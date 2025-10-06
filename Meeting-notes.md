@@ -55,3 +55,39 @@ Short summary of current project status.
 
 1. Member 1: Write an action.
 2. ...
+
+
+# Meeting 6.10.2025 10::00 - 11::45
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+1. First meeting, no summary
+
+## Challenges
+
+1. Not sure yet which features to implement in which sprints and how much time the implementation takes.
+
+## Actions
+
+1. Created issues to Issue Board which reflect the tasks each of us is doing
+2. Scheduled a time for the next meeting
+
+## Project status
+
+A rough outline for the project scope, frameworks and a sketch for an UML diagram exist. Work and importance of some features evaluated. Everyone knows what they are supposed to do for the next meeting.
+
+### TODOs
+
+1. Prioritize and estimate project features
+2. Create initial UML class diagram
+3. Research how SFML works and share remarks/notes
+4. Finish documenting the project scope
+5. Research how CMake is going to be used in the project
