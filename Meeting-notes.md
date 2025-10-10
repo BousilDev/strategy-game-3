@@ -91,3 +91,42 @@ A rough outline for the project scope, frameworks and a sketch for an UML diagra
 3. Research how SFML works and share remarks/notes
 4. Finish documenting the project scope
 5. Research how CMake is going to be used in the project
+
+
+# Meeting 10.10.2025 12::00 - 12::30 @Teams
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+1. Features estimated roughly
+2. Initial UML diagram created
+3. Basics of SFML under research
+4. Project scope clarified
+5. CMake basics researched
+
+## Challenges
+
+1. No notable challenges
+
+## Actions
+
+1. Discussed the deliverables of sprint 0 (the project scope and practices)
+
+## Project status
+
+The project scope and features are looking quite good already, some polishing needed. The basics of SFML and CMake have been researched.
+
+### TODOs
+
+1. Document project practices
+2. Finalize the UML diagram
+3. Research SFML more and report findings
+4. Specify the project scope further
+5. Research CMake further and report findings
