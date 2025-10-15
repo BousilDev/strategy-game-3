@@ -130,3 +130,46 @@ The project scope and features are looking quite good already, some polishing ne
 3. Research SFML more and report findings
 4. Specify the project scope further
 5. Research CMake further and report findings
+
+
+# Meeting 14.10.2025 16::00 - 17::15 @Jaakko (108)
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+6. Rami Ghoniem (TA)
+
+## Summary of works
+
+Initial project plan is committed to the repository. 
+Initial CMake for the project exists.
+
+## Challenges
+
+In which part of the development should we link the UI to the game logic?
+Can we implement all the things in our current aim?
+
+## Actions
+
+1. Discussed the general project idea & scope with the coach.
+2. Recommendation to use some cloud service to log implemented features.
+3. Scheduled time for next meeting, 23. thursday at 16 or 17 on site.
+4. Scheduled time for "daily" meeting, 17. friday at 16 remotely
+5. Added items to be implemented in the first sprint to the issue board.
+6. Assigned an issue board task to each developer.
+
+## Project status
+
+Project plan ready along with CMake for the project.
+Sprint 1 tasks defined in the issue board.
+
+### TODOs
+
+1. Research testing more.
+2. Remember to add exception handling in the project (part of testing plan)
+3. Think about establishing a log for implemented features
+4. Each of the developers will try to implement their own task in the issue board.
