@@ -11,6 +11,7 @@
 
 #include "core/Player.hpp"
 #include "world/Map.hpp"
+#include "cards/Deck.hpp"
 
 namespace core {
 
@@ -36,17 +37,19 @@ public:
    */
   Game();
 
+  struct PlayerInit {
+    std::string name;
+    cards::Deck deck;
+  };
+
   /**
    * @brief Initializes the game according to the given parameters.
    * 
-   * @param player_count The number of players in the game.
-   * @param player_names The names of the players. Must be of equal length to the number of 
-   * players.
+   * @param players The names and decks of the players in the game.
    * @param map_size The size of the map as an integer. The map will contain 
    * map_size * map_size tiles.
-   * @return true if the initialization was successful and false if it failed.
    */
-  bool initialize(int player_count, std::vector<std::string>& player_names, int map_size);
+  void Initialize(const std::vector<PlayerInit>& players, unsigned int map_size);
 
   /**
    * @brief Saves the state of the game. 
@@ -55,9 +58,8 @@ public:
    * uninitialized game cannot be saved.
    * 
    * @param filename The name of the file to save to.
-   * @return true if saving was successful and false if it failed.
    */
-  bool save(std::string filename);
+  void Save(std::ostream& out) const;
 
   /**
    * @brief Loads a game from a file.
@@ -65,17 +67,23 @@ public:
    * a single game.
    * 
    * @param filename The name of the file with a game to load.
-   * @return true if loading the game was successful and false if it failed.
    */
-  bool load(std::string filename);
+  void Load(std::istream& in);
 
   /**
    * @brief Checks if the game is over.
-   * The game is over when exactly one player is left alive.
+   * The game is over when only one player is left alive.
    * 
    * @return true if the game is over and false if not.
    */
-  bool isOver();
+  bool IsOver();
+
+  /**
+   * @brief Tells if the game has been initialized.
+   * 
+   * @return true if the game has been initialized and false if not.
+   */
+  bool IsInitialized() const { return is_initialized_; }
 
   /**
    * @brief Advances to next turn and updates alive players.
@@ -83,47 +91,36 @@ public:
    * player was destroyed, this player is now dead. Therefore, they have no more turns to 
    * play. 
    */
-  void nextTurn();
+  void NextTurn();
 
   /**
    * @brief Get the Map of the game.
    * 
    * @return A reference to the world map.
    */
-  world::Map& getMap();
+  const world::Map& GetMap() const { return map_; }
 
   /**
    * @brief Get the player whose turn it is.
    * 
    * @return A reference to the current player.
    */
-  Player& getCurrentPlayer() { return *players_[current_turn_]; }
+  Player& GetCurrentPlayer() { return *players_[current_turn_]; }
 
   /**
-   * @brief Get all the players in the game.
+   * @brief Get the player whose turn it is.
    * 
-   * @return A vector of pointers to the players.
+   * @return A const reference to the current player.
    */
-  std::vector<std::shared_ptr<Player>> getPlayers() { return players_; }
+  const Player& GetCurrentPlayer() const { return *players_[current_turn_]; }
 
-  /**
-   * @brief Get the players still in the game.
-   * 
-   * @return A reference to a vector of pointers to the players.
-   */
-  std::vector<std::shared_ptr<Player>>& getAlivePlayers();
-
-  /**
-   * @brief Get the players who have been defeated.
-   * 
-   * @return A reference to a vector of pointers to the players.
-   */
-  std::vector<std::shared_ptr<Player>>& getDeadPlayers();
 
 private:
-  std::vector<std::shared_ptr<Player>> players_; ///< All players in the game.
-  int current_turn_; ///< The index of the current player in players_.
-  int turn_; ///< The number of the current turn.
+  std::vector<std::unique_ptr<Player>> players_; ///< All players in the game.
+  unsigned int nof_players_; ///< The number of players in the game.
+  world::Map map_; ///< The map of the game.
+  unsigned int current_turn_; ///< The index of the current player in players_.
+  unsigned int turn_; ///< Global turn count.
   bool is_initialized_; ///< Indicator for whether the game has been initialized.
 };
 
