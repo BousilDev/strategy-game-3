@@ -60,7 +60,7 @@ public:
    * 
    * @return The deck of the player.
    */
-  cards::Deck& GetDeck();
+  cards::Deck& GetDeck() { return deck_; };
 
   /**
    * @brief Get the current hand of the player stored in the player's deck.
@@ -133,14 +133,14 @@ public:
    * 
    * @param resources The list of resources to be added.
    */
-  void AddResources(const std::list<core::Resource>& resources);
+  void AddResources(const std::list<Resource>& resources);
 
   /**
    * @brief Removes the amount of the resource from the player's corresponding resource.
    * 
    * @param Resource The resource to be subtracted.
    */
-  void RemoveResource(core::Resource resource);
+  void RemoveResource(Resource resource);
 
   /**
    * @brief Use the deck's drawHand() to draw a new hand which is stored in the deck.
