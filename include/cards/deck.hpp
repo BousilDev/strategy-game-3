@@ -8,7 +8,8 @@
 namespace cards {
   
 class Deck {
-
+    public:
+        Deck() {};
 };
   
 } // namespace cards
