@@ -16,7 +16,7 @@ file(GLOB SOURCES_C "src/*.c")
 # Add all .cpp, - files under src/ directory
 file(GLOB SOURCES_CPP "src/*.cpp")
 # Add all .hpp, - files under src/ directory
-file(GLOB SOURCES_HPP "src/*.hpp")
+file(GLOB SOURCES_HPP "include/*.hpp")
 # Add all .h, - files under src/ directory
 file(GLOB SOURCES_H "src/*.h")
 set(SOURCES ${SOURCES_C} ${SOURCES_CPP} ${SOURCES_H} ${SOURCES_HPP})
@@ -31,6 +31,7 @@ add_executable(cpp_game)
 target_sources(cpp_game PUBLIC ${SOURCES})
 target_include_directories(cpp_game PUBLIC .)
 target_include_directories(cpp_game PUBLIC src)
+target_include_directories(cpp_game PUBLIC include)
 
 # get a lot of warnings
 if(MSVC)

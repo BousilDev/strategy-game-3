@@ -10,14 +10,14 @@
 #include <memory>
 #include <string>
 
-#include "buildings/Building.hpp"
-#include "cards/Card.hpp"
-#include "cards/Deck.hpp"
-#include "cards/Hand.hpp"
+#include "buildings/building.hpp"
+#include "cards/card.hpp"
+#include "cards/deck.hpp"
+#include "cards/hand.hpp"
 #include "constants/constants.hpp"
-#include "core/Resource.hpp"
-#include "units/Unit.hpp"
-#include "world/Tile.hpp"
+#include "core/resource.hpp"
+#include "units/unit.hpp"
+#include "world/tile.hpp"
 
 namespace core {
 
@@ -45,7 +45,8 @@ public:
    * @param name The name of the player.
    * @param deck The starting deck of the player.
    */
-  Player(const std::string& name, cards::Deck deck);
+  Player(const std::string& name, cards::Deck deck) :
+    name_(name), deck_(deck), resources_({}), buildings_({}), units_({}) {};
 
   /**
    * @brief Get the name of the player.

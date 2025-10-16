@@ -9,9 +9,9 @@
 #include <string>
 #include <vector>
 
-#include "core/Player.hpp"
-#include "world/Map.hpp"
-#include "cards/Deck.hpp"
+#include "core/player.hpp"
+#include "world/map.hpp"
+#include "cards/deck.hpp"
 
 namespace core {
 
@@ -35,12 +35,19 @@ public:
   /**
    * @brief Construct an empty game instance.
    */
-  Game();
+  Game() : nof_players_(0), current_turn_(0), turn_(0), is_initialized_(false) {};
 
   struct PlayerInit {
     std::string name;
     cards::Deck deck;
   };
+
+  /**
+   * @brief Sets the debug flag.
+   * 
+   * @param debug The debug flag.
+   */
+  void SetDebug(bool debug) { debug_ = debug; }
 
   /**
    * @brief Initializes the game according to the given parameters.
@@ -122,6 +129,7 @@ private:
   unsigned int current_turn_; ///< The index of the current player in players_.
   unsigned int turn_; ///< Global turn count.
   bool is_initialized_; ///< Indicator for whether the game has been initialized.
+  bool debug_ = constants::debug; ///< If true, debug information is printed to the console.
 };
 
 } // namespace core

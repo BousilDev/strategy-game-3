@@ -8,7 +8,9 @@
 namespace world {
   
 class Map {
-
+  public:
+    Map() {};
+    Map(unsigned int map_size) {};
 };
   
 } // namespace world

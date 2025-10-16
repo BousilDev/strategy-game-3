@@ -7,4 +7,5 @@
 
 namespace constants {
 const int kNumberOfResourceTypes = 4;
+const bool debug = true;
 } // namespace core
