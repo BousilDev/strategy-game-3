@@ -124,6 +124,7 @@ public:
 
 private:
   std::vector<std::unique_ptr<Player>> players_; ///< All players in the game.
+  std::vector<std::unique_ptr<Player>> dead_players_; ///< All players that have lost the game.
   unsigned int nof_players_; ///< The number of players in the game.
   world::Map map_; ///< The map of the game.
   unsigned int current_turn_; ///< The index of the current player in players_.
