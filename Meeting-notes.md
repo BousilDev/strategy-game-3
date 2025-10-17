@@ -173,3 +173,44 @@ Sprint 1 tasks defined in the issue board.
 2. Remember to add exception handling in the project (part of testing plan)
 3. Think about establishing a log for implemented features
 4. Each of the developers will try to implement their own task in the issue board.
+
+
+# Meeting 17.10.2025 16::00 - 16::30 @Teams
+Sprint 1, "daily meeting" 1
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+1. Initial sketch of a working main menu exists, SFML researched more.
+2. Header files for basic classes exist.
+3. Game and Player classes initialized and basic functionalities implemented.
+4. The implementation of Map and Tile classes is progressing 
+
+## Challenges
+
+No notable new challenges
+
+## Actions
+
+1. Discussed the progress of the sprint items and reviewed what each of us had done.
+2. Agreed on some design details 
+3. Scheduled next "daily" meeting, 22.10 at 16 on site
+
+## Project status
+
+Sprint 1 is progressing so far as expected.
+The project contains basic header files and some game logic functionalities.
+
+### TODOs
+
+1. Begin sketching the game state save & loading
+2. Add the rest of the header files
+3. Implement game option selection to SFML main menu
+4. Finish the initial Map class
