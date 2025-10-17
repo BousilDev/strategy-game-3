@@ -60,14 +60,14 @@ public:
    * 
    * @return The deck of the player.
    */
-  cards::Deck& GetDeck();
+  cards::Deck& GetDeck() { return deck_; };
 
   /**
    * @brief Get the current hand of the player stored in the player's deck.
    * 
    * @return The hand of the player.
    */
-  cards::Hand& GetHand();
+  cards::Hand& GetHand() { return deck_.GetHand(); };
 
   /**
    * @brief Get the buildings owned by the player.
@@ -133,21 +133,21 @@ public:
    * 
    * @param resources The list of resources to be added.
    */
-  void AddResources(const std::list<core::Resource>& resources);
+  void AddResources(const std::list<Resource>& resources);
 
   /**
    * @brief Removes the amount of the resource from the player's corresponding resource.
    * 
    * @param Resource The resource to be subtracted.
    */
-  void RemoveResource(core::Resource resource);
+  void RemoveResource(Resource resource);
 
   /**
    * @brief Use the deck's drawHand() to draw a new hand which is stored in the deck.
    * 
    * This is used at the start of the turn to get a new set of cards for the turn.
    */
-  void DrawHand();
+  void DrawHand() { deck_.drawHand(); };
 
   /**
    * @brief Checks if the player is alive or not i.e. if the capital building of the player
