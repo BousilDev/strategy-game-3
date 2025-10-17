@@ -29,6 +29,7 @@ bool core::Game::IsOver() {
     return nof_players_ == 1;
 }
 void core::Game::NextTurn() {
+    // TODO: Update resources for all players
 
     // Update alive players
     for (auto it = players_.begin(); it != players_.end(); ) {
@@ -40,12 +41,17 @@ void core::Game::NextTurn() {
             dead_players_.push_back(std::move(*it));
             it = players_.erase(it);
             nof_players_--;
-            // Check that current_turn is not out of bounds and that current_turn is adjusted correctly
-            if (current_turn_ >= nof_players_ && nof_players_ > 0) {
-                current_turn_ = current_turn_ >= deleted_index ? 
-                    current_turn_ - 1 : current_turn_;
-                // Secure the validity of current_turn_
-                current_turn_ = current_turn_ % nof_players_;
+            // Check that current_turn is adjusted correctly
+            current_turn_ = current_turn_ >= deleted_index ? 
+                current_turn_ - 1 : current_turn_;
+            // Secure the validity of current_turn_
+            current_turn_ = current_turn_ % nof_players_;
+            if (nof_players_ < 2) {
+                // Game over
+                if (debug_) {
+                    std::cout << "Game over! Winner: " << players_[current_turn_]->GetName() << std::endl;
+                }
+                return;
             }
         } else {
             ++it;
@@ -58,4 +64,7 @@ void core::Game::NextTurn() {
     if (debug_) {
         std::cout << "It's now " << players_[current_turn_]->GetName() << "'s turn. " << "(global turn " << turn_ << ")" << std::endl;
     }
+
+    // Draw new hand for the current player (In one round everyone gets to draw a hand once)
+    players_[current_turn_]->DrawHand();
 }

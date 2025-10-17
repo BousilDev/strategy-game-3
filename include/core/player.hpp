@@ -67,7 +67,7 @@ public:
    * 
    * @return The hand of the player.
    */
-  cards::Hand& GetHand();
+  cards::Hand& GetHand() { return deck_.GetHand(); };
 
   /**
    * @brief Get the buildings owned by the player.
@@ -147,7 +147,7 @@ public:
    * 
    * This is used at the start of the turn to get a new set of cards for the turn.
    */
-  void DrawHand();
+  void DrawHand() { deck_.drawHand(); };
 
   /**
    * @brief Checks if the player is alive or not i.e. if the capital building of the player
