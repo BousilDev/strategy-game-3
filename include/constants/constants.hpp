@@ -8,4 +8,5 @@
 namespace constants {
 const int kNumberOfResourceTypes = 4;
 const bool debug = true;
+const std::string debug_prefix = "###: ";
 } // namespace core
