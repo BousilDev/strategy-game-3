@@ -3,15 +3,6 @@
 #include <iostream>
 #include <assert.h>
 
-// Test prefix wrapper
-template <typename T>
-void core::PrintTestMsg(const T& msg) {
-  std::cout << constants::debug_prefix << msg;
-}
-void core::PrintTestMsg(const std::ostringstream& msg) {
-  PrintTestMsg(msg.str());
-}
-
 // Testing the Game class
 void core::TestGameInitializationAndTurns() {
   std::cout << "Testing Game class..." << std::endl;

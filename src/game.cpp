@@ -1,6 +1,7 @@
 #include "core/game.hpp"
 #include <iostream>
 #include <sstream>
+#include <fstream>
 
 void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int map_size) {
     // Create map with given size
@@ -15,14 +16,25 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
     is_initialized_ = true;
     if (debug_) {
         // Use PrintTestMsg for cleaner test message handling
-        std::ostringstream test_msg;
-        test_msg << "Initialized game with " << nof_players_ << " players and map size " << map_size << "x" << map_size;
-        core::PrintTestMsg(test_msg);
+        core::PrintTestMsg("Initialized game with ", nof_players_, " players and map size ", map_size, "x", map_size);
     }
 }
 
 void core::Game::Save(std::ostream& out) const{
     // TODO
+    std::ofstream file;
+    // file << time;
+    // file << is_initialized_;
+    // file << nof_players_;
+    for (const auto& player : players_) {
+        // file << player;
+    }
+    for (const auto& player : dead_players_) {
+        // file << player;
+    }
+    // file << current_turn_;
+    // file << turn_;
+    // file << map_
 }
 
 void core::Game::Load(std::istream& in){
@@ -39,9 +51,7 @@ void core::Game::NextTurn() {
     for (auto it = players_.begin(); it != players_.end(); ) {
         if (!(*it)->IsAlive()) {
             if (debug_) {
-                std::ostringstream test_msg;
-                test_msg << (*it)->GetName() << " has lost the game." << std::endl;
-                core::PrintTestMsg(test_msg);
+                core::PrintTestMsg((*it)->GetName(), " has lost the game.");
             }
             unsigned int deleted_index = std::distance(players_.begin(), it);
             dead_players_.push_back(std::move(*it));
@@ -55,9 +65,7 @@ void core::Game::NextTurn() {
             if (nof_players_ < 2) {
                 // Game over
                 if (debug_) {
-                    std::ostringstream test_msg;
-                    test_msg << "Game over! Winner: " << players_[current_turn_]->GetName() << std::endl;
-                    core::PrintTestMsg(test_msg);
+                    core::PrintTestMsg("Game over! Winner: ", players_[current_turn_]->GetName());
                 }
                 return;
             }
@@ -70,9 +78,7 @@ void core::Game::NextTurn() {
     turn_++;
     current_turn_ = (current_turn_ + 1) % nof_players_;
     if (debug_) {
-        std::ostringstream test_msg;
-        test_msg << "It's now " << players_[current_turn_]->GetName() << "'s turn. " << "(global turn " << turn_ << ")" << std::endl;
-        core::PrintTestMsg(test_msg);
+        core::PrintTestMsg("It's now ", players_[current_turn_]->GetName(), "'s turn. ", "(global turn ", turn_, ")");
     }
 
     // Draw new hand for the current player (In one round everyone gets to draw a hand once)

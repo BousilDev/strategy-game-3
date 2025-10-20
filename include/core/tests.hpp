@@ -1,13 +1,17 @@
 #pragma once
 
 #include "core/game.hpp"
-#include <sstream>
+#include <iostream>
 
 namespace core {
-
-  template <typename T>
-  void PrintTestMsg(const T& msg);
-  void PrintTestMsg(const std::ostringstream& msg);
+  // Function to print test messages with debug prefix specified in constants.hpp
+  template <typename... Types>
+  // Uses universal references Types&&... (not sure if const works here)
+  void PrintTestMsg(Types&&... args) {
+    std::cout << constants::debug_prefix;
+    (std::cout << ... << args);
+    std::cout << std::endl;
+  }
   void TestGameInitializationAndTurns();
 
 }
