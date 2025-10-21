@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @file Map.hpp
+ * @file map.hpp
  * @brief Declares the Map class which manages and stores the state of the game world.
  */
 

@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @file Game.hpp
+ * @file game.hpp
  * @brief Declares the Game class which manages the main game state and flow.
  */
 

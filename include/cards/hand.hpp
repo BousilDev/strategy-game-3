@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @file Hand.hpp
+ * @file hand.hpp
  * @brief Declares the Hand class which is the set of cards playable this turn by the player 
  * who owns the deck.
  */

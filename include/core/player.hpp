@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @file Player.hpp
+ * @file player.hpp
  * @brief Declares the Player class which manages the actions performed by a single player.
  */
 
