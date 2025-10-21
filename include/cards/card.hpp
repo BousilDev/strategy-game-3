@@ -31,7 +31,7 @@ public:
    * @param name The name of the card.
    * @param description The description of what the card does.
    */
-  Card(std::string name, std::string description);
+  Card(std::string& name, std::string& description) : name_(name), description_(description) {}
 
   /**
    * @brief Get the name of the card.
@@ -56,9 +56,10 @@ public:
    * 
    * @param target The tile the card is played on.
    */
-  virtual void Play(world::Tile target) {}
+  virtual void Play(world::Tile& target) {}
 private:
-  
+  std::string name_;
+  std::string description_;
 };
 
 class BuildingCard : public Card {
@@ -70,16 +71,17 @@ public:
    * @param description The description of the card.
    * @param building The building the card constructs when played.
    */
-  BuildingCard(std::string name, std::string description, buildings::Building building);
+  BuildingCard(std::string& name, std::string& description, buildings::Building& building)
+    : Card(name, description), building_(building) {}
 
   /**
    * @brief Plays the card on the tile by constructing the building of the card.
    * 
    * @param target The tile the card is played on and thus where its building is constructed.
    */
-  virtual void Play(world::Tile target);
+  virtual void Play(world::Tile& target);
 private:
-
+  buildings::Building building_;
 };
 
 class UnitCard : public Card {
@@ -91,16 +93,17 @@ public:
    * @param description The description of the card.
    * @param unit The unit the card deploys when played.
    */
-  UnitCard(std::string name, std::string description, units::Unit unit);
+  UnitCard(std::string& name, std::string& description, units::Unit& unit)
+    : Card(name, description), unit_(unit) {}
 
   /**
    * @brief Plays the card on the tile by deploying the unit of the card.
    * 
    * @param target The tile the card is played on and thus where its unit is deployed.
    */
-  virtual void Play(world::Tile target);
+  virtual void Play(world::Tile& target);
 private:
-
+  units::Unit unit_;
 };
 
 class EffectCard : public Card {
@@ -112,16 +115,17 @@ public:
    * @param description The description of the card.
    * @param effect The effect the card causes when played.
    */
-  EffectCard(std::string name, std::string description, effects::Effect effect);
+  EffectCard(std::string& name, std::string& description, effects::Effect& effect)
+    : Card(name, description), effect_(effect) {}
 
   /**
    * @brief Plays the card on the tile by placing the effect on the tile.
    * 
    * @param target The tile the card is played on and thus where the effect is placed.
    */
-  virtual void Play(world::Tile target);
+  virtual void Play(world::Tile& target);
 private:
-
+  effects::Effect effect_;
 };
   
 } // namespace cards
