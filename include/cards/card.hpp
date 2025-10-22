@@ -57,8 +57,8 @@ public:
    * @param target The tile the card is played on.
    * @return true If the card was played and false otherwise. 
    */
-  virtual bool Play(world::Tile& target) {}
-  
+  virtual bool Play(world::Tile& target) { return false; }
+
 private:
   std::string name_; ///< The name of the card.
   std::string description_; ///< The description of the card.

@@ -38,6 +38,11 @@ public:
   Hand(unsigned int starting_size);
 
   /**
+   * @brief Default hand constructor for testing purposes.
+   */
+  Hand() {}
+
+  /**
    * @brief The size of the hand tells how many cards are drawn to the hand at the start of a turn.
    * 
    * @return The size of the hand.

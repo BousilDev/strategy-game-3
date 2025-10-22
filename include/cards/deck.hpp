@@ -31,6 +31,11 @@ public:
   Deck(std::list<Card> cards, unsigned int hand_size);
 
   /**
+   * @brief Default deck constructor for testing purposes.
+   */
+  Deck() {}
+
+  /**
    * @brief Get the Hand of the deck.
    * 
    * @return The hand of the deck.
@@ -82,7 +87,7 @@ public:
   /**
    * @brief Draws cards to the hand until it is full or there are no cards to draw.
    */
-  void DrawHand();
+  void DrawHand() {}
 
   /**
    * @brief Discards the card at index i from the hand and places it in the discard pile. If there is no
@@ -121,7 +126,7 @@ public:
    * @param card The card to remove from the hand.
    */
   void RemoveCard(Card& card);
-  
+
 private:
   Hand hand_; ///< The hand of the deck
   std::list<Card> draw_; ///< The draw pile of the deck.
