@@ -1,9 +1,18 @@
 #pragma once
+
+/**
+ * @file center_origin.hpp
+ * @brief TODO: Declares the centerOrigin template function which ???
+ */
+
 #include <SFML/Graphics.hpp>
 
-// Helper function for creating UI. Takes a drawable shape as input and sets 
-// the local origin to the center of the shape.
+namespace ui {
 
+/**
+ * @brief Helper function for creating UI. Takes a drawable shape as input and sets 
+ * the local origin to the center of the shape.
+ */
 template<typename T>
 void centerOrigin(T& shape) {
     sf::FloatRect bounds = shape.getLocalBounds();
@@ -11,3 +20,4 @@ void centerOrigin(T& shape) {
                     bounds.top + bounds.height / 2.0f);
 }
 
+} // namespace ui

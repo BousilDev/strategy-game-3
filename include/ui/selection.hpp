@@ -1,11 +1,22 @@
 #pragma once
+
+/**
+ * @file selection.hpp
+ * @brief TODO: Declares the Selection class which ???
+ */
+
 #include <iostream>
 #include <utility>
 #include <SFML/Graphics.hpp>
+
 #include "center_origin.hpp"
 
+namespace ui {
 
-// Displays and loops through selection options in the game menu screen
+/**
+ * @class Selection
+ * @brief Displays and loops through selection options in the game menu screen
+ */
 class Selection {
 public:
     
@@ -79,3 +90,5 @@ private:
     sf::CircleShape rightArrow_;
     int selectedOption_ = 0;
 };
+
+} // namespace ui

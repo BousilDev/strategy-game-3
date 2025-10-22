@@ -1,9 +1,10 @@
 #include <iostream>
-#include "core/game.hpp"
 #include <assert.h>
+#include <string>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include <string>
+
+#include "core/game.hpp"
 #include "ui/selection.hpp"
 #include "ui/center_origin.hpp"
 
@@ -45,19 +46,19 @@ int main(){
     playerCountOptions.emplace_back(sf::Text("Two players", *font, 35), 2);
     playerCountOptions.emplace_back(sf::Text("Three players", *font, 35), 3);
     playerCountOptions.emplace_back(sf::Text("Four players", *font, 35), 4);
-    Selection playerCountSelection(playerCountOptions, sf::Vector2f(200,225));
+    ui::Selection playerCountSelection(playerCountOptions, sf::Vector2f(200,225));
 
     std::vector<std::pair<sf::Text, int>> mapSizeOptions;
     mapSizeOptions.emplace_back(sf::Text("Small map", *font, 35), 3);
     mapSizeOptions.emplace_back(sf::Text("Normal map", *font, 35), 5);
     mapSizeOptions.emplace_back(sf::Text("Large Map", *font, 35), 7);
-    Selection mapSelection(mapSizeOptions, sf::Vector2f(200,275));
+    ui::Selection mapSelection(mapSizeOptions, sf::Vector2f(200,275));
 
     std::vector<std::pair<sf::Text, int>> deckOptions;
     deckOptions.emplace_back(sf::Text("Deck 1", *font, 35),1);
     deckOptions.emplace_back(sf::Text("Deck 2", *font, 35),2);
     deckOptions.emplace_back(sf::Text("Deck 3", *font, 35),3);
-    Selection deckSelection(deckOptions, sf::Vector2f(200,325));
+    ui::Selection deckSelection(deckOptions, sf::Vector2f(200,325));
 
     // Main menu graphics loop
     while (window.isOpen()) {
