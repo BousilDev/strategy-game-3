@@ -8,6 +8,7 @@
 namespace constants {
 const int kNumberOfResourceTypes = 4;
 const bool debug = true;
+const std::string debug_prefix = "###: ";
 const int kInitWindowWidth = 800;
 const int kInitWindowHeight = 600;
 } // namespace constants
