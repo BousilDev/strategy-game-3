@@ -25,7 +25,7 @@ public:
   /**
    * @brief Construct a new Deck object.
    * 
-   * @param cards The cards initially in the deck. Go in the draw pile.
+   * @param cards The cards initially in the deck. They start in the draw pile in pseudo-random order.
    * @param hand_size The initial hand size of the deck.
    */
   Deck(std::list<Card> cards, unsigned int hand_size);
@@ -57,13 +57,6 @@ public:
   const std::list<Card>& GetDiscard() const;
 
   /**
-   * @brief Get all cards in the deck.
-   * 
-   * @return A list of all the cards the deck contains.
-   */
-  const std::list<Card>& GetCards() const;
-
-  /**
    * @brief Returns a pseudo-randomly picked card from the entire deck.
    * 
    * Used to give pseudo-randomized deck alteration options to the player. For example, choose one of these
@@ -71,7 +64,7 @@ public:
    * 
    * @return A random card from the deck.
    */
-  const Card& GetRandomCard() const;
+  Card GetRandomCard() const;
 
   /**
    * @brief Draws a card from the draw pile of the deck into the hand. 
@@ -91,7 +84,7 @@ public:
 
   /**
    * @brief Discards the card at index i from the hand and places it in the discard pile. If there is no
-   * card at index i in the hand, throws an exception.
+   * card at index i in the hand, throws std::out_of_range.
    * 
    * @param i The index of the card to discard.
    */
@@ -117,15 +110,15 @@ public:
    * 
    * @param card The card to add.
    */
-  void AddCard(Card& card);
+  void AddCard(const Card& card);
 
   /**
    * @brief Removes the given card from the deck. If the card is not in the draw pile, discard pile, or
-   * hand, throws an exception.
+   * hand, does nothing.
    * 
    * @param card The card to remove from the hand.
    */
-  void RemoveCard(Card& card);
+  void RemoveCard(const Card& card);
 
 private:
   Hand hand_; ///< The hand of the deck
