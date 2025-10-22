@@ -31,6 +31,13 @@ namespace cards {
 class Hand {
 public:
   /**
+   * @brief Construct a new Hand object.
+   * 
+   * @param starting_size The starting size of the hand.
+   */
+  Hand(unsigned int starting_size);
+
+  /**
    * @brief The size of the hand tells how many cards are drawn to the hand at the start of a turn.
    * 
    * @return The size of the hand.
@@ -50,6 +57,15 @@ public:
    * @param n how much smaller the hand will become.
    */
   void DecreaseSize(int n) { size_ -= n; }
+
+  /**
+   * @brief Checks if the hand is full, meaning there are as many cards in the contents of the hand as
+   * the size of the hand.
+   * 
+   * @return true 
+   * @return false 
+   */
+  bool IsFull();
 
   /**
    * @brief Get the Card in the hand at index i. Throws an exception if the index is out of bounds.
@@ -88,13 +104,16 @@ public:
    * @brief Removes the card at index i from the hand. Throws an exception if the index is out of bounds.
    * 
    * @param i The index of the card to be removed.
+   * @return The discarded card.
    */
-  void DiscardCard(int i);
+  Card& DiscardCard(int i);
 
   /**
    * @brief Removes all cards from the hand so that the contents_ of the hand becomes empty.
+   * 
+   * @return List containing the cards discarded.
    */
-  void DiscardHand();
+  std::list<Card>& DiscardHand();
 
 private:
   int size_; ///< The size of the hand.

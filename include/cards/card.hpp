@@ -58,6 +58,7 @@ public:
    * @return true If the card was played and false otherwise. 
    */
   virtual bool Play(world::Tile& target) {}
+  
 private:
   std::string name_; ///< The name of the card.
   std::string description_; ///< The description of the card.
@@ -82,6 +83,7 @@ public:
    * @return true If the building was successfully constructed on the target tile, false otherwise.
    */
   virtual bool Play(world::Tile& target);
+
 private:
   buildings::Building building_; ///< The building the card constructs a copy of.
 };
@@ -105,6 +107,7 @@ public:
    * @return true If the unit was successfully deployed on the target tile, false otherwise.
    */
   virtual bool Play(world::Tile& target);
+
 private:
   units::Unit unit_; ///< The unit the card deploys a copy of.
 };
@@ -128,6 +131,7 @@ public:
    * @return true If the effect was successfully applied on the target tile, false otherwise.
    */
   virtual bool Play(world::Tile& target);
+
 private:
   effects::Effect effect_; ///< The effect the card places a copy of.
 };
