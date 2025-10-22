@@ -8,12 +8,18 @@
 
 #include <string>
 
-#include "world/tile.hpp"
 #include "buildings/building.hpp"
-#include "units/unit.hpp"
 #include "effects/effect.hpp"
+#include "world/tile.hpp"
+#include "units/unit.hpp"
+
 
 namespace cards {
+
+/**
+ * @brief Enumerator for different card types
+ */
+enum class CardType { kBuilding, kUnit, kEffect };
   
 /**
  * @brief Abstract base class representing a playable card.
@@ -31,14 +37,26 @@ public:
    * @param name The name of the card.
    * @param description The description of what the card does.
    */
-  Card(std::string& name, std::string& description) : name_(name), description_(description) {}
+  Card(std::string name, std::string description) : name_(name), description_(description) {}
+
+  /**
+   * @brief Destroy the Card object.
+   */
+  virtual ~Card() = default;
+
+  /**
+   * @brief Clone the card.
+   * 
+   * @return A copy of the card.
+   */
+  virtual std::unique_ptr<Card> Clone() const = 0;
 
   /**
    * @brief Get the name of the card.
    * 
    * @return The name of the card.
    */
-  const std::string& GetName() const;
+  const std::string& GetName() const noexcept { return name_; }
 
   /**
    * @brief Get the description of the card.
@@ -47,7 +65,14 @@ public:
    * 
    * @return The description of the card.
    */
-  const std::string& GetDescription() const;
+  const std::string& GetDescription() const noexcept { return description_; }
+
+  /**
+   * @brief Get the type of the card.
+   * 
+   * @return The type of the card.
+   */
+  virtual CardType GetCardType() const = 0;
 
   /**
    * @brief Play the card if the target allows the card to be played on it.
@@ -57,7 +82,7 @@ public:
    * @param target The tile the card is played on.
    * @return true If the card was played and false otherwise. 
    */
-  virtual bool Play(world::Tile& target) { return false; }
+  virtual bool Play(world::Tile& target) const = 0;
 
 private:
   std::string name_; ///< The name of the card.
@@ -73,43 +98,87 @@ public:
    * @param description The description of the card.
    * @param building The building the card constructs when played.
    */
-  BuildingCard(std::string& name, std::string& description, buildings::Building& building)
-    : Card(name, description), building_(building) {}
+  BuildingCard(std::string name, std::string description, const buildings::Building& building);
 
   /**
-   * @brief Plays the card on the tile by constructing a copy of the building of the card if possible.
+   * @brief Clone the card.
+   * 
+   * @return A copy of the card.
+   */
+  std::unique_ptr<Card> Clone() const override { return std::make_unique<BuildingCard>(*this); }
+
+  /**
+   * @brief Get the type of the card (kBuilding).
+   * 
+   * @return CardType::kBuilding
+   */
+  CardType GetCardType() const override { return CardType::kBuilding; }
+  
+  /**
+   * @brief Plays the card by constructing a copy its building on the target tile if possible.
    * 
    * @param target The tile the card is played on and thus where its building is constructed.
    * @return true If the building was successfully constructed on the target tile, false otherwise.
    */
-  virtual bool Play(world::Tile& target);
+  bool Play(world::Tile& target) const override;
 
 private:
-  buildings::Building building_; ///< The building the card constructs a copy of.
+  std::unique_ptr<buildings::Building> building_; ///< The building the card constructs a copy of.
+
+  /**
+   * @brief Copy constructor for the BuildingCard.
+   * 
+   * @param other Other BuildingCard
+   */
+  BuildingCard(const BuildingCard& other)
+  : Card(other),
+    building_(other.building_ ? other.building_->Clone() : nullptr) {}
 };
 
 class UnitCard : public Card {
 public:
   /**
-   * @brief Construct a new UnitCard object/
+   * @brief Construct a new UnitCard object.
    * 
    * @param name The name of the card.
    * @param description The description of the card.
    * @param unit The unit the card deploys when played.
    */
-  UnitCard(std::string& name, std::string& description, units::Unit& unit)
-    : Card(name, description), unit_(unit) {}
+  UnitCard(std::string name, std::string description, const units::Unit& unit);
 
   /**
-   * @brief Plays the card on the tile by deploying a copy of the unit of the card.
+   * @brief Clone the card.
+   * 
+   * @return A copy of the card.
+   */
+  std::unique_ptr<Card> Clone() const override { return std::make_unique<UnitCard>(*this); }
+
+  /**
+   * @brief Get the type of the card (kUnit).
+   * 
+   * @return CardType::kUnit
+   */
+  CardType GetCardType() const override { return CardType::kUnit; }
+  
+  /**
+   * @brief Plays the card by deploying a copy of its unit on the target tile.
    * 
    * @param target The tile the card is played on and thus where its unit is deployed.
    * @return true If the unit was successfully deployed on the target tile, false otherwise.
    */
-  virtual bool Play(world::Tile& target);
+  bool Play(world::Tile& target) const override;
 
 private:
-  units::Unit unit_; ///< The unit the card deploys a copy of.
+  std::unique_ptr<units::Unit> unit_; ///< The unit the card deploys a copy of.
+
+  /**
+   * @brief Copy constructor for the UnitCard.
+   * 
+   * @param other Other UnitCard
+   */
+  UnitCard(const UnitCard& other)
+  : Card(other),
+    unit_(other.unit_ ? other.unit_->Clone() : nullptr) {}
 };
 
 class EffectCard : public Card {
@@ -121,19 +190,41 @@ public:
    * @param description The description of the card.
    * @param effect The effect the card causes when played.
    */
-  EffectCard(std::string& name, std::string& description, effects::Effect& effect)
-    : Card(name, description), effect_(effect) {}
+  EffectCard(std::string name, std::string description, const effects::Effect& effect);
 
   /**
-   * @brief Plays the card on the tile by placing a copy of the effect on the tile.
+   * @brief Clone the card.
+   * 
+   * @return A copy of the card.
+   */
+  std::unique_ptr<Card> Clone() const override { return std::make_unique<EffectCard>(*this); }
+
+  /**
+   * @brief Get the type of the card (kEffect).
+   * 
+   * @return CardType::kEffect
+   */
+  CardType GetCardType() const override { return CardType::kEffect; }
+
+  /**
+   * @brief Plays the card by applying a copy of its effect to the target tile.
    * 
    * @param target The tile the card is played on and thus where the effect is placed.
    * @return true If the effect was successfully applied on the target tile, false otherwise.
    */
-  virtual bool Play(world::Tile& target);
+  bool Play(world::Tile& target) const override;
 
 private:
-  effects::Effect effect_; ///< The effect the card places a copy of.
+  std::unique_ptr<effects::Effect> effect_; ///< The effect the card places a copy of.
+
+  /**
+   * @brief Copy constructor for the EffectCard.
+   * 
+   * @param other Other EffectCard
+   */
+  EffectCard(const EffectCard& other)
+  : Card(other),
+    effect_(other.effect_ ? other.effect_->Clone() : nullptr) {}
 };
   
 } // namespace cards

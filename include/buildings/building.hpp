@@ -20,12 +20,17 @@ class Building {
   public:
     Building(BuildingType type) : type_(type) {};
 
+    virtual ~Building() = default;
+    
+    virtual std::unique_ptr<Building> Clone() = 0;
+
     /**
      * @brief Get the type of the building.
      * 
      * @return The type of the building.
      */
     BuildingType GetType() const { return type_; };
+
   private:
     BuildingType type_;
 };

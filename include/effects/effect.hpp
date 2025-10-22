@@ -9,6 +9,9 @@
 namespace effects {
   
 class Effect {
+public:
+  virtual std::unique_ptr<Effect> Clone() = 0;
+private:
 
 };
   

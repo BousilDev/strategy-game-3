@@ -9,6 +9,10 @@
 namespace units {
   
 class Unit {
+public:
+  virtual std::unique_ptr<Unit> Clone() = 0;
+  
+private:
 
 };
   
