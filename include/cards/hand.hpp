@@ -47,21 +47,21 @@ public:
    * 
    * @return The size of the hand.
    */
-  const int Size() const { return size_; }
+  int Size() const { return size_; }
 
   /**
    * @brief Increases the size of the hand by n.
    * 
    * @param n how much larger the hand will become.
    */
-  void IncreaseSize(int n) { size_ += n; }
+  void IncreaseSize(unsigned int n) { size_ += n; }
 
   /**
-   * @brief Decreases the size of the hand by n.
+   * @brief Decreases the size of the hand by n. Hand size cannot be less than 0.
    * 
    * @param n how much smaller the hand will become.
    */
-  void DecreaseSize(int n) { size_ -= n; }
+  void DecreaseSize(unsigned int n) { size_ = std::max(0U, size_ - n); }
 
   /**
    * @brief Checks if the hand is full, meaning there are as many cards in the contents of the hand as
@@ -73,7 +73,7 @@ public:
   bool IsFull();
 
   /**
-   * @brief Get the Card in the hand at index i. Throws an exception if the index is out of bounds.
+   * @brief Get the Card in the hand at index i. Throws std::out_of_range if the index is out of bounds.
    * 
    * @param i The index of the card in the hand.
    * @return The card at the index.
@@ -88,8 +88,8 @@ public:
   const std::list<Card>& GetCards() const;
 
   /**
-   * @brief Plays the card at index i in the hand on the target if possible. Throws an exception if the card
-   * index is out of bounds.
+   * @brief Plays the card at index i in the hand on the target if possible. Throws std::out_of_range 
+   * if the card index is out of bounds. Discards the card if it was successfully played.
    * 
    * @param i The index of the card in the hand.
    * @param target The tile the card will attempt to be played on.
@@ -106,22 +106,31 @@ public:
   bool DrawCard(Card& card);
 
   /**
-   * @brief Removes the card at index i from the hand. Throws an exception if the index is out of bounds.
+   * @brief Removes the card at index i from the hand. Throws std::out_of_range if the index is out of 
+   * bounds.
    * 
    * @param i The index of the card to be removed.
    * @return The discarded card.
    */
-  Card& DiscardCard(int i);
+  Card DiscardCard(int i);
 
   /**
    * @brief Removes all cards from the hand so that the contents_ of the hand becomes empty.
    * 
    * @return List containing the cards discarded.
    */
-  std::list<Card>& DiscardHand();
+  std::list<Card> DiscardHand();
+
+  /**
+   * @brief Get the Card in the hand at index i. Throws std::out_of_range if the index is out of bounds.
+   * 
+   * @param i The index of the card.
+   * @return The card at index i in the hand.
+   */
+  Card& operator[](int i);
 
 private:
-  int size_; ///< The size of the hand.
+  unsigned int size_; ///< The size of the hand.
   std::list<Card> contents_; ///< The cards in the hand.
 };
   
