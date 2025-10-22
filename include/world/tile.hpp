@@ -85,10 +85,18 @@ class Tile {
         * Since the array has weak pointers that might be null must do if(auto s_pointer = weak_pointer.lock()) to access. 
         */
         std::array<std::weak_ptr<Tile>, 6>& get_neighbours();
+
+        void set_tile_number(unsigned int num){
+            tile_number_ = num;
+        }
+        unsigned int get_tile_number(){
+            return tile_number_;
+        }
 //void add_effect(Effect);
 //void remove_effect(Effect);
         
     protected:
+        unsigned int tile_number_;///< the tile number in the tiles_ vector of map.
         std::shared_ptr<Terrain> terrain_;///< The terrain this tile has. also contains resources.
         std::shared_ptr<buildings::Building> current_building_;///< the building this tile might have.
         std::shared_ptr<units::Unit> current_unit_;///< the unit this tile might have.

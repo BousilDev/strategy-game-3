@@ -54,7 +54,9 @@ Map::Map(unsigned int map_width, unsigned int map_length)
  : map_lenght_(map_length), map_width_(map_width ){
     size_t n = map_width * map_length;
     for (size_t i = 0; i < n; i++) {
-        tiles_.push_back(std::make_shared<Tile>());
+        std::shared_ptr<Tile> tile = std::make_shared<Tile>();
+        tile->set_tile_number(i);
+        tiles_.push_back(tile);
     }
     assign_neighbours(map_width, map_length, tiles_);
     generate_map();
