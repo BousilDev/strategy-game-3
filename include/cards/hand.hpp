@@ -78,14 +78,14 @@ public:
    * @param i The index of the card in the hand.
    * @return The card at the index.
    */
-  const Card& GetCard(int i) const;
+  const std::shared_ptr<Card>& GetCard(int i) const;
 
   /**
    * @brief Get the cards contained in the hand.
    * 
    * @return The cards in a list.
    */
-  const std::list<Card>& GetCards() const;
+  const std::list<std::shared_ptr<Card>>& GetCards() const;
 
   /**
    * @brief Plays the card at index i in the hand on the target if possible. Throws std::out_of_range 
@@ -112,14 +112,14 @@ public:
    * @param i The index of the card to be removed.
    * @return The discarded card.
    */
-  Card DiscardCard(int i);
+  std::shared_ptr<Card> DiscardCard(int i);
 
   /**
    * @brief Removes all cards from the hand so that the contents_ of the hand becomes empty.
    * 
    * @return List containing the cards discarded.
    */
-  std::list<Card> DiscardHand();
+  std::list<std::shared_ptr<Card>> DiscardHand();
 
   /**
    * @brief Get the Card in the hand at index i. Throws std::out_of_range if the index is out of bounds.
@@ -127,11 +127,11 @@ public:
    * @param i The index of the card.
    * @return The card at index i in the hand.
    */
-  Card& operator[](int i);
+  std::shared_ptr<Card>& operator[](int i);
 
 private:
   unsigned int size_; ///< The size of the hand.
-  std::list<Card> contents_; ///< The cards in the hand.
+  std::list<std::shared_ptr<Card>> contents_; ///< The cards in the hand.
 };
   
 } // namespace cards

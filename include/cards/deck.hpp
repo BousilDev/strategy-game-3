@@ -6,6 +6,7 @@
  */
 
 #include <list>
+#include <memory>
 
 #include "cards/hand.hpp"
 
@@ -28,7 +29,7 @@ public:
    * @param cards The cards initially in the deck. They start in the draw pile in pseudo-random order.
    * @param hand_size The initial hand size of the deck.
    */
-  Deck(std::list<Card> cards, unsigned int hand_size);
+  Deck(const std::list<std::shared_ptr<Card>>& cards, unsigned int hand_size);
 
   /**
    * @brief Default deck constructor for testing purposes.
@@ -47,14 +48,14 @@ public:
    * 
    * @return A list of cards in the draw pile.
    */
-  const std::list<Card>& GetDraw() const;
+  const std::list<std::shared_ptr<Card>>& GetDraw() const;
 
   /**
    * @brief Get the discard pile of the deck.
    * 
    * @return A list of cards in the discard pile.
    */
-  const std::list<Card>& GetDiscard() const;
+  const std::list<std::shared_ptr<Card>>& GetDiscard() const;
 
   /**
    * @brief Returns a pseudo-randomly picked card from the entire deck.
@@ -64,7 +65,7 @@ public:
    * 
    * @return A random card from the deck.
    */
-  Card GetRandomCard() const;
+  std::shared_ptr<Card>& GetRandomCard() const;
 
   /**
    * @brief Draws a card from the draw pile of the deck into the hand. 
@@ -110,7 +111,7 @@ public:
    * 
    * @param card The card to add.
    */
-  void AddCard(const Card& card);
+  void AddCard(const std::shared_ptr<Card>& card);
 
   /**
    * @brief Removes the given card from the deck. If the card is not in the draw pile, discard pile, or
@@ -118,12 +119,12 @@ public:
    * 
    * @param card The card to remove from the hand.
    */
-  void RemoveCard(const Card& card);
+  void RemoveCard(const std::shared_ptr<Card>& card);
 
 private:
   Hand hand_; ///< The hand of the deck
-  std::list<Card> draw_; ///< The draw pile of the deck.
-  std::list<Card> discard_; ///< The discard pile of the deck.
+  std::list<std::shared_ptr<Card>> draw_; ///< The draw pile of the deck.
+  std::list<std::shared_ptr<Card>> discard_; ///< The discard pile of the deck.
 };
   
 } // namespace cards
