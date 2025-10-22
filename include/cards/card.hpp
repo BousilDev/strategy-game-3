@@ -38,7 +38,7 @@ public:
    * 
    * @return The name of the card.
    */
-  std::string GetName();
+  const std::string& GetName() const;
 
   /**
    * @brief Get the description of the card.
@@ -47,19 +47,20 @@ public:
    * 
    * @return The description of the card.
    */
-  std::string GetDescription();
+  const std::string& GetDescription() const;
 
   /**
-   * @brief Play the card.
+   * @brief Play the card if the target allows the card to be played on it.
    * 
-   * This is implemented in the subclasses.
+   * This is implemented in the subclasses. 
    * 
    * @param target The tile the card is played on.
+   * @return true If the card was played and false otherwise. 
    */
-  virtual void Play(world::Tile& target) {}
+  virtual bool Play(world::Tile& target) {}
 private:
-  std::string name_;
-  std::string description_;
+  std::string name_; ///< The name of the card.
+  std::string description_; ///< The description of the card.
 };
 
 class BuildingCard : public Card {
@@ -75,13 +76,14 @@ public:
     : Card(name, description), building_(building) {}
 
   /**
-   * @brief Plays the card on the tile by constructing the building of the card.
+   * @brief Plays the card on the tile by constructing a copy of the building of the card if possible.
    * 
    * @param target The tile the card is played on and thus where its building is constructed.
+   * @return true If the building was successfully constructed on the target tile, false otherwise.
    */
-  virtual void Play(world::Tile& target);
+  virtual bool Play(world::Tile& target);
 private:
-  buildings::Building building_;
+  buildings::Building building_; ///< The building the card constructs a copy of.
 };
 
 class UnitCard : public Card {
@@ -97,13 +99,14 @@ public:
     : Card(name, description), unit_(unit) {}
 
   /**
-   * @brief Plays the card on the tile by deploying the unit of the card.
+   * @brief Plays the card on the tile by deploying a copy of the unit of the card.
    * 
    * @param target The tile the card is played on and thus where its unit is deployed.
+   * @return true If the unit was successfully deployed on the target tile, false otherwise.
    */
-  virtual void Play(world::Tile& target);
+  virtual bool Play(world::Tile& target);
 private:
-  units::Unit unit_;
+  units::Unit unit_; ///< The unit the card deploys a copy of.
 };
 
 class EffectCard : public Card {
@@ -119,13 +122,14 @@ public:
     : Card(name, description), effect_(effect) {}
 
   /**
-   * @brief Plays the card on the tile by placing the effect on the tile.
+   * @brief Plays the card on the tile by placing a copy of the effect on the tile.
    * 
    * @param target The tile the card is played on and thus where the effect is placed.
+   * @return true If the effect was successfully applied on the target tile, false otherwise.
    */
-  virtual void Play(world::Tile& target);
+  virtual bool Play(world::Tile& target);
 private:
-  effects::Effect effect_;
+  effects::Effect effect_; ///< The effect the card places a copy of.
 };
   
 } // namespace cards
