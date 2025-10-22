@@ -49,7 +49,7 @@ public:
    * 
    * @return A copy of the card.
    */
-  virtual std::unique_ptr<Card> Clone() const = 0;
+  virtual std::shared_ptr<Card> Clone() const = 0;
 
   /**
    * @brief Get the name of the card.
@@ -98,14 +98,23 @@ public:
    * @param description The description of the card.
    * @param building The building the card constructs when played.
    */
-  BuildingCard(std::string name, std::string description, const buildings::Building& building);
+  BuildingCard(std::string name, std::string description, const std::shared_ptr<buildings::Building> building);
+
+  /**
+   * @brief Copy constructor for the BuildingCard.
+   * 
+   * @param other Other BuildingCard
+   */
+  BuildingCard(const BuildingCard& other)
+  : Card(other),
+    building_(other.building_ ? other.building_->Clone() : nullptr) {}
 
   /**
    * @brief Clone the card.
    * 
    * @return A copy of the card.
    */
-  std::unique_ptr<Card> Clone() const override { return std::make_unique<BuildingCard>(*this); }
+  std::shared_ptr<Card> Clone() const override { return std::make_shared<BuildingCard>(*this); }
 
   /**
    * @brief Get the type of the card (kBuilding).
@@ -123,16 +132,7 @@ public:
   bool Play(world::Tile& target) const override;
 
 private:
-  std::unique_ptr<buildings::Building> building_; ///< The building the card constructs a copy of.
-
-  /**
-   * @brief Copy constructor for the BuildingCard.
-   * 
-   * @param other Other BuildingCard
-   */
-  BuildingCard(const BuildingCard& other)
-  : Card(other),
-    building_(other.building_ ? other.building_->Clone() : nullptr) {}
+  std::shared_ptr<buildings::Building> building_; ///< The building the card constructs a copy of.
 };
 
 class UnitCard : public Card {
@@ -144,14 +144,23 @@ public:
    * @param description The description of the card.
    * @param unit The unit the card deploys when played.
    */
-  UnitCard(std::string name, std::string description, const units::Unit& unit);
+  UnitCard(std::string name, std::string description, const std::shared_ptr<units::Unit> unit);
+
+  /**
+   * @brief Copy constructor for the UnitCard.
+   * 
+   * @param other Other UnitCard
+   */
+  UnitCard(const UnitCard& other)
+  : Card(other),
+    unit_(other.unit_ ? other.unit_->Clone() : nullptr) {}
 
   /**
    * @brief Clone the card.
    * 
    * @return A copy of the card.
    */
-  std::unique_ptr<Card> Clone() const override { return std::make_unique<UnitCard>(*this); }
+  std::shared_ptr<Card> Clone() const override { return std::make_shared<UnitCard>(*this); }
 
   /**
    * @brief Get the type of the card (kUnit).
@@ -169,16 +178,7 @@ public:
   bool Play(world::Tile& target) const override;
 
 private:
-  std::unique_ptr<units::Unit> unit_; ///< The unit the card deploys a copy of.
-
-  /**
-   * @brief Copy constructor for the UnitCard.
-   * 
-   * @param other Other UnitCard
-   */
-  UnitCard(const UnitCard& other)
-  : Card(other),
-    unit_(other.unit_ ? other.unit_->Clone() : nullptr) {}
+  std::shared_ptr<units::Unit> unit_; ///< The unit the card deploys a copy of.
 };
 
 class EffectCard : public Card {
@@ -190,14 +190,23 @@ public:
    * @param description The description of the card.
    * @param effect The effect the card causes when played.
    */
-  EffectCard(std::string name, std::string description, const effects::Effect& effect);
+  EffectCard(std::string name, std::string description, const std::shared_ptr<effects::Effect> effect);
+
+  /**
+   * @brief Copy constructor for the EffectCard.
+   * 
+   * @param other Other EffectCard
+   */
+  EffectCard(const EffectCard& other)
+  : Card(other),
+    effect_(other.effect_ ? other.effect_->Clone() : nullptr) {}
 
   /**
    * @brief Clone the card.
    * 
    * @return A copy of the card.
    */
-  std::unique_ptr<Card> Clone() const override { return std::make_unique<EffectCard>(*this); }
+  std::shared_ptr<Card> Clone() const override { return std::make_shared<EffectCard>(*this); }
 
   /**
    * @brief Get the type of the card (kEffect).
@@ -215,16 +224,7 @@ public:
   bool Play(world::Tile& target) const override;
 
 private:
-  std::unique_ptr<effects::Effect> effect_; ///< The effect the card places a copy of.
-
-  /**
-   * @brief Copy constructor for the EffectCard.
-   * 
-   * @param other Other EffectCard
-   */
-  EffectCard(const EffectCard& other)
-  : Card(other),
-    effect_(other.effect_ ? other.effect_->Clone() : nullptr) {}
+  std::shared_ptr<effects::Effect> effect_; ///< The effect the card places a copy of.
 };
   
 } // namespace cards

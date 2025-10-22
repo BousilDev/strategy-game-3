@@ -18,7 +18,7 @@ enum BuildingType {
   
 class Building {
   public:
-    Building(BuildingType type) : type_(type) {};
+    Building();
 
     virtual ~Building() = default;
     
@@ -29,10 +29,14 @@ class Building {
      * 
      * @return The type of the building.
      */
-    BuildingType GetType() const { return type_; };
+    virtual BuildingType GetType() const = 0;
+};
 
-  private:
-    BuildingType type_;
+class CapitalBuilding : public Building {
+public:
+  std::unique_ptr<Building> Clone() override;
+
+  BuildingType GetType() const override; 
 };
   
 } // namespace buildings
