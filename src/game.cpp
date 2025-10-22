@@ -14,6 +14,10 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
     is_initialized_ = true;
     if (debug_) {
         std::cout << "Initialized game with " << nof_players_ << " players and map size " << map_size << "x" << map_size << std::endl;
+        auto center_tile = map_.get_tile(12); // some tile in your map
+        map_.flood_tile_neighbours_test(center_tile);
+        map_.print_map();
+        auto spawns = map_.get_n_spawn(20);
     }
 }
 

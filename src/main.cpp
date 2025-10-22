@@ -1,6 +1,7 @@
 #include <iostream>
 #include "core/game.hpp"
 #include <assert.h>
+#include <iostream>
 
 // the main function
 int main(){
