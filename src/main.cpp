@@ -8,29 +8,28 @@
 #include "ui/selection.hpp"
 #include "ui/center_origin.hpp"
 
-
 // the main function
 int main(){
     
-    // Graphics init 
-
-    sf::RenderWindow window(sf::VideoMode(800,600), "StrategyGame");
+    // Graphics init
+    sf::RenderWindow window(sf::VideoMode(constants::kInitWindowWidth, constants::kInitWindowHeight), "StrategyGame");
     sf::View view = window.getDefaultView();
     sf::Vector2f view_size = view.getSize();
 
+    // initialize sprite for background image
     sf::Texture texture;
     if (!texture.loadFromFile("../texture/background.jpg")){
         return EXIT_FAILURE;
     }
     sf::Sprite sprite(texture);
 
-    // Using shared ptr for font
+    // Initialize font with shared_ptr
     auto font = std::make_shared<sf::Font>();
     if (!font->loadFromFile("../texture/times.ttf")){
         return EXIT_FAILURE;
     }
-
     
+    // Initialize texts and set their position in the main menu
     sf::Text name("Placeholder", *font, 50);
     name.setPosition(view_size.x*0.1, view_size.y*0.1);
 
@@ -40,31 +39,26 @@ int main(){
     sf::Text options("Options", *font, 35);
     play.setPosition(sf::Vector2f(view_size.x*0.1, view_size.y*0.2));
 
-    // Initialize options selection
-    std::vector<std::pair<sf::Text, int>> playerCountOptions;
-    playerCountOptions.emplace_back(sf::Text("One player", *font, 35), 1);
-    playerCountOptions.emplace_back(sf::Text("Two players", *font, 35), 2);
-    playerCountOptions.emplace_back(sf::Text("Three players", *font, 35), 3);
-    playerCountOptions.emplace_back(sf::Text("Four players", *font, 35), 4);
-    ui::Selection playerCountSelection(playerCountOptions, sf::Vector2f(200,225));
+    // Initialize option selectors for the main menu
+    std::vector<std::pair<std::string, int>> playerCountTexts {
+        std::pair("Two players", 2), std::pair("Three players", 3), std::pair("Four players", 4) };
+    ui::Selection playerCountSelection(playerCountTexts, font, 35, sf::Vector2f(view_size.x*0.25, view_size.y*0.35));
 
-    std::vector<std::pair<sf::Text, int>> mapSizeOptions;
-    mapSizeOptions.emplace_back(sf::Text("Small map", *font, 35), 3);
-    mapSizeOptions.emplace_back(sf::Text("Normal map", *font, 35), 5);
-    mapSizeOptions.emplace_back(sf::Text("Large Map", *font, 35), 7);
-    ui::Selection mapSelection(mapSizeOptions, sf::Vector2f(200,275));
+    std::vector<std::pair<std::string, int>> mapSizeTexts {
+        std::pair("Small map", 3), std::pair("Normal map", 5), std::pair("Large map", 7) };
+    ui::Selection mapSelection(mapSizeTexts, font, 35, sf::Vector2f(view_size.x*0.25, view_size.y*0.45));
 
-    std::vector<std::pair<sf::Text, int>> deckOptions;
-    deckOptions.emplace_back(sf::Text("Deck 1", *font, 35),1);
-    deckOptions.emplace_back(sf::Text("Deck 2", *font, 35),2);
-    deckOptions.emplace_back(sf::Text("Deck 3", *font, 35),3);
-    ui::Selection deckSelection(deckOptions, sf::Vector2f(200,325));
+    std::vector<std::pair<std::string, int>> deckTexts {
+        std::pair("Deck 1", 1), std::pair("Deck 2", 2), std::pair("Deck 3", 3) };
+    ui::Selection deckSelection(deckTexts, font, 35, sf::Vector2f(view_size.x*0.25, view_size.y*0.55));
+
 
     // Main menu graphics loop
     while (window.isOpen()) {
         
         sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
+        // Handle events
         sf::Event event;
         while (window.pollEvent(event)) {
             
@@ -121,6 +115,7 @@ int main(){
             }
         }
 
+        // Make play button slightly larger if mouse is hovering on it
         if(play.getGlobalBounds().contains(mousePos)) {
             play.setScale(1.1,1.1);
         } else {
@@ -131,8 +126,10 @@ int main(){
         mapSelection.UpdateHovered(window);
         deckSelection.UpdateHovered(window); 
 
+        // Clear the screen
         window.clear();
 
+        // Draw the sprites and selectors
         window.draw(sprite);
         playerCountSelection.DrawTo(window);
         mapSelection.DrawTo(window);
@@ -140,6 +137,7 @@ int main(){
         window.draw(name);
         window.draw(play);
 
+        // Update the window
         window.display();
     }
 

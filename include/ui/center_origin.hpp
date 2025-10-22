@@ -2,7 +2,7 @@
 
 /**
  * @file center_origin.hpp
- * @brief TODO: Declares the centerOrigin template function which ???
+ * @brief Declares the centerOrigin template function which sets the local origin to the center of the shape
  */
 
 #include <SFML/Graphics.hpp>
