@@ -214,3 +214,40 @@ The project contains basic header files and some game logic functionalities.
 2. Add the rest of the header files
 3. Implement game option selection to SFML main menu
 4. Finish the initial Map class
+
+
+# Meeting 22.10.2021 16::00 - 16::40 @On site
+Sprint 1, "daily meeting" 2
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+1. Main menu with interactivity (Aleksi & Topi)
+2. Header files quite ready (Konsta)
+3. Game class testing isolated to its own file and better testing output formatting (Oliver)
+4. Map functional (Atte)
+
+## Challenges
+
+No notable
+
+## Actions
+
+1. Agreed on saving/loading strategies
+2. Discussed interactive UI
+
+## Project status
+
+All sprint 1 backlog items seem to be on schedule.
+Basic classes have their initial implementations and a main menu using SFML works.
+
+### TODOs
+
+1. Merge all changes before sprint review
