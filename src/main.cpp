@@ -19,14 +19,14 @@ int main(){
 
     // initialize sprite for background image
     sf::Texture texture;
-    if (!texture.loadFromFile("../texture/background.jpg")){
+    if (!texture.loadFromFile("./texture/background.jpg")){
         return EXIT_FAILURE;
     }
     sf::Sprite sprite(texture);
 
     // Initialize font with shared_ptr
     auto font = std::make_shared<sf::Font>();
-    if (!font->loadFromFile("../texture/times.ttf")){
+    if (!font->loadFromFile("./texture/times.ttf")){
         return EXIT_FAILURE;
     }
     
