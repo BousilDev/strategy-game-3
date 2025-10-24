@@ -13,5 +13,6 @@ namespace core {
     std::cout << std::endl;
   }
   void TestGameInitializationAndTurns();
-
+  void DebugGameState(const Game& game);
+  void TestGameSaveAndLoad();
 }

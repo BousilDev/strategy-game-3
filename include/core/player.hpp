@@ -46,7 +46,11 @@ public:
    * @param deck The starting deck of the player.
    */
   Player(const std::string& name, cards::Deck deck) :
-    name_(name), deck_(deck), resources_({}), buildings_({}), units_({}) {};
+    name_(name), 
+    deck_(deck), 
+    resources_({Resource(ResourceType::kGold, 0), Resource(ResourceType::kWood, 0), Resource(ResourceType::kMetal, 0), Resource(ResourceType::kFood, 0)}), 
+    buildings_({}), 
+    units_({}) {};
 
   /**
    * @brief Get the name of the player.
@@ -192,6 +196,10 @@ public:
    * @param target The target tile to use the unit on.
    */
   void UseUnit(std::shared_ptr<units::Unit> unit, world::Tile& target); 
+
+  friend std::ostream& operator<<(std::ostream &out, const Player& other);
+
+  friend std::istream& operator>>(std::istream &in, Player& other);
 
 private:
   const std::string name_; ///< The name of the player.
