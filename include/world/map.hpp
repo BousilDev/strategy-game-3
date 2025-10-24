@@ -5,7 +5,7 @@
 #include "world/tile.hpp"
 #include "world/terrain.hpp"
 /**
- * @file Map.hpp
+ * @file map.hpp
  * @brief Declares the Map class which manages and stores the state of the game world.
  */
 

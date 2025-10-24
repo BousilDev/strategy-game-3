@@ -10,7 +10,7 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
     for (const auto& player : players) {
         players_.push_back(std::make_unique<Player>(Player(player.name, player.deck)));
         // Add a capital building to each player
-        players_.back()->AddBuilding(std::make_shared<buildings::Building>(buildings::BuildingType::kCapital));
+        players_.back()->AddBuilding(std::make_shared<buildings::CapitalBuilding>());
     }
     nof_players_ = players_.size();
     is_initialized_ = true;

@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @file Resource.hpp
+ * @file resource.hpp
  * @brief Defines the Resource type representing game materials or currencies.
  */
 

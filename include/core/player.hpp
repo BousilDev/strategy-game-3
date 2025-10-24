@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @file Player.hpp
+ * @file player.hpp
  * @brief Declares the Player class which manages the actions performed by a single player.
  */
 
@@ -31,9 +31,9 @@ namespace core {
  * Example usage:
  * @code
  * core::Player p1 = Player("p1", some_deck);
- * p1.drawHand();
- * cards::Hand hand = p1.getHand();
- * p1.playCard(hand[0]);
+ * p1.DrawHand();
+ * cards::Hand hand = p1.GetHand();
+ * p1.PlayCard(hand[0]);
  * @endcode
  */
 class Player {
@@ -108,7 +108,7 @@ public:
   void AddBuilding(std::shared_ptr<buildings::Building> building);
 
   /**
-   * @brief Removes the given building from the buildings owned by the player if owned.
+   * @brief Removes the given building from the buildings owned by the player.
    * 
    * @param building The building to be removed.
    */
@@ -147,7 +147,7 @@ public:
    * 
    * This is used at the start of the turn to get a new set of cards for the turn.
    */
-  void DrawHand() { deck_.drawHand(); };
+  void DrawHand() { deck_.DrawHand(); };
 
   /**
    * @brief Checks if the player is alive or not i.e. if the capital building of the player
