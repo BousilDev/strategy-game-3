@@ -105,9 +105,9 @@ public:
    * 
    * @param other Other BuildingCard
    */
-  BuildingCard(const BuildingCard& other)
-  : Card(other),
-    building_(other.building_ ? other.building_->Clone() : nullptr) {}
+  BuildingCard(const BuildingCard& other);
+  // : Card(other),
+  //   building_(other.building_ ? other.building_->Clone() : nullptr) {}
 
   /**
    * @brief Clone the card.
@@ -151,9 +151,9 @@ public:
    * 
    * @param other Other UnitCard
    */
-  UnitCard(const UnitCard& other)
-  : Card(other),
-    unit_(other.unit_ ? other.unit_->Clone() : nullptr) {}
+  UnitCard(const UnitCard& other);
+  // : Card(other),
+  //   unit_(other.unit_ ? other.unit_->Clone() : nullptr) {}
 
   /**
    * @brief Clone the card.
@@ -197,9 +197,9 @@ public:
    * 
    * @param other Other EffectCard
    */
-  EffectCard(const EffectCard& other)
-  : Card(other),
-    effect_(other.effect_ ? other.effect_->Clone() : nullptr) {}
+  EffectCard(const EffectCard& other);
+  // : Card(other),
+  //   effect_(other.effect_ ? other.effect_->Clone() : nullptr) {}
 
   /**
    * @brief Clone the card.

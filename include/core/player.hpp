@@ -108,7 +108,7 @@ public:
   void AddBuilding(std::shared_ptr<buildings::Building> building);
 
   /**
-   * @brief Removes the given building from the buildings owned by the player if owned.
+   * @brief Removes the given building from the buildings owned by the player.
    * 
    * @param building The building to be removed.
    */

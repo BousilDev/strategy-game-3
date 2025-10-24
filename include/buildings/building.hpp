@@ -17,26 +17,28 @@ enum BuildingType {
 };
   
 class Building {
-  public:
-    Building();
+public:
+  Building() {}
 
-    virtual ~Building() = default;
-    
-    virtual std::unique_ptr<Building> Clone() = 0;
+  virtual ~Building() = default;
+  
+  // virtual std::unique_ptr<Building> Clone() = 0;
 
-    /**
-     * @brief Get the type of the building.
-     * 
-     * @return The type of the building.
-     */
-    virtual BuildingType GetType() const = 0;
+  /**
+   * @brief Get the type of the building.
+   * 
+   * @return The type of the building.
+   */
+  virtual BuildingType GetType() const = 0;
 };
 
 class CapitalBuilding : public Building {
 public:
-  std::unique_ptr<Building> Clone() override;
+  CapitalBuilding() : Building() {}
 
-  BuildingType GetType() const override; 
+  // std::unique_ptr<Building> Clone() override;
+
+  BuildingType GetType() const override { return kCapital; } 
 };
   
 } // namespace buildings
