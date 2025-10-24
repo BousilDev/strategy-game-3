@@ -216,7 +216,7 @@ The project contains basic header files and some game logic functionalities.
 4. Finish the initial Map class
 
 
-# Meeting 22.10.2021 16::00 - 16::40 @On site
+# Meeting 22.10.2025 16::00 - 16::40 @On site
 Sprint 1, "daily meeting" 2
 
 **Participants**:
@@ -251,3 +251,41 @@ Basic classes have their initial implementations and a main menu using SFML work
 ### TODOs
 
 1. Merge all changes before sprint review
+
+
+# Meeting 23.10.2025 16::00 - 17::00 @On site
+Sprint 1, review
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+6. Rami Ghoniem (TA)
+
+## Summary of works
+
+Merged all Sprint 1 branches, modified CMake configuration to include SFML
+
+## Challenges
+
+Valgrind problems with SFML
+
+## Actions
+
+1. Reviewed Sprint 1 with TA
+2. Discussed the next sprint briefly
+3. Added first Sprint 2 items to issue board
+4. Next daily meeting scheduled, 29.10 at 12.00 on site
+5. Next sprint review scheduled, 6.11 at 16.00 on site
+
+## Project status
+
+Project advancing according to schedule. Main menu, header files, basic game and map logics implemented.
+
+### TODOs
+
+1. Add rest Sprint 2 items to issue board
+2. Test whether new CMake configuration with SFML works
