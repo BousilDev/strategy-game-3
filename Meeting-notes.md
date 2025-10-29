@@ -289,3 +289,38 @@ Project advancing according to schedule. Main menu, header files, basic game and
 
 1. Add rest Sprint 2 items to issue board
 2. Test whether new CMake configuration with SFML works
+
+
+# Meeting 29.10.2025 12::00 - 13::00 @On site
+Sprint 2, sprint planning
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+Game saving and loading works for pretty well for the current state of the project.
+
+## Challenges
+
+Current CMake configuration (including SFML) doesn't work in all environments
+
+## Actions
+
+1. Scheduled next meeting, 4.11 Tuesday at 12.00
+2. Tried to fix the CMake issue
+3. Added Sprint 2 backlog items to issue board and assigned tasks to developers
+
+## Project status
+
+Apart from the CMake issues everything is looking fine. Sprint 2 items have been set to issue board and assigned to developers. 
+
+### TODOs
+
+1. Fix CMake configuration and verify the fix as soon as possible
+2. Start implementing Sprint 2 items
