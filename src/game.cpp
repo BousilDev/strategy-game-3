@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <ctime>
 
 void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int map_size) {
     // Create map with given size
@@ -24,8 +25,9 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
 }
 
 void core::Game::Save(std::ostream& file) const{
-    // TODO
-    // file << time;
+    time_t timestamp = time(nullptr);
+    file << timestamp << "\n";
+
     file << is_initialized_  << "\n";
     file << nof_players_ << "\n";
     for (const auto& player : players_) {
@@ -41,48 +43,35 @@ void core::Game::Save(std::ostream& file) const{
 }
 
 void core::Game::Load(std::istream& file){
-    // TODO
-    //std::string time;
-    //std::getline(file, time);
-    std::string is_initialized_str;
-    std::getline(file, is_initialized_str);
-    is_initialized_ = (is_initialized_str == "1");
+    // Loads timestamp
+    std::time_t timestamp = static_cast<std::time_t>(GetIntFromLine(file));
+    std::string timeStr = asctime(std::localtime(&timestamp));
+    timeStr.pop_back(); // Remove newline for consistent debug output
+    debug_ ? core::PrintTestMsg("Loading game saved at: ", timeStr) : void();
 
-    std::string nof_players_str;
-    std::getline(file, nof_players_str);
-    nof_players_ = std::stoul(nof_players_str);
+    is_initialized_ = (GetStringFromLine(file) == "1");
+    nof_players_ = GetIntFromLine(file);
 
     // Load players
     players_.clear();
     for (unsigned int i = 0; i < nof_players_; ++i) {
-        std::string player_name_str;
-        std::getline(file, player_name_str);
-        Player player(player_name_str, cards::Deck());
+        Player player(GetStringFromLine(file), cards::Deck());
         file >> player;
         players_.push_back(std::make_unique<Player>(std::move(player)));
     }
 
-    std::string dead_players_size_str;
-    std::getline(file, dead_players_size_str);
-    size_t dead_players_size = std::stoul(dead_players_size_str);
+    size_t dead_players_size = GetIntFromLine(file);
 
     // Load dead players
     dead_players_.clear();
     for (unsigned int i = 0; i < dead_players_size; ++i) {
-        std::string player_name_str;
-        std::getline(file, player_name_str);
-        Player player(player_name_str, cards::Deck());
+        Player player(GetStringFromLine(file), cards::Deck());
         file >> player;
         dead_players_.push_back(std::make_unique<Player>(std::move(player)));
     }
 
-    std::string current_turn_str;
-    std::getline(file, current_turn_str);
-    current_turn_ = std::stoul(current_turn_str);
-
-    std::string turn_str;
-    std::getline(file, turn_str);
-    turn_ = std::stoul(turn_str);
+    current_turn_ = GetIntFromLine(file);
+    turn_ = GetIntFromLine(file);
 
     // After map has been loaded, use players to add the building to the map
     debug_ ? core::PrintTestMsg("Loaded game with ", nof_players_, " players.") : void();

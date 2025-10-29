@@ -18,6 +18,7 @@
 #include "core/resource.hpp"
 #include "units/unit.hpp"
 #include "world/tile.hpp"
+#include "core/utils.hpp"
 
 namespace core {
 

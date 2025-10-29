@@ -102,6 +102,8 @@ void core::TestGameSaveAndLoad() {
             assert(originalResources[j].type == loadedResources[j].type);
             assert(originalResources[j].amount == loadedResources[j].amount);
         }
+        //game.NextTurn();
+        //loadedGame.NextTurn();
     }
     constants::debug ? DebugGameState(loadedGame) : void();
     std::cout << "Game Save and Load tests completed successfully." << std::endl;
