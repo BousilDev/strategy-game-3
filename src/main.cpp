@@ -24,14 +24,14 @@ int main(){
 
     // initialize sprite for background image
     sf::Texture texture;
-    if (!texture.loadFromFile("../texture/background.jpg")){
+    if (!texture.loadFromFile("./texture/background.jpg")){
         return EXIT_FAILURE;
     }
     sf::Sprite sprite(texture);
 
     // Initialize font with shared_ptr
     auto font = std::make_shared<sf::Font>();
-    if (!font->loadFromFile("../texture/times.ttf")){
+    if (!font->loadFromFile("./texture/times.ttf")){
         return EXIT_FAILURE;
     }
     
@@ -95,7 +95,7 @@ int main(){
                 event.mouseButton.button == sf::Mouse::Left) {
                 if(play.getGlobalBounds().contains(mousePos)) {
                     
-                    start = true;
+                    // start = true;
 
                     unsigned int map_size = mapSelection.GetSelectedOption();
                     unsigned int player_count = playerCountSelection.GetSelectedOption();
@@ -112,11 +112,22 @@ int main(){
 
                     // Initializing through main menu testing
                     game.Initialize(players, map_size);
-                    MapRenderer map(game.GetMap(), 50);
+                    MapRenderer map(game.GetMap(), window);
                     while (true) {
                         window.clear();
-                        map.DrawTo(window);
+                        map.DrawTo();
                         window.display();
+
+                        if (event.type == sf::Event::Closed)
+                            window.close();
+
+                        if (event.type == sf::Event::Resized) {
+                            view.setSize(sf::Vector2f(event.size.width, event.size.height));
+                            window.setView(view);
+                        }
+
+
+
                     }
                     
 
@@ -161,7 +172,7 @@ int main(){
         window.draw(play);
 
         } else if (start) { 
-
+            
         }
 
 

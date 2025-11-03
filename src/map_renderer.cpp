@@ -4,31 +4,40 @@
 
 // #define HEX_ROTATION 0.f
 
-MapRenderer::MapRenderer(world::Map map,
-    float tile_size) : map_(map), tile_size_(tile_size) {
+MapRenderer::MapRenderer(world::Map map, sf::RenderWindow& window,
+    float tile_size) : map_(map), tile_size_(tile_size), window_(window) {
 
     const size_t width = map_.get_map_width();
-    //const size_t height = map_.get_map_height();
+    const size_t height = map_.get_map_height();
     
     
     const auto & tile_data = map_.get_tiles();
 
     const float h  = std::sqrt(3.f) * tile_size_; // horizontal spacing
     const float v  = 1.5f * tile_size_;           // vertical spacing
+
+    float window_width  = window_.getSize().x;
+    float window_height = window_.getSize().y;
+
+// Centering offset
+    sf::Vector2f offset(
+        (window_width  - width)  / 2.f,
+        (window_height - height) / 2.f
+    );
     
     for (size_t i = 0; i < tile_data.size(); i++) {
         size_t row = i / width;
         size_t col = i % width;
         
-        sf::Vector2f pos = sf::Vector2f(col * h + ((row & 1) ? h * 0.5 : 0.0)+400,
-                                        row * v+400
+        sf::Vector2f pos = sf::Vector2f(col * h + ((row & 1) ? h * 0.5 : 0.0),
+                                        row * v
         );
         
 
         sf::CircleShape tile(tile_size_, 6);
         ui::centerOrigin(tile);
 //        tile.setRotation(HEX_ROTATION);
-        tile.setPosition(pos);
+        tile.setPosition(pos + offset);
 
 /*         float map_width_px = (width - 1) * h + h;
         float map_height_px = ((tile_data.size() / width) - 1) * v + v; */
@@ -54,10 +63,12 @@ MapRenderer::MapRenderer(world::Map map,
             }
 }
 
-void MapRenderer::DrawTo(sf::RenderWindow& window)  {
+void MapRenderer::DrawTo()  {
     
+    // finish positioning according to window
+
     for (auto v :  tiles_) {
-        window.draw(v);
+        window_.draw(v);
     }
 };
 
