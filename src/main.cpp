@@ -8,6 +8,8 @@
 #include "core/tests.hpp"
 #include "ui/selection.hpp"
 #include "ui/center_origin.hpp"
+#include "ui/map_renderer.hpp"
+
 
 // the main function
 int main(){
@@ -17,16 +19,19 @@ int main(){
     sf::View view = window.getDefaultView();
     sf::Vector2f view_size = view.getSize();
 
+    // Game state
+    bool start = false;
+
     // initialize sprite for background image
     sf::Texture texture;
-    if (!texture.loadFromFile("./texture/background.jpg")){
+    if (!texture.loadFromFile("../texture/background.jpg")){
         return EXIT_FAILURE;
     }
     sf::Sprite sprite(texture);
 
     // Initialize font with shared_ptr
     auto font = std::make_shared<sf::Font>();
-    if (!font->loadFromFile("./texture/times.ttf")){
+    if (!font->loadFromFile("../texture/times.ttf")){
         return EXIT_FAILURE;
     }
     
@@ -54,6 +59,8 @@ int main(){
     ui::Selection deckSelection(deckTexts, font, 35, sf::Vector2f(view_size.x*0.25, view_size.y*0.55));
 
 
+    // MapRenderer map;
+
     // Main menu graphics loop
     while (window.isOpen()) {
         
@@ -61,6 +68,7 @@ int main(){
 
         // Handle events
         sf::Event event;
+
         while (window.pollEvent(event)) {
             
             if (event.type == sf::Event::Closed)
@@ -70,6 +78,10 @@ int main(){
                 view.setSize(sf::Vector2f(event.size.width, event.size.height));
                 window.setView(view);
             }
+
+
+            if (!start) {  
+
 
             if (event.type == sf::Event::MouseButtonReleased && 
                 event.mouseButton.button == sf::Mouse::Left) {
@@ -83,6 +95,8 @@ int main(){
                 event.mouseButton.button == sf::Mouse::Left) {
                 if(play.getGlobalBounds().contains(mousePos)) {
                     
+                    start = true;
+
                     unsigned int map_size = mapSelection.GetSelectedOption();
                     unsigned int player_count = playerCountSelection.GetSelectedOption();
                     std::vector<core::Game::PlayerInit> players;
@@ -98,7 +112,15 @@ int main(){
 
                     // Initializing through main menu testing
                     game.Initialize(players, map_size);
-                    assert(game.IsInitialized() && !game.IsOver());
+                    MapRenderer map(game.GetMap(), 50);
+                    while (true) {
+                        window.clear();
+                        map.DrawTo(window);
+                        window.display();
+                    }
+                    
+
+/*                     assert(game.IsInitialized() && !game.IsOver());
                     assert(game.GetCurrentPlayer().GetName() == "Player 1");
                     for (int i = 0; i < 5; i++) {
                         game.NextTurn();
@@ -112,9 +134,9 @@ int main(){
                     }
                     assert(game.IsOver());
                     return 0;  
+                 */
                 }
             }
-        }
 
         // Make play button slightly larger if mouse is hovering on it
         if(play.getGlobalBounds().contains(mousePos)) {
@@ -137,6 +159,14 @@ int main(){
         deckSelection.DrawTo(window); 
         window.draw(name);
         window.draw(play);
+
+        } else if (start) { 
+
+        }
+
+
+
+    }
 
         // Update the window
         window.display();

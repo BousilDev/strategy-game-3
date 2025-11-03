@@ -29,7 +29,9 @@ public:
    * 
    * @return The type of the building.
    */
-  virtual BuildingType GetType() const = 0;
+  virtual BuildingType GetType() const {
+    return kCapital;
+  }
 };
 
 class CapitalBuilding : public Building {
