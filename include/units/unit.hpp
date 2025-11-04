@@ -10,7 +10,9 @@ namespace units {
   
 class Unit {
 public:
-  virtual std::unique_ptr<Unit> Clone() = 0;
+  std::unique_ptr<Unit> Clone() {
+      return std::make_unique<Unit>(*this);
+  }
   
 private:
 

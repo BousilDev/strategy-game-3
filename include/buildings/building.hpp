@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 /**
  * @file building.hpp
  * @brief Declares the Building class which is owned by a player and located on the game 
@@ -20,7 +22,7 @@ class Building {
 public:
   Building() {}
 
-  virtual ~Building() = default;
+  ~Building() = default;
   
   // virtual std::unique_ptr<Building> Clone() = 0;
 
@@ -29,7 +31,19 @@ public:
    * 
    * @return The type of the building.
    */
-  virtual BuildingType GetType() const = 0;
+  BuildingType GetType() const { return BuildingType::kCapital; }
+
+  friend std::istream& operator>>(std::istream &in, std::shared_ptr<Building>& other) {
+      std::string typeStr;
+      std::getline(in, typeStr);
+      return in;
+  };
+
+  friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Building>& other) {
+      out << "Building";
+      return out;
+  };
+
 };
 
 class CapitalBuilding : public Building {
@@ -38,7 +52,12 @@ public:
 
   // std::unique_ptr<Building> Clone() override;
 
-  BuildingType GetType() const override { return kCapital; } 
+  BuildingType GetType() const { return kCapital; } 
+
+  friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<CapitalBuilding>& other) {
+      out << "CapitalBuilding";
+      return out;
+  };
 };
   
 } // namespace buildings
