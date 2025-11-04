@@ -7,6 +7,7 @@
  */
 #include <vector>
 #include <memory>
+#include <array>
 #include "terrain.hpp"
 #include "buildings/building.hpp"
 #include "units/unit.hpp"
