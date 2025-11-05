@@ -43,10 +43,6 @@ void ui::MainMenu::UpdateLMBReleased(const sf::RenderWindow& window) {
     for (auto& e : selections_) {
         e.UpdateState(window);
     }
-
-    //playerCountSelection.UpdateState(window);
-    //mapSelection.UpdateState(window);
-    //deckSelection.UpdateState(window);
 }
 
 void ui::MainMenu::UpdateHovered(const sf::RenderWindow& window, sf::Vector2f mousePos) {
@@ -54,7 +50,7 @@ void ui::MainMenu::UpdateHovered(const sf::RenderWindow& window, sf::Vector2f mo
         e.UpdateHovered(window);
     }
 
-    //TODO: implement this better
+    //FIXME: This doesnt work
     // Make play button slightly larger if mouse is hovering on it
     if(play_.getGlobalBounds().contains(mousePos)) {
         play_.setScale(1.1,1.1);
@@ -83,7 +79,6 @@ bool ui::MainMenu::IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mo
 
 // TODO: improve: currently returns vector with elements (playerCount, map, deck)
 // perhaps return a map?
-// FIXME: this causes a segmentation fault
 std::vector<int> ui::MainMenu::GetSelectedOptions() {
     std::vector<int> selected_options;
     for (auto e : selections_) {
