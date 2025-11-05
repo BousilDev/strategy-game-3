@@ -1,5 +1,5 @@
 # was 3.11.0, newest on ubuntu 24.04 is 3.28.3
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.22)
 project(cpp_game VERSION 0.1.0)
 
 enable_language(CXX)
