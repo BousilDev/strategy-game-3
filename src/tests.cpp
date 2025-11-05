@@ -3,6 +3,7 @@
 #include <iostream>
 #include <assert.h>
 #include <fstream>
+#include <filesystem>
 
 // Sends the file and line number to the AssertWithMessageFull function
 #define AssertWithMessage(condition, message) core::AssertWithMessageFull(condition, message, __FILE__, __LINE__)
@@ -53,6 +54,20 @@ void core::DebugGameState(const Game& game) {
     */
 }
 
+void TestFaultyFile(std::string filename) {
+    core::Game faultyGame;
+    std::ifstream faultyFile(filename);
+    if (faultyFile.is_open()) {
+        try {
+            faultyGame.Load(faultyFile);
+            AssertWithMessage(false, "Loading from a faulty file should fail: " + filename);
+        } catch (std::exception& e) {
+            core::PrintTestMsg("Correctly caught exception when loading faulty file '", filename, "': ", e.what());
+        }
+        faultyFile.close();
+    }
+}
+
 void core::TestGameSaveAndLoad() {
     std::cout << "Testing Game Save and Load..." << std::endl;
     unsigned int map_size = 5;
@@ -81,6 +96,18 @@ void core::TestGameSaveAndLoad() {
         std::cerr << "Failed to open file for saving." << std::endl;
         return;
     }
+    // Test loading with a faulty files
+    // Get files in tests/faultySaves/
+    try {
+        for (const auto& file : std::filesystem::directory_iterator(constants::faultySavesPath)) {
+            if (file.is_regular_file() && file.path().extension() == ".txt") {
+                TestFaultyFile(file.path().string());
+            }
+        }
+    } catch(const std::exception& e) {
+        AssertWithMessage(false, "Could not access faulty saves directory.");
+    }
+    
     // Load the game state into a new Game instance
     Game loadedGame;
     std::ifstream inFile("testSaveFile.txt");
@@ -102,7 +129,7 @@ void core::TestGameSaveAndLoad() {
         const core::Player& loadedPlayer = loadedGame.GetCurrentPlayer();
         const auto& originalResources = originalPlayer.GetResources();
         const auto& loadedResources = loadedPlayer.GetResources();
-        assert(originalResources.size() == loadedResources.size());
+        AssertWithMessage(originalResources.size() == loadedResources.size(), "Resource size for player " + std::to_string(i + 1) + " should match.");
         for (size_t j = 0; j < originalResources.size(); ++j) {
             AssertWithMessage(originalResources[j].type == loadedResources[j].type, "Resource types for player " + std::to_string(i + 1) + " should match.");
             AssertWithMessage(originalResources[j].amount == loadedResources[j].amount, "Resource amounts for player " + std::to_string(i + 1) + " should match.");

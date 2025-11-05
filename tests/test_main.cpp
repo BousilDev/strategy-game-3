@@ -15,17 +15,14 @@ struct test_result {
 
 struct test_suite {
     const std::string description;
-    test_result (*test)();
+    void (*test)();
 };
 
-test_result TestGame() {
-    try
-    {
-        core::TestGameInitializationAndTurns();
-        core::TestGameSaveAndLoad();
-    }
-    catch(const std::exception& e)
-    {
+template <typename Func>
+test_result ExecuteTest(Func test) {
+    try {
+        test();
+    } catch (const std::exception& e) {
         PrintTestFailure(e.what());
         return {e.what(), false};
     }
@@ -35,14 +32,15 @@ test_result TestGame() {
 int main() {
 
     test_suite tests[] = {
-        {"Testing Game Initialization and turns along with Save and Load", TestGame},
+        {"Testing Game Initialization and turns", core::TestGameInitializationAndTurns},
+        {"Testing Game Save and Load", core::TestGameSaveAndLoad}
     };
     unsigned int passed = 0;
     unsigned int total = 0;
     std::vector<test_result> results;
 
     for (auto test : tests) {
-        test_result result = test.test();
+        test_result result = ExecuteTest(test.test);
         results.push_back(result);
         if (result.passed) {
             passed++;   
