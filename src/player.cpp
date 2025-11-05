@@ -1,5 +1,6 @@
 #include "core/player.hpp"
 #include <iostream>
+#include <string>
 
 void core::Player::AddBuilding(std::shared_ptr<buildings::Building> building) {
     buildings_.push_back(building);
@@ -43,3 +44,59 @@ bool core::Player::IsAlive() const {
     }
     return false;
 }
+
+namespace core {
+std::ostream& operator<<(std::ostream &out, const core::Player& other) {
+    out << other.GetName() << "\n";
+    //out << other.GetDeck() << "\n";
+    
+    out << other.GetBuildings().size() << "\n";
+    for (const auto& building : other.GetBuildings()) {
+        out << building << "\n";
+    }
+    /*
+    out << other.GetUnits().size() << "\n";
+    for (const auto& unit : other.GetUnits()) {
+        out << unit << "\n";
+    }
+        */
+    out << other.GetResources().size() << "\n";
+    for (const auto& resource : other.GetResources()) {
+        //out << static_cast<int>(resource.type) << "\n";
+        out << resource.amount << "\n";
+    }
+    return out;
+}
+
+std::istream& operator>>(std::istream &in, core::Player& other) {
+    
+    // get deck here
+    size_t buildSize = GetIntFromLine(in);
+    while (buildSize--) {
+        std::shared_ptr<buildings::Building> building;
+        in >> building;
+        other.AddBuilding(building);
+    }
+
+    /*
+    size_t unitSize = GetIntFromLine(in);
+    while (unitSize--) {
+        std::shared_ptr<units::Unit> unit;
+        in >> unit;
+        other.AddUnit(unit);
+    }
+        */
+
+    size_t resSize = GetIntFromLine(in);
+    std::list<core::Resource> resources;
+    // VALIDATE
+    while (resSize--) {
+        core::ResourceType type = static_cast<core::ResourceType>(resources.size());
+        unsigned int amount = GetIntFromLine(in);
+        resources.push_back(core::Resource(type, amount));
+    }
+    other.AddResources(resources);
+    
+    return in;
+}
+} // namespace core

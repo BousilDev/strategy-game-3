@@ -12,7 +12,6 @@
 #include "core/player.hpp"
 #include "world/map.hpp"
 #include "cards/deck.hpp"
-#include "core/tests.hpp"
 
 namespace core {
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <assert.h>
 #include <string>
+#include <fstream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
@@ -12,6 +13,23 @@
 // the main function
 int main(){
     
+    /*
+    // Load game from save file
+    core::Game game;
+    std::ifstream inFile("saveFile.txt");
+    if (inFile.is_open()) {
+        game.Load(inFile);
+        inFile.close();
+        core::DebugGameState(game);
+    } else {
+        std::cout << "No save file found." << std::endl;
+    }
+    */
+
+    // Run tests
+    core::TestGameInitializationAndTurns();
+    core::TestGameSaveAndLoad();
+
     // Graphics init
     sf::RenderWindow window(sf::VideoMode(constants::kInitWindowWidth, constants::kInitWindowHeight), "StrategyGame");
     sf::View view = window.getDefaultView();
@@ -103,6 +121,14 @@ int main(){
                     for (int i = 0; i < 5; i++) {
                         game.NextTurn();
                         assert(game.GetCurrentTurn() == i + 1);
+                        // Add resources to the current player for testing
+                        game.GetCurrentPlayer().AddResources({core::Resource(core::ResourceType::kGold, 10 + 2 * i)});
+                    }
+                    // Save game state after initialization
+                    std::ofstream outFile("saveFile.txt");
+                    if (outFile.is_open()) {
+                        game.Save(outFile);
+                        outFile.close();
                     }
                     for (int i = 0; i < player_count - 1; i++) {
                         const std::shared_ptr<buildings::Building> capital = game.GetCurrentPlayer().GetBuildings().front();
@@ -141,8 +167,6 @@ int main(){
         // Update the window
         window.display();
     }
-
-    core::TestGameInitializationAndTurns();
 
     return 0;
 }

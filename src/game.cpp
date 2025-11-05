@@ -1,7 +1,11 @@
 #include "core/game.hpp"
+// Tests included here to avoid circular dependency issues in .hpp files
+// (Game needs PrintTestMsg, and Tests needs Game)
+#include "core/tests.hpp"
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <ctime>
 
 void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int map_size) {
     // Create map with given size
@@ -20,25 +24,57 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
     }
 }
 
-void core::Game::Save(std::ostream& out) const{
-    // TODO
-    std::ofstream file;
-    // file << time;
-    // file << is_initialized_;
-    // file << nof_players_;
+void core::Game::Save(std::ostream& file) const{
+    time_t timestamp = time(nullptr);
+    file << timestamp << "\n";
+
+    file << is_initialized_  << "\n";
+    file << nof_players_ << "\n";
     for (const auto& player : players_) {
-        // file << player;
+        file << *player;
     }
+    file << dead_players_.size() << "\n";
     for (const auto& player : dead_players_) {
-        // file << player;
+        file << *player;
     }
-    // file << current_turn_;
-    // file << turn_;
+    file << current_turn_ << "\n";
+    file << turn_ << "\n";
     // file << map_
 }
 
-void core::Game::Load(std::istream& in){
-    // TODO
+void core::Game::Load(std::istream& file){
+    // Loads timestamp
+    std::time_t timestamp = static_cast<std::time_t>(GetIntFromLine(file));
+    std::string timeStr = asctime(std::localtime(&timestamp));
+    timeStr.pop_back(); // Remove newline for consistent debug output
+    debug_ ? core::PrintTestMsg("Loading game saved at: ", timeStr) : void();
+
+    is_initialized_ = (GetStringFromLine(file) == "1");
+    nof_players_ = GetIntFromLine(file);
+
+    // Load players
+    players_.clear();
+    for (unsigned int i = 0; i < nof_players_; ++i) {
+        Player player(GetStringFromLine(file), cards::Deck());
+        file >> player;
+        players_.push_back(std::make_unique<Player>(std::move(player)));
+    }
+
+    size_t dead_players_size = GetIntFromLine(file);
+
+    // Load dead players
+    dead_players_.clear();
+    for (unsigned int i = 0; i < dead_players_size; ++i) {
+        Player player(GetStringFromLine(file), cards::Deck());
+        file >> player;
+        dead_players_.push_back(std::make_unique<Player>(std::move(player)));
+    }
+
+    current_turn_ = GetIntFromLine(file);
+    turn_ = GetIntFromLine(file);
+
+    // After map has been loaded, use players to add the building to the map
+    debug_ ? core::PrintTestMsg("Loaded game with ", nof_players_, " players.") : void();
 }
 
 bool core::Game::IsOver() {
