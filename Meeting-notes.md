@@ -324,3 +324,36 @@ Apart from the CMake issues everything is looking fine. Sprint 2 items have been
 
 1. Fix CMake configuration and verify the fix as soon as possible
 2. Start implementing Sprint 2 items
+
+
+# Meeting 4.11.2025 12::00 - 13::00 @On site
+Sprint 2, "daily" 1
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki (Remotely)
+
+## Summary of works
+
+Building class and its basic methods implemented further. UI shows the map correctly.
+
+## Challenges
+
+1. Problems with inconsistencies in building the project
+
+## Actions
+
+1. Fixed building issues, so that everyone's master branch now builds correctly.
+2. Agreed on the todos for the sprint review
+
+## Project status
+
+A working UI with the static map works along with the game saving and loading.
+
+### TODOs
+
+1. Merge all changes to master before sprint review at thursday
