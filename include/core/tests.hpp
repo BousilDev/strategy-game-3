@@ -12,6 +12,11 @@ namespace core {
     (std::cout << ... << args);
     std::cout << std::endl;
   }
+  inline void AssertWithMessageFull(bool condition, const std::string& message, const std::string& file, int line) {
+    if (!condition) {
+      throw std::runtime_error(message + " at " + file + ":" + std::to_string(line));
+    }
+  }
   void TestGameInitializationAndTurns();
   void DebugGameState(const Game& game);
   void TestGameSaveAndLoad();
