@@ -34,6 +34,11 @@ int ui::MainMenu::Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f 
     return 0;
 }   
 
+int ui::MainMenu::Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event) {
+    //if (event.type == )
+    return 0;
+}
+
 void ui::MainMenu::UpdateLMBReleased(const sf::RenderWindow& window) {
     for (auto& e : selections_) {
         e.UpdateState(window);

@@ -12,11 +12,14 @@
 namespace ui {
 
 
-//TODO: group update methods into one method
+//TODO: group update methods into one method maybe? (might not be needed)
 class MainMenu {
 public:
     // TODO: add numbers to indicate success etc
     int Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f view_size);
+
+    //TODO: group the update methods under this
+    int Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event);
 
     // Update the state of the elements that change when left mouse button is released
     void UpdateLMBReleased(const sf::RenderWindow& window);
@@ -24,11 +27,14 @@ public:
     // Update the state of the elements that change when hovered over
     void UpdateHovered(const sf::RenderWindow& window, sf::Vector2f mousePos);
 
-    // draw the sprites and selectors
-    void DrawTo(sf::RenderWindow& window);
-
     // Initialize game on pressing "play"
     bool IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mousePos);
+
+
+
+
+    // draw the sprites and selectors
+    void DrawTo(sf::RenderWindow& window);
 
     // return the options selected in selectors
     std::vector<int> GetSelectedOptions();

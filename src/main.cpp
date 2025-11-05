@@ -31,13 +31,14 @@ int main(){
     ui::MainMenu main_menu;
     main_menu.Initialize(font, view_size);
 
+    // Map renderer init
     ui::MapRenderer map_renderer;
 
     // init game
     std::vector<core::Game::PlayerInit> players;
     core::Game game;
 
-    // Main menu graphics loop
+    // Main graphics loop
     while (window.isOpen()) {
         
         sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
@@ -53,6 +54,8 @@ int main(){
                 view.setSize(sf::Vector2f(event.size.width, event.size.height));
                 window.setView(view);
             }
+
+            
 
             if (!start) { 
                 if (event.type == sf::Event::MouseButtonReleased && 
@@ -101,7 +104,6 @@ int main(){
                         */
                     }
                 }
-
                 // Update the elements that do something when hovered over
                 main_menu.UpdateHovered(window, mousePos);
                 // Clear the screen
