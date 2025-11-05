@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.11.0)
+# was 3.11.0, newest on ubuntu 24.04 is 3.28.3
+cmake_minimum_required(VERSION 3.28)
 project(cpp_game VERSION 0.1.0)
 
 enable_language(CXX)
@@ -11,13 +12,14 @@ set(CMAKE_BUILD_TYPE Debug)
 message(STATUS "BUILD directory is ${CMAKE_BINARY_DIR}")
 message(STATUS "SRC directory is ${CMAKE_SOURCE_DIR}")
 
+# 2.5.1 on intel machines, 2.6.1 on amd machines (WSL)
 find_package(SFML 2.5 COMPONENTS system window graphics REQUIRED)
 
 # Add all .c, - files under src/ directory
 file(GLOB SOURCES_C "src/*.c")
 # Add all .cpp, - files under src/ directory
 file(GLOB SOURCES_CPP "src/*.cpp")
-# Add all .hpp, - files under src/ directory
+# Add all .hpp, - files under include/ directory
 file(GLOB SOURCES_HPP "include/*.hpp")
 # Add all .h, - files under src/ directory
 file(GLOB SOURCES_H "src/*.h")
