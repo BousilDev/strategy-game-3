@@ -31,8 +31,11 @@ int main(){
     ui::MainMenu main_menu;
     main_menu.Initialize(font, view_size);
 
+    ui::MapRenderer map_renderer;
 
-    // MapRenderer map;
+    // init game
+    std::vector<core::Game::PlayerInit> players;
+    core::Game game;
 
     // Main menu graphics loop
     while (window.isOpen()) {
@@ -56,23 +59,18 @@ int main(){
                     event.mouseButton.button == sf::Mouse::Left) {
                     // update elements that do something when LMB is released
                     main_menu.UpdateLMBReleased(window); 
-                }
 
-                // Initialize game on pressing "Play"
-                if (event.type == sf::Event::MouseButtonReleased && 
-                    event.mouseButton.button == sf::Mouse::Left) {
+                    // Initialize game on pressing "Play"
                     if (main_menu.IsPlayClicked(window, mousePos)) {
                         //TODO: things that are done when play is clicked
 
-                        // start = true;
+                        start = true;
+
+                        // get options from selectors
                         std::vector<int> options = main_menu.GetSelectedOptions();
-                        unsigned int map_size = options[0];
-                        unsigned int player_count = options[1];
-
-
-                        std::vector<core::Game::PlayerInit> players;
-                        core::Game game;
-
+                        unsigned int player_count = options[0];
+                        unsigned int map_size = options[1];
+                        
                         // Create players
                         for (unsigned int i = 0; i < player_count; ++i) {
                             players.emplace_back(core::Game::PlayerInit{
@@ -83,23 +81,7 @@ int main(){
 
                         // Initializing through main menu testing
                         game.Initialize(players, map_size);
-                        MapRenderer map(game.GetMap(), window);
-                        while (true) {
-                            window.clear();
-                            map.DrawTo();
-                            window.display();
-
-                            if (event.type == sf::Event::Closed)
-                                window.close();
-
-                            if (event.type == sf::Event::Resized) {
-                                view.setSize(sf::Vector2f(event.size.width, event.size.height));
-                                window.setView(view);
-                            }
-
-
-
-                        }
+                        map_renderer.Initialize(game.GetMap(), window);
 
                         /*                     
                         assert(game.IsInitialized() && !game.IsOver());
@@ -116,26 +98,23 @@ int main(){
                         }
                         assert(game.IsOver());
                         return 0;  
-                     */
+                        */
                     }
                 }
 
-            
-            // update the elements that do something when hovered over
-            main_menu.UpdateHovered(window, mousePos);
+                // Update the elements that do something when hovered over
+                main_menu.UpdateHovered(window, mousePos);
+                // Clear the screen
+                window.clear();
+                // Draw the sprites and selectors
+                main_menu.DrawTo(window);
 
-            // Clear the screen
-            window.clear();
-
-            // Draw the sprites and selectors
-            main_menu.DrawTo(window);
-
-        } else if (start) { 
-            // TODO: what is done when start
+            } else if (start) { 
+                // TODO: what is done when start
+                window.clear();
+                map_renderer.DrawTo(window);
+            }
         }
-
-    }
-
         // Update the window
         window.display();
     }

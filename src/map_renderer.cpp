@@ -4,8 +4,10 @@
 
 // #define HEX_ROTATION 0.f
 
-MapRenderer::MapRenderer(world::Map map, sf::RenderWindow& window,
-    float tile_size) : map_(map), tile_size_(tile_size), window_(window) {
+void ui::MapRenderer::Initialize(world::Map map, sf::RenderWindow& window, float tile_size) {
+
+    map_ = map;
+    tile_size_ = tile_size;
 
     const size_t width = map_.get_map_width();
     const size_t height = map_.get_map_height();
@@ -16,8 +18,8 @@ MapRenderer::MapRenderer(world::Map map, sf::RenderWindow& window,
     const float h  = std::sqrt(3.f) * tile_size_; // horizontal spacing
     const float v  = 1.5f * tile_size_;           // vertical spacing
 
-    float window_width  = window_.getSize().x;
-    float window_height = window_.getSize().y;
+    float window_width  = window.getSize().x;
+    float window_height = window.getSize().y;
 
 // Centering offset
     sf::Vector2f offset(
@@ -63,12 +65,12 @@ MapRenderer::MapRenderer(world::Map map, sf::RenderWindow& window,
             }
 }
 
-void MapRenderer::DrawTo()  {
+void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
     
     // finish positioning according to window
 
     for (auto v :  tiles_) {
-        window_.draw(v);
+        window.draw(v);
     }
 };
 
