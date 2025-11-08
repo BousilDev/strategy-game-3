@@ -357,3 +357,42 @@ A working UI with the static map works along with the game saving and loading.
 ### TODOs
 
 1. Merge all changes to master before sprint review at thursday
+
+
+# Meeting 6.11.2025 16::00 - 17::00 @On site
+Sprint 2, review
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+6. Rami Ghoniem (TA)
+
+## Summary of works
+
+Merged all changes to master.
+
+## Challenges
+
+1. Some segmentation fault issues in UI
+
+## Actions
+
+1. Reviewed Sprint 2 with TA
+2. Discussed Sprint 3 deliverables
+3. Scheduled time for the next meeting, Monday 10.11 at 10:00
+
+## Project status
+
+Main menu, saving & loading, initial map UI and some tests for Game & Player implemented
+
+### TODOs
+
+1. Add Sprint 3 items to issue board
+2. Update NextTurn() and operator overloads for Building, Map, Unit
+3. Add some kind of distance function for Tile/Map
+4. Implement UI info screen layer and saving & loading UI interface
+5. Implement Card, Hand and Deck
