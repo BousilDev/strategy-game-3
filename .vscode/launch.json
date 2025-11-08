@@ -55,6 +55,17 @@
                 "name": "PATH",
                 "value": "$PATH:${command:cmake.launchTargetDirectory}"
             },
+        },
+        {
+            "name": "Build and run tests",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/tests",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "build tests"
+
         }
     ]
 }

@@ -16,3 +16,8 @@ In this folder, you can create your own unit test files to validate the operatio
 
 **Results:**
 
+Tests can be run in VS code configurations or in terminal with
+```
+g++ -std=c++17 -Iinclude $(find src -name '*.cpp' ! -name 'main.cpp') tests/test_main.cpp -o build/tests -lsfml-graphics -lsfml-window -lsfml-system
+./build/tests
+```

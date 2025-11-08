@@ -3,6 +3,10 @@
 #include <iostream>
 #include <assert.h>
 #include <fstream>
+#include <filesystem>
+
+// Sends the file and line number to the AssertWithMessageFull function
+#define AssertWithMessage(condition, message) core::AssertWithMessageFull(condition, message, __FILE__, __LINE__)
 
 // Testing the Game class
 void core::TestGameInitializationAndTurns() {
@@ -16,19 +20,19 @@ void core::TestGameInitializationAndTurns() {
     {"Markku the Conqueror", cards::Deck()}
   };
   game.Initialize(players, map_size);
-  assert(game.IsInitialized() && !game.IsOver());
-  assert(game.GetCurrentPlayer().GetName() == "Test Gamer");
+  AssertWithMessage(game.IsInitialized() && !game.IsOver(), "Game should be initialized and not over after initialization.");
+  AssertWithMessage(game.GetCurrentPlayer().GetName() == "Test Gamer", "Current player should be 'Test Gamer' after initialization.");
   for (int i = 0; i < 5; i++) {
     game.NextTurn();
-    assert(game.GetCurrentTurn() == i + 1);
+    AssertWithMessage(game.GetCurrentTurn() == i + 1, "Turn number should be " + std::to_string(i + 1) + " after " + std::to_string(i) + " turns.");
   }
   for (int i = 0; i < 3; i++) {
     const std::shared_ptr<buildings::Building> capital = game.GetCurrentPlayer().GetBuildings().front();
     game.GetCurrentPlayer().RemoveBuilding(capital);
     game.NextTurn();
-    assert(game.GetNofPlayers() == 4 - (i + 1));
+    AssertWithMessage(game.GetNofPlayers() == 4 - (i + 1), "Number of players should be " + std::to_string(4 - (i + 1)) + " after removing a player.");
   }
-  assert(game.IsOver());
+  AssertWithMessage(game.IsOver(), "Game should be over when only one player is left.");
   std::cout << "Game class tests completed successfully." << std::endl;
 };
 
@@ -38,13 +42,29 @@ void core::DebugGameState(const Game& game) {
     core::PrintTestMsg("Number of Players: ", game.GetNofPlayers());
     core::PrintTestMsg("Current Turn: ", game.GetCurrentTurn());
     core::PrintTestMsg("Current Player: ", game.GetCurrentPlayer().GetName());
-    // Print each player's resources
+    // Print each player's resources - Doesnt work since game has no GetPlayers() method
+    /*
     for (unsigned int i = 0; i < game.GetNofPlayers(); ++i) {
         const core::Player& player = game.GetCurrentPlayer();
         core::PrintTestMsg("- Player ", i + 1, " (", player.GetName(), ") Resources:");
         for (const auto& resource : player.GetResources()) {
             core::PrintTestMsg("- - Resource Type: ", static_cast<int>(resource.type), ", Amount: ", resource.amount);
         }
+    }
+    */
+}
+
+void TestFaultyFile(std::string filename) {
+    core::Game faultyGame;
+    std::ifstream faultyFile(filename);
+    if (faultyFile.is_open()) {
+        try {
+            faultyGame.Load(faultyFile);
+            AssertWithMessage(false, "Loading from a faulty file should fail: " + filename);
+        } catch (std::exception& e) {
+            core::PrintTestMsg("Correctly caught exception when loading faulty file '", filename, "': ", e.what());
+        }
+        faultyFile.close();
     }
 }
 
@@ -76,6 +96,18 @@ void core::TestGameSaveAndLoad() {
         std::cerr << "Failed to open file for saving." << std::endl;
         return;
     }
+    // Test loading with a faulty files
+    // Get files in tests/faultySaves/
+    try {
+        for (const auto& file : std::filesystem::directory_iterator(constants::faultySavesPath)) {
+            if (file.is_regular_file() && file.path().extension() == ".txt") {
+                TestFaultyFile(file.path().string());
+            }
+        }
+    } catch(const std::exception& e) {
+        AssertWithMessage(false, "Could not access faulty saves directory.");
+    }
+    
     // Load the game state into a new Game instance
     Game loadedGame;
     std::ifstream inFile("testSaveFile.txt");
@@ -87,23 +119,23 @@ void core::TestGameSaveAndLoad() {
         return;
     }
     // Check that the loaded game matches the original game
-    assert(loadedGame.IsInitialized() == game.IsInitialized());
-    assert(loadedGame.GetNofPlayers() == game.GetNofPlayers());
-    assert(loadedGame.GetCurrentTurn() == game.GetCurrentTurn());
-    assert(loadedGame.GetCurrentPlayer().GetName() == game.GetCurrentPlayer().GetName());
+    AssertWithMessage(loadedGame.IsInitialized() == game.IsInitialized(), "Loaded game initialization state should match original.");
+    AssertWithMessage(loadedGame.GetNofPlayers() == game.GetNofPlayers(), "Loaded game number of players should match original.");
+    AssertWithMessage(loadedGame.GetCurrentTurn() == game.GetCurrentTurn(), "Loaded game current turn should match original.");
+    AssertWithMessage(loadedGame.GetCurrentPlayer().GetName() == game.GetCurrentPlayer().GetName(), "Loaded game current player name should match original.");
     // Check resources of each player
     for (unsigned int i = 0; i < game.GetNofPlayers(); ++i) {
         const core::Player& originalPlayer = game.GetCurrentPlayer();
         const core::Player& loadedPlayer = loadedGame.GetCurrentPlayer();
         const auto& originalResources = originalPlayer.GetResources();
         const auto& loadedResources = loadedPlayer.GetResources();
-        assert(originalResources.size() == loadedResources.size());
+        AssertWithMessage(originalResources.size() == loadedResources.size(), "Resource size for player " + std::to_string(i + 1) + " should match.");
         for (size_t j = 0; j < originalResources.size(); ++j) {
-            assert(originalResources[j].type == loadedResources[j].type);
-            assert(originalResources[j].amount == loadedResources[j].amount);
+            AssertWithMessage(originalResources[j].type == loadedResources[j].type, "Resource types for player " + std::to_string(i + 1) + " should match.");
+            AssertWithMessage(originalResources[j].amount == loadedResources[j].amount, "Resource amounts for player " + std::to_string(i + 1) + " should match.");
         }
-        //game.NextTurn();
-        //loadedGame.NextTurn();
+        game.NextTurn();
+        loadedGame.NextTurn();
     }
     constants::debug ? DebugGameState(loadedGame) : void();
     std::cout << "Game Save and Load tests completed successfully." << std::endl;
