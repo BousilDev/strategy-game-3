@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "world/map.hpp"
-#define TILE_SIZE 32.f
+#define TILE_SIZE 48.f
 
 namespace ui {
 
@@ -12,7 +12,9 @@ public:
 
     void DrawTo(sf::RenderWindow& window);
 
-private:
+    std::shared_ptr<world::Tile> GetClickedTile(sf::RenderWindow& window);
+
+   private:
     world::Map map_;
     float tile_size_;
     std::vector<sf::CircleShape> tiles_;

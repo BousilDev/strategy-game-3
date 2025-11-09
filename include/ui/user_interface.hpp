@@ -24,8 +24,10 @@ public:
     // Update mouse position and poll events. Returns true if event found.
     bool PollEvent();
 
+    sf::Event& GetEvent();
+
     // Handle current event
-    void HandleEvent();
+    void HandleEvent(bool start);
 
     // check if play button is clicked
     bool IsPlayClicked();
