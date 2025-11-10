@@ -9,6 +9,7 @@
 #include "core/tests.hpp"
 #include "ui/map_renderer.hpp"
 #include "ui/main_menu.hpp"
+#include "ui/info_layer_renderer.hpp"
 
 
 // the main function
@@ -55,6 +56,9 @@ int main() {
     // init game
     std::vector<core::Game::PlayerInit> players;
     core::Game game;
+
+    // Info layer renderer init
+    ui::InfoLayerRenderer info_layer_renderer = ui::InfoLayerRenderer(game, font);
 
     // Main graphics loop
     while (window.isOpen()) {
@@ -126,6 +130,7 @@ int main() {
                 // Map rendering loop
                 window.clear();
                 map_renderer.DrawTo(window);
+                info_layer_renderer.DrawTo(window);
             }
         }
         // Update the window
