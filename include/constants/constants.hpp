@@ -13,4 +13,12 @@ const std::string debug_prefix = "###: ";
 const int kInitWindowWidth = 800;
 const int kInitWindowHeight = 600;
 const std::string faultySavesPath = "tests/faultySaves/";
+const float infoLayerHeight = 100.f;
+
+const std::vector<std::string> resourceTypeNames = {
+    "Gold",
+    "Wood",
+    "Metal",
+    "Food"
+};
 } // namespace constants

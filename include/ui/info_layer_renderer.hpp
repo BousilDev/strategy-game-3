@@ -24,6 +24,7 @@ private:
     std::shared_ptr<sf::Font> font_;
     std::vector<DrawItem<std::string>> items_;
     void UpdateDrawItems();
+    sf::Vector2f GetFixedPosition(sf::RenderWindow& window, const sf::Vector2f& relativePos);
 };
 
 } // namespace ui
