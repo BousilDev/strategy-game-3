@@ -396,3 +396,37 @@ Main menu, saving & loading, initial map UI and some tests for Game & Player imp
 3. Add some kind of distance function for Tile/Map
 4. Implement UI info screen layer and saving & loading UI interface
 5. Implement Card, Hand and Deck
+
+
+# Meeting 10.11.2025 10::00 - 10::45 @On site
+Sprint 3, "daily" 1
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+Added a VS code test configuration to project, implemented initial version of Tile selecting in UI, implemented a rough info layer for UI.
+
+## Challenges
+
+1. When selecting a Tile, the selection is somewhat inaccurate due to SFML shapes, we discussed a possible fix for this
+
+## Actions
+
+1. Discussed what the info layer should include and how it gets the information it needs.
+
+## Project status
+
+Working main menu and game with Tile selection and rough info layer.
+
+### TODOs
+
+1. Implement the info layer further
+2. Add helper function(s) to Building to help calculate the gained resources per turn in Game
+3. Continue implementing other sprint items
