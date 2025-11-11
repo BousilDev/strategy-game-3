@@ -13,18 +13,23 @@ struct DrawItem {
 
 class InfoLayerRenderer {
 public:
-    InfoLayerRenderer(core::Game& game, const std::shared_ptr<sf::Font> font) :
-        game_(game), font_(font) {}
+    InfoLayerRenderer(core::Game& game, const std::shared_ptr<sf::Font> font);
 
     void DrawTo(sf::RenderWindow& window);
+    void UpdateLMBReleased(const sf::RenderWindow& window);
+    bool isNextTurnClicked(const sf::RenderWindow& window, const sf::Vector2f& mousePos);
 
 private: 
     core::Game& game_;
     float tile_size_;
     std::shared_ptr<sf::Font> font_;
     std::vector<DrawItem<std::string>> items_;
+    std::vector<DrawItem<std::string>> resource_items_;
+    world::Tile* selected_tile_ = nullptr;
     void UpdateDrawItems();
-    sf::Vector2f GetFixedPosition(sf::RenderWindow& window, const sf::Vector2f& relativePos);
+    sf::RectangleShape nextTurnButton_;
+    sf::Vector2f GetFixedPosition(sf::RenderWindow& window, const sf::Vector2f& relativePos, bool absolute = true);
+    int DrawItemAtLocation(sf::RenderWindow& window, DrawItem<std::string> item, sf::Vector2f location);
 };
 
 } // namespace ui

@@ -131,6 +131,16 @@ int main() {
                 window.clear();
                 map_renderer.DrawTo(window);
                 info_layer_renderer.DrawTo(window);
+                if (event.type == sf::Event::MouseButtonReleased && 
+                    event.mouseButton.button == sf::Mouse::Left) {
+                    // update elements that do something when LMB is released
+                    info_layer_renderer.UpdateLMBReleased(window); 
+                    // Check if next turn button is clicked
+                    if (info_layer_renderer.isNextTurnClicked(window, mousePos)) {
+                        game.NextTurn();
+                        info_layer_renderer.DrawTo(window);
+                    }
+                }
             }
         }
         // Update the window
