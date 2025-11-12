@@ -16,5 +16,5 @@ const std::string faultySavesPath = "tests/faultySaves/";
 const int kInitWindowWidth = 800;
 const int kInitWindowHeight = 600;
 const std::string kFontPath = "texture/times.ttf";
-const std::string kBackgroundPath = "texture/background.jpg";
+const std::string kBackgroundImagePath = "texture/background.jpg";
 } // namespace constants

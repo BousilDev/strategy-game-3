@@ -3,23 +3,23 @@
 int ui::MainMenu::Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f view_size) {
 
     // initialize sprite for background image
-    //if (!texture_.loadFromFile("./texture/background.jpg")){
-    if (!texture_.loadFromFile(constants::kBackgroundPath)) {
+    sf::Texture texture;
+    if (!texture.loadFromFile(constants::kBackgroundImagePath)) {
         std::cerr << "Failed to load texture_ in ui::MainMenu::Initialize\n";
         return EXIT_FAILURE;
     }
-    sprite_ = sf::Sprite(texture_);
+    background_ = sf::Sprite(texture);
 
     // Initialize texts and set their position in the main menu
-    name_ = sf::Text("Strategy Game 3", *font, 50);
-    name_.setPosition(view_size.x*0.1, view_size.y*0.1);
+    title_ = sf::Text("Strategy Game 3", *font, 50);
+    title_.setPosition(view_size.x*0.1, view_size.y*0.1);
 
     // TODO: fix the positioning
-    load_ = sf::Text("Load Game", *font, 40);
-    load_.setPosition(sf::Vector2f(view_size.x*0.1, view_size.y*0.2));
+    load_button_ = sf::Text("Load Game", *font, 40);
+    load_button_.setPosition(sf::Vector2f(view_size.x*0.1, view_size.y*0.2));
 
-    play_ = sf::Text("New Game", *font, 40);
-    play_.setPosition(sf::Vector2f(view_size.x*0.1, view_size.y*0.3));
+    play_button_ = sf::Text("New Game", *font, 40);
+    play_button_.setPosition(sf::Vector2f(view_size.x*0.1, view_size.y*0.3));
 
     //options_ = sf::Text("Options", *font, 35);
     //options_.setPosition(sf::Vector2f(view_size.x*0.1, view_size.y*0.2));
@@ -59,34 +59,34 @@ void ui::MainMenu::UpdateHovered(const sf::RenderWindow& window, sf::Vector2f mo
     }
 
     // Make play button slightly larger if mouse is hovering on it
-    if(play_.getGlobalBounds().contains(mousePos)) {
-        play_.setScale(1.1,1.1);
+    if(play_button_.getGlobalBounds().contains(mousePos)) {
+        play_button_.setScale(1.1,1.1);
     } else {
-        play_.setScale(1,1);
+        play_button_.setScale(1,1);
     }
 
-    if(load_.getGlobalBounds().contains(mousePos)) {
-        load_.setScale(1.1,1.1);
+    if(load_button_.getGlobalBounds().contains(mousePos)) {
+        load_button_.setScale(1.1,1.1);
     } else {
-        load_.setScale(1,1);
+        load_button_.setScale(1,1);
     }
 }
 
 void ui::MainMenu::DrawTo(sf::RenderWindow& window) {
-    window.draw(sprite_);
+    window.draw(background_);
     for (auto e : selections_) {
         e.DrawTo(window);
     }
-    window.draw(name_);
-    window.draw(play_);
+    window.draw(title_);
+    window.draw(play_button_);
     //window.draw(options_);
-    window.draw(load_);
+    window.draw(load_button_);
 }
 
 bool ui::MainMenu::IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mouse_pos, sf::Event event) const {
     if (event.type == sf::Event::MouseButtonReleased && 
         event.mouseButton.button == sf::Mouse::Left &&
-        play_.getGlobalBounds().contains(mouse_pos)) {
+        play_button_.getGlobalBounds().contains(mouse_pos)) {
         return true;   
     } else {
         return false;
@@ -96,7 +96,7 @@ bool ui::MainMenu::IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mo
 bool ui::MainMenu::IsLoadClicked(const sf::RenderWindow& window, sf::Vector2f mouse_pos, sf::Event event) const {
     return (event.type == sf::Event::MouseButtonReleased && 
         event.mouseButton.button == sf::Mouse::Left &&
-        load_.getGlobalBounds().contains(mouse_pos));
+        load_button_.getGlobalBounds().contains(mouse_pos));
 }
 
 // TODO: improve: currently returns vector with elements (playerCount, map, deck)

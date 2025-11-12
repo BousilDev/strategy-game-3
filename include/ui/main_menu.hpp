@@ -44,13 +44,12 @@ public:
 
 private:
     std::vector<ui::Selection> selections_;
-    std::vector<sf::Text> texts_;
-    sf::Text name_;
-    sf::Text play_;
-    sf::Text load_;
-    sf::Text options_;
-    sf::Texture texture_;
-    sf::Sprite sprite_;
+    sf::Text title_;
+    sf::Text play_button_;
+    sf::Text load_button_;
+
+    //sf::Text options_;
+    sf::Sprite background_;
 };
 
 } // namespace ui

@@ -90,8 +90,6 @@ int main() {
                     //TODO: things that are done when load is clicked
                 }
 
-                
-
             // Render map and other game ui elements
             } else {
                 // TODO: temporarily keep this to accomodate other ui branches
