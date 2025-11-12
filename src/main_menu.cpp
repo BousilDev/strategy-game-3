@@ -4,7 +4,8 @@ int ui::MainMenu::Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f 
 
     // initialize sprite for background image
     if (!texture_.loadFromFile("./texture/background.jpg")){
-        return EXIT_FAILURE;
+        std::cerr << "Failed to initialize texture_ in ui::MainMenu::Initialize\n";
+        std::exit(EXIT_FAILURE);
     }
     sprite_ = sf::Sprite(texture_);
 
@@ -69,8 +70,10 @@ void ui::MainMenu::DrawTo(sf::RenderWindow& window) {
 }
 
 // TODO: pass mousePos or something idk
-bool ui::MainMenu::IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mousePos) {
-    if (play_.getGlobalBounds().contains(mousePos)) {
+bool ui::MainMenu::IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mouse_pos, sf::Event event) {
+    if (event.type == sf::Event::MouseButtonReleased && 
+        event.mouseButton.button == sf::Mouse::Left &&
+        play_.getGlobalBounds().contains(mouse_pos)) {
         return true;   
     } else {
         return false;

@@ -28,7 +28,7 @@ public:
     void UpdateHovered(const sf::RenderWindow& window, sf::Vector2f mousePos);
 
     // Initialize game on pressing "play"
-    bool IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mousePos);
+    bool IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event);
 
 
 
