@@ -12,6 +12,8 @@ public:
 
     void DrawTo(sf::RenderWindow& window);
 
+    void ClickTile(sf::RenderWindow& window);
+
     std::shared_ptr<world::Tile> GetClickedTile(sf::RenderWindow& window);
 
    private:

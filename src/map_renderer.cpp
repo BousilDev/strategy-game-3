@@ -2,16 +2,14 @@
 #include "ui/center_origin.hpp"
 #include <cmath>
 #include "ui/map_renderer.hpp"
-#include "ui/map_renderer.hpp"
 
 void ui::MapRenderer::Initialize(world::Map map, sf::RenderWindow& window, float tile_size) {
     
-    // TODO: Bloated way to line things up, might need refactoring
-
     map_ = map;
     tile_size_ = tile_size;
 
     const size_t map_w  = map_.get_map_width();
+    // const size_t map_height = map_.get_map_height();
     const auto& tile_data = map_.get_tiles();
 
     const float r = tile_size_;
@@ -31,11 +29,13 @@ void ui::MapRenderer::Initialize(world::Map map, sf::RenderWindow& window, float
     tiles_.reserve(tile_data.size());
 
     // Compute centers and bounds
-    std::vector<sf::Vector2f> centers;
     float minX = std::numeric_limits<float>::infinity();
     float minY = std::numeric_limits<float>::infinity();
     float maxX = -std::numeric_limits<float>::infinity();
     float maxY = -std::numeric_limits<float>::infinity();
+
+    std::vector<sf::Vector2f> centers;
+    centers.reserve(tile_data.size());
 
     for (size_t i = 0; i < tile_data.size(); ++i) {
         const size_t row = i / map_w;
@@ -77,12 +77,13 @@ void ui::MapRenderer::Initialize(world::Map map, sf::RenderWindow& window, float
         ui::centerOrigin(tile);
         tile.setPosition(pos);
 
+        // Get terrain
         const std::string terrain = tile_data[i]->get_terrain()->get_name();
-        if      (terrain == "plains")    tile.setFillColor(sf::Color(132,176,103));
-        else if (terrain == "forest")    tile.setFillColor(sf::Color(93,101,50));
+        if (terrain == "plains") tile.setFillColor(sf::Color(132,176,103));
+        else if (terrain == "forest") tile.setFillColor(sf::Color(93,101,50));
         else if (terrain == "mountains") tile.setFillColor(sf::Color(203,203,203));
-        else if (terrain == "water")     tile.setFillColor(sf::Color(0,123,167));
-        else                             tile.setFillColor(sf::Color::White);
+        else if (terrain == "water") tile.setFillColor(sf::Color(0,123,167));
+        else tile.setFillColor(sf::Color::White);
 
         tile.setOutlineColor(sf::Color(0,0,0));
         tile.setOutlineThickness(outline);
@@ -97,13 +98,13 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
     }
 }
 
-// Get clicked tile. Returns nullptr when no tile is clicked!!
+// Returns the tile that was clicked with Mouse 1 on the map. Returns nullptr when no tile is clicked!!
 std::shared_ptr<world::Tile> ui::MapRenderer::GetClickedTile(sf::RenderWindow& window) {
     sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
     for (size_t i = 0; i < tiles_.size(); i++) {
         const auto& tile_shape = tiles_[i];
         if (tile_shape.getGlobalBounds().contains(mousePos)) {
-            return map_.get_tile(i);
+            auto get_tile = map_.get_tile(i);
         }
     }
     return nullptr;
