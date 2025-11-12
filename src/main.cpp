@@ -37,12 +37,11 @@ int main() {
 
     // Main graphics loop
     while (user_interface.GetWindow().isOpen()) {
-        
-        user_interface.UpdateMousePos();
 
         // Handle events
         while (user_interface.PollEvent()) {
             
+            // Handle events that do not depend on game state etc. (window resizing and closing)
             user_interface.HandleGeneralEvents();
 
             // show main menu if game is not initialized yet
@@ -90,6 +89,7 @@ int main() {
                 // TODO: temporarily keep this to accomodate other ui branches
             }
         }
+
         user_interface.DrawAndDisplay(game.IsInitialized());
     }
     return 0;

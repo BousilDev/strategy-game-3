@@ -18,6 +18,11 @@ ui::UserInterface::UserInterface() {
     main_menu_.Initialize(font_, view_size_);
 }
 
+bool ui::UserInterface::PollEvent() {
+    mouse_pos_ = window_.mapPixelToCoords(sf::Mouse::getPosition(window_));
+    return window_.pollEvent(event_);
+}
+
 void ui::UserInterface::HandleGeneralEvents() {
     if (event_.type == sf::Event::Closed) window_.close();
     if (event_.type == sf::Event::Resized) {

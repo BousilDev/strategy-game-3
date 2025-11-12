@@ -14,12 +14,8 @@ public:
 
     UserInterface();
 
-    void UpdateMousePos() {
-        mouse_pos_ = window_.mapPixelToCoords(sf::Mouse::getPosition(window_));
-    }
-
-    // TODO: pollevent and updatemousepos could be combined perhaps?
-    bool PollEvent() { return window_.pollEvent(event_); }
+    // update mouse position and poll events. Returns true if event found.
+    bool PollEvent();
 
     // Handle events that do not depend on game state etc.
     void HandleGeneralEvents();
