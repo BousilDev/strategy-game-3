@@ -45,7 +45,7 @@ int main() {
         while (user_interface.PollEvent()) {
             user_interface.HandleEvent();
 
-            // Render main menu if game is not initialized yet
+            // main menu if game is not initialized yet
             if (!game.IsInitialized()) {
 
                 // Initialize game on pressing "Play"
@@ -85,13 +85,10 @@ int main() {
                     std::cout << "Load has been clicked!" << std::endl;
                     //TODO: things that are done when load is clicked
                 }
-
-            // Render map and other game ui elements
             } else {
                 // TODO: temporarily keep this to accomodate other ui branches
             }
         }
-
         user_interface.DrawAndDisplay(game.IsInitialized());
     }
     return 0;

@@ -10,7 +10,7 @@ int ui::MainMenu::Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f 
     background_ = sf::Sprite(background_texture_);
 
     // Initialize texts and set their position in the main menu
-    title_ = sf::Text("Strategy Game 3", *font, 50);
+    title_ = sf::Text(constants::kGameTitle, *font, 50);
     title_.setPosition(view_size.x*0.1, view_size.y*0.1);
 
     // TODO: fix the positioning

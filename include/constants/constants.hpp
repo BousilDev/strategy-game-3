@@ -17,4 +17,5 @@ const int kInitWindowWidth = 800;
 const int kInitWindowHeight = 600;
 const std::string kFontPath = "texture/times.ttf";
 const std::string kBackgroundImagePath = "texture/background.jpg";
+const std::string kGameTitle = "Strategy Game 3";
 } // namespace constants

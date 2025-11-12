@@ -3,12 +3,11 @@
 int ui::UserInterface::Initialize() {
 
     // Graphics init
-    window_.create(sf::VideoMode(constants::kInitWindowWidth, constants::kInitWindowHeight), "StrategyGame");
+    window_.create(sf::VideoMode(constants::kInitWindowWidth, constants::kInitWindowHeight), constants::kGameTitle);
     view_ = window_.getDefaultView();
     view_size_ = view_.getSize();
 
     // Initialize font with shared_ptr
-    //if (!font_->loadFromFile("./texture/times.ttf")) {
     if (!font_->loadFromFile(constants::kFontPath)) {
         std::cerr << "Failed to initialize font_ in ui::UserInterface constructor\n";
         return EXIT_FAILURE;
