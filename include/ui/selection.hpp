@@ -102,9 +102,9 @@ public:
     }
 
     // TODO: implement if needed
-//  void SetPosition(const sf::Vector2f& pos) {
-//
-//  }
+    //void SetPosition(const sf::Vector2f& pos) {
+    //
+    //}
 
     /**
      * @brief Return the index of the selected option
