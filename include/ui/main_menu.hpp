@@ -17,17 +17,12 @@ namespace ui {
 class MainMenu {
 public:
     // Initialize a MainMenu object. Returns 0 if succesful and 1 if there are errors.
-    // Errors are also printed to
+    // Errors are also printed to error stream
     int Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f view_size);
 
-    //TODO: group the update methods under this?
-    //int Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event);
-
-    // Update the state of the elements that change when left mouse button is released
-    void UpdateLMBReleased(const sf::RenderWindow& window);
-
-    // Update the state of the elements that change when hovered over
-    void UpdateHovered(const sf::RenderWindow& window, sf::Vector2f mousePos);
+    //TODO: maybe use the return value to replace isPlayClicked etc?
+    // Update the state of the main menu elements based on the event
+    int Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event);
 
     // Check if play is clicked
     bool IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event) const;
@@ -47,8 +42,8 @@ private:
     sf::Text title_;
     sf::Text play_button_;
     sf::Text load_button_;
-
     //sf::Text options_;
+    sf::Texture background_texture_;
     sf::Sprite background_;
 };
 

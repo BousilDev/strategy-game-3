@@ -37,16 +37,18 @@ void ui::UserInterface::HandleGeneralEvents() {
 
 void ui::UserInterface::HandleMainMenuEvents() {
 
-    // if left mouse button is released
-    if (event_.type == sf::Event::MouseButtonReleased && 
-        event_.mouseButton.button == sf::Mouse::Left) {
-        
-        // update main menu elements that do something when LMB is released
-        main_menu_.UpdateLMBReleased(window_);
-    }
+    main_menu_.Update(window_, mouse_pos_, event_);
 
-    // update main menu elements that do something when hovered over
-    main_menu_.UpdateHovered(window_, mouse_pos_);
+    //// if left mouse button is released
+    //if (event_.type == sf::Event::MouseButtonReleased && 
+    //    event_.mouseButton.button == sf::Mouse::Left) {
+        //
+    //    // update main menu elements that do something when LMB is released
+    //    main_menu_.UpdateLMBReleased(window_);
+    //}
+    //
+    //// update main menu elements that do something when hovered over
+    //main_menu_.UpdateHovered(window_, mouse_pos_);
 }
 
 bool ui::UserInterface::IsPlayClicked() {

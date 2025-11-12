@@ -3,12 +3,11 @@
 int ui::MainMenu::Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f view_size) {
 
     // initialize sprite for background image
-    sf::Texture texture;
-    if (!texture.loadFromFile(constants::kBackgroundImagePath)) {
+    if (!background_texture_.loadFromFile(constants::kBackgroundImagePath)) {
         std::cerr << "Failed to load texture_ in ui::MainMenu::Initialize\n";
         return EXIT_FAILURE;
     }
-    background_ = sf::Sprite(texture);
+    background_ = sf::Sprite(background_texture_);
 
     // Initialize texts and set their position in the main menu
     title_ = sf::Text("Strategy Game 3", *font, 50);
@@ -40,20 +39,15 @@ int ui::MainMenu::Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f 
     return 0;
 }   
 
-//int ui::MainMenu::Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event) {
-//    //if (event.type == )
-//    return 0;
-//}
-
-void ui::MainMenu::UpdateLMBReleased(const sf::RenderWindow& window) {
-    for (auto& e : selections_) {
-        e.UpdateState(window);
+// Update the elements based on the event
+int ui::MainMenu::Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event) {
+    // Left mouse button released
+    if (event.type == sf::Event::MouseButtonReleased && 
+        event.mouseButton.button == sf::Mouse::Left) {
+        for (auto& e : selections_) { e.UpdateState(window); }
     }
-}
 
-void ui::MainMenu::UpdateHovered(const sf::RenderWindow& window, sf::Vector2f mousePos) {
-    
-    // Make selections slightly larger if mouse is hovering on them
+    // Make selector buttons slightly larger if mouse is hovering on them
     for (auto& e : selections_) {
         e.UpdateHovered(window);
     }
@@ -70,6 +64,8 @@ void ui::MainMenu::UpdateHovered(const sf::RenderWindow& window, sf::Vector2f mo
     } else {
         load_button_.setScale(1,1);
     }
+    
+    return 0;
 }
 
 void ui::MainMenu::DrawTo(sf::RenderWindow& window) {
@@ -84,13 +80,9 @@ void ui::MainMenu::DrawTo(sf::RenderWindow& window) {
 }
 
 bool ui::MainMenu::IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mouse_pos, sf::Event event) const {
-    if (event.type == sf::Event::MouseButtonReleased && 
+    return (event.type == sf::Event::MouseButtonReleased && 
         event.mouseButton.button == sf::Mouse::Left &&
-        play_button_.getGlobalBounds().contains(mouse_pos)) {
-        return true;   
-    } else {
-        return false;
-    }
+        play_button_.getGlobalBounds().contains(mouse_pos));
 }
 
 bool ui::MainMenu::IsLoadClicked(const sf::RenderWindow& window, sf::Vector2f mouse_pos, sf::Event event) const {
