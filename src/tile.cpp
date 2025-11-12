@@ -11,22 +11,22 @@ std::shared_ptr<buildings::Building> Tile::get_building(){
 std::array<std::weak_ptr<Tile>, 6>& Tile::get_neighbours(){
     return neighbours_;
 }
-bool Tile::place_building(buildings::Building& building){
+bool Tile::place_building(std::shared_ptr<buildings::Building> building) {
     if(current_building_){
         return false;
     } else {
-    current_building_ =  std::make_shared<buildings::Building>(building);
+    current_building_ = building;
     return true;
     }
 }
 void Tile::destroy_current_building(){
     current_building_ = nullptr;
 }
-bool Tile::place_unit(units::Unit& unit){
+bool Tile::place_unit(std::shared_ptr<units::Unit> unit){
     if(current_unit_){
         return false;
     } else {
-    current_unit_ =  std::make_shared<units::Unit>(unit);
+    current_unit_ = unit;
     return true;
     }
 }

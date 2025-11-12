@@ -56,7 +56,7 @@ class Tile {
         * @param building the building this tile is made to contain.
         * @return returns true if the setting was successful and false if it wasn't.
         */
-        bool place_building(buildings::Building& building);
+        bool place_building(std::shared_ptr<buildings::Building> building);
 
         /**
         * @brief Makes the current_builder_ shared pointer empty. 
@@ -70,7 +70,7 @@ class Tile {
         * @param unit the unit this tile is made to contain.
         * @return returns true if the setting was successful and false if it wasn't.
         */
-        bool place_unit(units::Unit& unit);
+        bool place_unit(std::shared_ptr<units::Unit> unit);
 
         /**
         * @brief Makes the current_unit_ shared pointer empty. 
