@@ -10,9 +10,7 @@ namespace units {
   
 class Unit {
 public:
-  std::unique_ptr<Unit> Clone() {
-      return std::make_unique<Unit>(*this);
-  }
+  std::shared_ptr<Unit> Clone() { return std::make_shared<Unit>(*this); }
   
 private:
 

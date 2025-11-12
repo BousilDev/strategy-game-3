@@ -24,7 +24,12 @@ public:
 
   ~Building() = default;
   
-  // virtual std::unique_ptr<Building> Clone() = 0;
+  /**
+   * @brief Explicit clone method for a building. Prevents slicing
+   * 
+   * @return A clone of the building wrapped in a shared pointer.
+   */
+  virtual std::shared_ptr<Building> Clone() = 0;
 
   /**
    * @brief Get the type of the building.
@@ -50,7 +55,7 @@ class CapitalBuilding : public Building {
 public:
   CapitalBuilding() : Building() {}
 
-  // std::unique_ptr<Building> Clone() override;
+  std::shared_ptr<Building> Clone() override { return std::make_shared<CapitalBuilding>(*this); }
 
   BuildingType GetType() const { return kCapital; } 
 
