@@ -34,7 +34,9 @@ int main() {
 
     // init user interface
     ui::UserInterface user_interface;
-    user_interface.Initialize();
+    if (!user_interface.Initialize()) {
+        return EXIT_FAILURE;
+    }
 
     // Main graphics loop
     while (user_interface.GetWindow().isOpen()) {

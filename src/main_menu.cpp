@@ -4,7 +4,7 @@ int ui::MainMenu::Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f 
 
     // initialize sprite for background image
     if (!texture_.loadFromFile("./texture/background.jpg")){
-        std::cerr << "Failed to initialize texture_ in ui::MainMenu::Initialize\n";
+        std::cerr << "Failed to load texture_ in ui::MainMenu::Initialize\n";
         return EXIT_FAILURE;
     }
     sprite_ = sf::Sprite(texture_);
@@ -47,11 +47,13 @@ void ui::MainMenu::UpdateLMBReleased(const sf::RenderWindow& window) {
 }
 
 void ui::MainMenu::UpdateHovered(const sf::RenderWindow& window, sf::Vector2f mousePos) {
+    
+    //FIXME: This doesnt work
+    // Make selections slightly larger if mouse is hovering on them
     for (auto e : selections_) {
         e.UpdateHovered(window);
     }
 
-    //FIXME: This doesnt work
     // Make play button slightly larger if mouse is hovering on it
     if(play_.getGlobalBounds().contains(mousePos)) {
         play_.setScale(1.1,1.1);

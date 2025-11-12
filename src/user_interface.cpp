@@ -14,7 +14,9 @@ int ui::UserInterface::Initialize() {
     }
 
     // Main menu init
-    main_menu_.Initialize(font_, view_size_);
+    if (!main_menu_.Initialize(font_, view_size_)) {
+        return EXIT_FAILURE;
+    }
 
     return 0;
 }
@@ -55,7 +57,7 @@ void ui::UserInterface::DrawAndDisplay(bool start) {
     // clear the screen
     window_.clear();
     // draw the sprites etc. in vertices_
-    window_.draw(vertices_);
+    //window_.draw(vertices_);
 
     // TODO: temporary, update the underlying classes to use vertices_ instead
     if (!start) {
@@ -68,6 +70,5 @@ void ui::UserInterface::DrawAndDisplay(bool start) {
     window_.display();
 
     // empty the vertices array
-    vertices_.clear();
-
+    //vertices_.clear();
 }
