@@ -85,7 +85,12 @@ int main() {
                         game.Save(outFile);
                         outFile.close();
                     }
+                } else if (user_interface.IsLoadClicked()) {
+                    std::cout << "Load has been clicked!" << std::endl;
+                    //TODO: things that are done when load is clicked
                 }
+
+                
 
             // Render map and other game ui elements
             } else {

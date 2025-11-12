@@ -8,6 +8,7 @@
 
 #include "ui/selection.hpp"
 #include "ui/center_origin.hpp"
+#include "constants/constants.hpp"
 
 namespace ui {
 
@@ -15,11 +16,12 @@ namespace ui {
 //TODO: group update methods into one method maybe? (might not be needed)
 class MainMenu {
 public:
-    // TODO: add numbers to indicate success etc
+    // Initialize a MainMenu object. Returns 0 if succesful and 1 if there are errors.
+    // Errors are also printed to
     int Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f view_size);
 
-    //TODO: group the update methods under this
-    int Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event);
+    //TODO: group the update methods under this?
+    //int Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event);
 
     // Update the state of the elements that change when left mouse button is released
     void UpdateLMBReleased(const sf::RenderWindow& window);
@@ -27,18 +29,14 @@ public:
     // Update the state of the elements that change when hovered over
     void UpdateHovered(const sf::RenderWindow& window, sf::Vector2f mousePos);
 
-    // Initialize game on pressing "play"
-    bool IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event);
+    // Check if play is clicked
+    bool IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event) const;
 
+    // Check if load is clicked
+    bool IsLoadClicked(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event) const;
 
-
-
-    // draw the sprites and selectors
+    // Draw the sprites and selectors
     void DrawTo(sf::RenderWindow& window);
-
-    //TODO: implement if you have time, this would improve performance by reducing draw calls
-    // return a VertexArray containing the vertices that will be drawn
-    //sf::VertexArray VerticesToDraw();
 
     // return the options selected in selectors
     std::vector<int> GetSelectedOptions();
@@ -46,8 +44,10 @@ public:
 
 private:
     std::vector<ui::Selection> selections_;
+    std::vector<sf::Text> texts_;
     sf::Text name_;
     sf::Text play_;
+    sf::Text load_;
     sf::Text options_;
     sf::Texture texture_;
     sf::Sprite sprite_;

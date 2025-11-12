@@ -8,7 +8,8 @@ int ui::UserInterface::Initialize() {
     view_size_ = view_.getSize();
 
     // Initialize font with shared_ptr
-    if (!font_->loadFromFile("./texture/times.ttf")) {
+    //if (!font_->loadFromFile("./texture/times.ttf")) {
+    if (!font_->loadFromFile(constants::kFontPath)) {
         std::cerr << "Failed to initialize font_ in ui::UserInterface constructor\n";
         return EXIT_FAILURE;
     }
@@ -52,14 +53,16 @@ bool ui::UserInterface::IsPlayClicked() {
     return main_menu_.IsPlayClicked(window_, mouse_pos_, event_);
 }
 
+bool ui::UserInterface::IsLoadClicked() {
+    return main_menu_.IsLoadClicked(window_, mouse_pos_, event_);
+}
+
 // TODO: temporarily use start variable
 void ui::UserInterface::DrawAndDisplay(bool start) {
     // clear the screen
     window_.clear();
-    // draw the sprites etc. in vertices_
-    //window_.draw(vertices_);
 
-    // TODO: temporary, update the underlying classes to use vertices_ instead
+    // render main menu if game has not started, otherwise render the map etc.
     if (!start) {
         main_menu_.DrawTo(window_);
     } else {
@@ -68,7 +71,4 @@ void ui::UserInterface::DrawAndDisplay(bool start) {
     
     // Update the window
     window_.display();
-
-    // empty the vertices array
-    //vertices_.clear();
 }

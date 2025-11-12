@@ -26,6 +26,9 @@ public:
     // check if play button is clicked
     bool IsPlayClicked();
 
+    // check if load button is clicked
+    bool IsLoadClicked();
+
     void InitializeMapRenderer(world::Map map) {
         map_renderer_.Initialize(map, window_);
     }
@@ -42,15 +45,11 @@ private:
     sf::RenderWindow window_;
     sf::View view_;
     sf::Vector2f view_size_;
-    std::shared_ptr<sf::Font> font_ = std::make_shared<sf::Font>();
     sf::Vector2f mouse_pos_;
     sf::Event event_;
-
-    sf::VertexArray vertices_;
-
+    std::shared_ptr<sf::Font> font_ = std::make_shared<sf::Font>();
     ui::MainMenu main_menu_;
     ui::MapRenderer map_renderer_;
-
 };
 
 } // namespace ui
