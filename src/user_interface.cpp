@@ -1,7 +1,6 @@
 #include "ui/user_interface.hpp"
-#include "constants/constants.hpp"
 
-ui::UserInterface::UserInterface() {
+int ui::UserInterface::Initialize() {
 
     // Graphics init
     window_.create(sf::VideoMode(constants::kInitWindowWidth, constants::kInitWindowHeight), "StrategyGame");
@@ -11,11 +10,13 @@ ui::UserInterface::UserInterface() {
     // Initialize font with shared_ptr
     if (!font_->loadFromFile("./texture/times.ttf")) {
         std::cerr << "Failed to initialize font_ in ui::UserInterface constructor\n";
-        std::exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
 
     // Main menu init
     main_menu_.Initialize(font_, view_size_);
+
+    return 0;
 }
 
 bool ui::UserInterface::PollEvent() {
@@ -65,5 +66,8 @@ void ui::UserInterface::DrawAndDisplay(bool start) {
     
     // Update the window
     window_.display();
+
+    // empty the vertices array
+    vertices_.clear();
 
 }

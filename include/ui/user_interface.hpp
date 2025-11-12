@@ -3,8 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include <ui/main_menu.hpp>
-#include <ui/map_renderer.hpp>
+#include "ui/main_menu.hpp"
+#include "ui/map_renderer.hpp"
+#include "constants/constants.hpp"
 
 namespace ui {
 
@@ -12,7 +13,7 @@ namespace ui {
 class UserInterface {
 public:
 
-    UserInterface();
+    int Initialize();
 
     // update mouse position and poll events. Returns true if event found.
     bool PollEvent();
@@ -44,7 +45,6 @@ private:
     std::shared_ptr<sf::Font> font_ = std::make_shared<sf::Font>();
     sf::Vector2f mouse_pos_;
     sf::Event event_;
-
 
     sf::VertexArray vertices_;
 

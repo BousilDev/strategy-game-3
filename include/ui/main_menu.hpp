@@ -36,6 +36,10 @@ public:
     // draw the sprites and selectors
     void DrawTo(sf::RenderWindow& window);
 
+    //TODO: implement if you have time, this would improve performance by reducing draw calls
+    // return a VertexArray containing the vertices that will be drawn
+    //sf::VertexArray VerticesToDraw();
+
     // return the options selected in selectors
     std::vector<int> GetSelectedOptions();
 

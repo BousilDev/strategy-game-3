@@ -5,7 +5,7 @@ int ui::MainMenu::Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f 
     // initialize sprite for background image
     if (!texture_.loadFromFile("./texture/background.jpg")){
         std::cerr << "Failed to initialize texture_ in ui::MainMenu::Initialize\n";
-        std::exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
     sprite_ = sf::Sprite(texture_);
 
@@ -69,7 +69,19 @@ void ui::MainMenu::DrawTo(sf::RenderWindow& window) {
     window.draw(play_);
 }
 
-// TODO: pass mousePos or something idk
+//sf::VertexArray ui::MainMenu::VerticesToDraw() {
+//
+//    sf::VertexArray arr;
+//    ////window.draw(sprite_);
+//    arr.append(sprite_);
+//    
+//    for (auto e : selections_) {
+//        e.DrawTo(window);
+//    }
+//    window.draw(name_);
+//    window.draw(play_);
+//}
+
 bool ui::MainMenu::IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mouse_pos, sf::Event event) {
     if (event.type == sf::Event::MouseButtonReleased && 
         event.mouseButton.button == sf::Mouse::Left &&
@@ -81,7 +93,7 @@ bool ui::MainMenu::IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mo
 }
 
 // TODO: improve: currently returns vector with elements (playerCount, map, deck)
-// perhaps return a map?
+//                perhaps return a map?
 std::vector<int> ui::MainMenu::GetSelectedOptions() {
     std::vector<int> selected_options;
     for (auto e : selections_) {
