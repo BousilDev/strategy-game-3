@@ -15,13 +15,15 @@ public:
 
     int Initialize();
 
-    // update mouse position and poll events. Returns true if event found.
+    //FIXME: using this in the event handling loop in main causes a weird bug
+    // Update mousepos, poll next event and handle it
+    //bool PollAndHandleEvent();
+
+    // Update mouse position and poll events. Returns true if event found.
     bool PollEvent();
 
-    // Handle events that do not depend on game state etc.
-    void HandleGeneralEvents();
-
-    void HandleMainMenuEvents();
+    // Handle current event
+    void HandleEvent();
 
     // check if play button is clicked
     bool IsPlayClicked();

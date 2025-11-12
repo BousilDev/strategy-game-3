@@ -43,21 +43,17 @@ int main() {
 
         // Handle events
         while (user_interface.PollEvent()) {
-            
-            // Handle events that do not depend on game state etc. (window resizing and closing)
-            user_interface.HandleGeneralEvents();
+            user_interface.HandleEvent();
 
-            // show main menu if game is not initialized yet
+            // Render main menu if game is not initialized yet
             if (!game.IsInitialized()) {
-                user_interface.HandleMainMenuEvents();
 
                 // Initialize game on pressing "Play"
                 if (user_interface.IsPlayClicked()) {
 
                     // Get game initialization options from selectors
-                    std::vector<int> options = user_interface.GetSelectedOptions();
-                    unsigned int player_count = options[0];
-                    unsigned int map_size = options[1];
+                    unsigned int player_count = user_interface.GetSelectedOptions()[0];
+                    unsigned int map_size = user_interface.GetSelectedOptions()[1];
 
                     // Create players
                     for (unsigned int i = 0; i < player_count; ++i) {

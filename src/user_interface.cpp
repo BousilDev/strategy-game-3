@@ -22,33 +22,28 @@ int ui::UserInterface::Initialize() {
     return 0;
 }
 
+//bool ui::UserInterface::PollAndHandleEvent() {
+//    bool event_found = PollEvent();
+//    HandleEvent();
+//    return event_found;
+//}
+
+
 bool ui::UserInterface::PollEvent() {
     mouse_pos_ = window_.mapPixelToCoords(sf::Mouse::getPosition(window_));
     return window_.pollEvent(event_);
 }
 
-void ui::UserInterface::HandleGeneralEvents() {
+void ui::UserInterface::HandleEvent() {
+    // Handle general events
     if (event_.type == sf::Event::Closed) window_.close();
     if (event_.type == sf::Event::Resized) {
         view_.setSize(sf::Vector2f(event_.size.width, event_.size.height));
         window_.setView(view_);
     }
-}
 
-void ui::UserInterface::HandleMainMenuEvents() {
-
+    // Handle main menu events
     main_menu_.Update(window_, mouse_pos_, event_);
-
-    //// if left mouse button is released
-    //if (event_.type == sf::Event::MouseButtonReleased && 
-    //    event_.mouseButton.button == sf::Mouse::Left) {
-        //
-    //    // update main menu elements that do something when LMB is released
-    //    main_menu_.UpdateLMBReleased(window_);
-    //}
-    //
-    //// update main menu elements that do something when hovered over
-    //main_menu_.UpdateHovered(window_, mouse_pos_);
 }
 
 bool ui::UserInterface::IsPlayClicked() {
