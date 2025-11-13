@@ -46,7 +46,7 @@ void ui::MapRenderer::Initialize(world::Map map, sf::RenderWindow& window, float
             row * v
         );
 
-        centers.emplace_back(c);
+        centers.push_back(c);
         minX = std::min(minX, c.x);
         minY = std::min(minY, c.y);
         maxX = std::max(maxX, c.x);
