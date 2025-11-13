@@ -13,10 +13,10 @@ int ui::UserInterface::Initialize(core::Game& game) {
         return EXIT_FAILURE;
     }
 
-    info_layer_renderer_ = std::make_unique<ui::InfoLayerRenderer>(game, font_);
+    info_layer_renderer_.Initialize(game, font_);
 
     // Main menu init
-    if (!main_menu_.Initialize(font_, view_size_)) {
+    if (main_menu_.Initialize(font_, view_size_)) {
         return EXIT_FAILURE;
     }
 
@@ -45,7 +45,7 @@ void ui::UserInterface::HandleEvent() {
 
     // Handle main menu events
     main_menu_.Update(window_, mouse_pos_, event_);
-    info_layer_renderer_->Update(window_, mouse_pos_, event_);
+    info_layer_renderer_.Update(window_, mouse_pos_, event_);
 }
 
 bool ui::UserInterface::IsPlayClicked() {
@@ -66,7 +66,7 @@ void ui::UserInterface::DrawAndDisplay(bool start) {
         main_menu_.DrawTo(window_);
     } else {
         map_renderer_.DrawTo(window_);
-        info_layer_renderer_->DrawTo(window_);
+        info_layer_renderer_.DrawTo(window_);
     }
     
     // Update the window

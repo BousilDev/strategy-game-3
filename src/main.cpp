@@ -34,7 +34,7 @@ int main() {
 
     // init user interface
     ui::UserInterface user_interface;
-    if (!user_interface.Initialize(game)) {
+    if (user_interface.Initialize(game)) {
         return EXIT_FAILURE;
     }
 
