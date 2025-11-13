@@ -430,3 +430,36 @@ Working main menu and game with Tile selection and rough info layer.
 1. Implement the info layer further
 2. Add helper function(s) to Building to help calculate the gained resources per turn in Game
 3. Continue implementing other sprint items
+
+
+# Meeting 13.11.2025 16::30 - 17::30 @On site
+Sprint 3, "daily" 2
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+UI info layer works, main refactored using User Interface class, initial implementation of Cards, more Building and Unit functionalities
+
+## Challenges
+
+1. Making Buildings and Units compatible with Cards (Cloning or Creating)
+
+## Actions
+
+1. Discussed the UI changes, possible UI improvements and a possible solution to the challenge described above
+2. Scheduled a time for next meeting, Tuesday 18.11 at 12.00
+
+## Project status
+
+Info layer exists with a working 'next turn' button and initial Tile info (no actual Tile info yet). The implementation of Cards has begun.
+
+### TODOs
+
+1. Connect separate functionalities into UI and update existing code to manage new changes
