@@ -1,6 +1,7 @@
 #pragma once
 #include "string"
 #include <vector>
+#include <list>
 #include "core/resource.hpp"
 /**
  * @file Terrain.hpp
@@ -27,7 +28,7 @@ public:
     * @param resources a vector of resources this terrain has.  
     */
     Terrain(const std::string& name, int movement_cost, int sight_cost,
-          std::vector<core::Resource> resources)
+          std::list<core::Resource> resources)
         : terrain_name_(name), movement_cost_(movement_cost),
           sight_cost_(sight_cost),  resources_(resources){};
 
@@ -58,7 +59,7 @@ public:
     * @brief getter for resources_.
     * @return returns a reference to a vector containing this terrains resource structs. might be empty if this terrain has no resources.
     */
-    virtual std::vector<core::Resource>& get_resources() { return  resources_; };
+    virtual std::list<core::Resource>& get_resources() { return  resources_; };
 
     /**
     * @brief Retrieves and removes all resources from this terrain.
@@ -68,15 +69,15 @@ public:
     * 
     * @return A vector containing all resources that were in this terrain.
     */
-    virtual std::vector<core::Resource> take_resources() {
-        std::vector<core::Resource> copy = std::move(resources_);
+    virtual std::list<core::Resource> take_resources() {
+        std::list<core::Resource> copy = std::move(resources_);
         return copy;
     };
 protected:
     std::string terrain_name_;///< the name of this terrain
     int movement_cost_;///< the movement cost to this terrain. Negative means no movement.
     int sight_cost_;///< the cost to reveal this terrain.
-    std::vector<core::Resource> resources_;///<resources of this terrain. might be empty.
+    std::list<core::Resource> resources_;///<resources of this terrain. might be empty.
 };
 
 
@@ -89,9 +90,9 @@ class PlainsTerrain : public Terrain{
 public:
     /**
      * @brief Constructs a PlainsTerrain with optional resources.
-     * @param resources Vector of resources contained in the terrain.
+     * @param resources list of resources contained in the terrain.
      */
-    PlainsTerrain(std::vector<core::Resource> resources) 
+    PlainsTerrain(std::list<core::Resource> resources) 
         : Terrain("plains", 1, 1, resources){};
 };
 
@@ -104,9 +105,9 @@ class ForestTerrain : public Terrain{
 public:
     /**
      * @brief Constructs a ForestTerrain with optional resources.
-     * @param resources Vector of resources contained in the terrain.
+     * @param resources list of resources contained in the terrain.
      */
-    ForestTerrain(std::vector<core::Resource> resources) 
+    ForestTerrain(std::list<core::Resource> resources) 
         : Terrain("forest", 1, 2, resources){};
 };
 
@@ -119,9 +120,9 @@ class MountainsTerrain : public Terrain{
 public:
     /**
      * @brief Constructs a MountainsTerrain with optional resources.
-     * @param resources Vector of resources contained in the terrain.
+     * @param resources list of resources contained in the terrain.
      */
-    MountainsTerrain(std::vector<core::Resource> resources) 
+    MountainsTerrain(std::list<core::Resource> resources) 
         : Terrain("mountains", 2, 2, resources){};
 };
 
@@ -134,9 +135,9 @@ class WaterTerrain : public Terrain{
 public:
     /**
      * @brief Constructs a WaterTerrain with optional resources.
-     * @param resources Vector of resources contained in the terrain.
+     * @param resources list of resources contained in the terrain.
      */
-    WaterTerrain(std::vector<core::Resource> resources) 
+    WaterTerrain(std::list<core::Resource> resources) 
         : Terrain("water", -1, 1, resources){};
 };
 } // namespace world

@@ -111,7 +111,7 @@ std::vector<std::shared_ptr<Tile>> Map::get_n_spawn(unsigned int nof_players) {
         if (tile->get_terrain()->get_name() == "plains"){
             valid_tiles.push_back(i);
         }
-    }
+}
 
     std::vector<std::shared_ptr<Tile>> result;
     // Shuffle the valid indices for random selection
