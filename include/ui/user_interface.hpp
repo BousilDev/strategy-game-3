@@ -5,7 +5,9 @@
 
 #include "ui/main_menu.hpp"
 #include "ui/map_renderer.hpp"
+#include "ui/info_layer_renderer.hpp"
 #include "constants/constants.hpp"
+#include "core/game.hpp"
 
 namespace ui {
 
@@ -13,7 +15,7 @@ namespace ui {
 class UserInterface {
 public:
 
-    int Initialize();
+    int Initialize(core::Game& game);
 
     //FIXME: using this in the event handling loop in main causes a weird bug
     // Update mousepos, poll next event and handle it
@@ -52,6 +54,7 @@ private:
     std::shared_ptr<sf::Font> font_ = std::make_shared<sf::Font>();
     ui::MainMenu main_menu_;
     ui::MapRenderer map_renderer_;
+    std::unique_ptr<ui::InfoLayerRenderer> info_layer_renderer_;
 };
 
 } // namespace ui

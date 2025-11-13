@@ -1,6 +1,6 @@
 #include "ui/user_interface.hpp"
 
-int ui::UserInterface::Initialize() {
+int ui::UserInterface::Initialize(core::Game& game) {
 
     // Graphics init
     window_.create(sf::VideoMode(constants::kInitWindowWidth, constants::kInitWindowHeight), constants::kGameTitle);
@@ -12,6 +12,8 @@ int ui::UserInterface::Initialize() {
         std::cerr << "Failed to initialize font_ in ui::UserInterface constructor\n";
         return EXIT_FAILURE;
     }
+
+    info_layer_renderer_ = std::make_unique<ui::InfoLayerRenderer>(game, font_);
 
     // Main menu init
     if (!main_menu_.Initialize(font_, view_size_)) {
@@ -43,6 +45,7 @@ void ui::UserInterface::HandleEvent() {
 
     // Handle main menu events
     main_menu_.Update(window_, mouse_pos_, event_);
+    info_layer_renderer_->Update(window_, mouse_pos_, event_);
 }
 
 bool ui::UserInterface::IsPlayClicked() {
@@ -63,6 +66,7 @@ void ui::UserInterface::DrawAndDisplay(bool start) {
         main_menu_.DrawTo(window_);
     } else {
         map_renderer_.DrawTo(window_);
+        info_layer_renderer_->DrawTo(window_);
     }
     
     // Update the window
