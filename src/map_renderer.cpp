@@ -101,10 +101,12 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
 // Returns the tile that was clicked with Mouse 1 on the map. Returns nullptr when no tile is clicked!!
 std::shared_ptr<world::Tile> ui::MapRenderer::GetClickedTile(sf::RenderWindow& window) {
     sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
     for (size_t i = 0; i < tiles_.size(); i++) {
         const auto& tile_shape = tiles_[i];
         if (tile_shape.getGlobalBounds().contains(mousePos)) {
             auto get_tile = map_.get_tile(i);
+            return get_tile;
         }
     }
     return nullptr;
