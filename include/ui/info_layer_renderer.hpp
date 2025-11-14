@@ -14,10 +14,7 @@ struct DrawItem {
 class InfoLayerRenderer {
 public:
     InfoLayerRenderer() {};
-    void Initialize(core::Game& game, const std::shared_ptr<sf::Font> font) {
-        game_ = &game;
-        font_ = font;
-    };
+    void Initialize(core::Game& game, const std::shared_ptr<sf::Font> font);
 
     void DrawTo(sf::RenderWindow& window);
     void Update(sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event);
@@ -30,10 +27,21 @@ private:
     std::vector<DrawItem<std::string>> items_;
     std::vector<DrawItem<std::string>> resource_items_;
     world::Tile* selected_tile_ = nullptr;
-    void UpdateDrawItems();
+
+    sf::RectangleShape background_;
     sf::RectangleShape nextTurnButton_;
+    sf::Text nextTurnText_;
+    sf::RectangleShape tileInfoBackground_;
+    sf::Text tileInfoText_;
+    sf::RectangleShape infoBackground_;
+    sf::Text infoText_;
+    int parts_ = 2;
+    float inc_ = (constants::infoLayerHeight - float(constants::infoLayerTextSize)) / float(parts_);
+
+    void UpdateDrawItems();
     sf::Vector2f GetFixedPosition(sf::RenderWindow& window, const sf::Vector2f& relativePos, bool absolute = true);
     int DrawItemAtLocation(sf::RenderWindow& window, DrawItem<std::string> item, sf::Vector2f location);
+    void DrawItems(sf::RenderWindow& window, std::vector<DrawItem<std::string>> items, int& textLen);
 };
 
 } // namespace ui

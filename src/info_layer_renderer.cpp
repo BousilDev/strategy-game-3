@@ -2,6 +2,61 @@
 #include <sstream>
 #include <string>
 
+// Initializes the InfoLayerRenderer
+void ui::InfoLayerRenderer::Initialize(core::Game& game, const std::shared_ptr<sf::Font> font) {
+    game_ = &game;
+    font_ = font;
+
+    sf::RectangleShape background;
+    background.setFillColor(constants::infoLayerColor);
+    background.setOutlineColor(sf::Color::White);
+    background.setOutlineThickness(5.f);
+    background_ = background;
+
+    sf::RectangleShape nextTurnButton;
+    nextTurnButton.setSize(sf::Vector2f(120.f, 40.f));
+    nextTurnButton.setFillColor(sf::Color(100, 200, 100, 255));
+    nextTurnButton.setOutlineColor(sf::Color::White);
+    nextTurnButton.setOutlineThickness(2.f);
+    nextTurnButton_ = nextTurnButton;
+
+    sf::Text nextTurnText;
+    nextTurnText.setFont(*font_);
+    nextTurnText.setCharacterSize(constants::infoLayerTextSize);
+    nextTurnText.setFillColor(sf::Color::Black);
+    nextTurnText.setStyle(sf::Text::Bold);
+    nextTurnText.setString("Next Turn");
+    nextTurnText_ = nextTurnText;
+
+    sf::RectangleShape tileInfoBackground;
+    tileInfoBackground.setSize(sf::Vector2f(constants::kInitWindowWidth / 4.f, 2 * constants::kInitWindowHeight / 3.f));
+    tileInfoBackground.setFillColor(constants::infoLayerColor);
+    tileInfoBackground.setOutlineColor(sf::Color::White);
+    tileInfoBackground.setOutlineThickness(5.f);
+    tileInfoBackground_ = tileInfoBackground;
+
+    sf::Text tileInfoText;
+    tileInfoText.setFont(*font_);
+    tileInfoText.setCharacterSize(constants::infoLayerTextSize);
+    tileInfoText.setFillColor(sf::Color::White);
+    tileInfoText.setStyle(sf::Text::Bold);
+    tileInfoText_ = tileInfoText;
+
+    sf::RectangleShape box;
+    box.setFillColor(constants::infoLayerColor + sf::Color(100, 0, 0, 255));
+    box.setOutlineColor(sf::Color::White);
+    box.setOutlineThickness(1.f);
+    infoBackground_ = box;
+
+    sf::Text infoText;
+    infoText.setFont(*font_);
+    infoText.setCharacterSize(constants::infoLayerTextSize);
+    infoText.setFillColor(sf::Color::White);
+    infoText.setStyle(sf::Text::Bold);
+    infoText_ = infoText;
+}
+
+// Updates the info items
 void ui::InfoLayerRenderer::UpdateDrawItems() {
     items_.clear();
     resource_items_.clear();
@@ -34,19 +89,12 @@ sf::Vector2f ui::InfoLayerRenderer::GetFixedPosition(sf::RenderWindow& window, c
 
 // Returns the width of the drawn item
 int ui::InfoLayerRenderer::DrawItemAtLocation(sf::RenderWindow& window, ui::DrawItem<std::string> item, sf::Vector2f location) {
-    sf::Text text;
-    text.setFont(*font_);
+    sf::Text text = infoText_;
     text.setString(item.description + ": " + item.value);
-    text.setCharacterSize(constants::infoLayerTextSize);
-    text.setFillColor(sf::Color::White);
-    text.setStyle(sf::Text::Bold);
 
     // Draw background box for the text
-    sf::RectangleShape box;
+    sf::RectangleShape box = infoBackground_;
     box.setSize(sf::Vector2f(text.getLocalBounds().width + 10.f, constants::infoLayerTextSize + 5.f));
-    box.setFillColor(constants::infoLayerColor + sf::Color(100, 0, 0, 255));
-    box.setOutlineColor(sf::Color::White);
-    box.setOutlineThickness(1.f);
     box.setPosition(GetFixedPosition(window, location));
     window.draw(box);
 
@@ -56,28 +104,13 @@ int ui::InfoLayerRenderer::DrawItemAtLocation(sf::RenderWindow& window, ui::Draw
     return std::max(0, static_cast<int>(box.getLocalBounds().width + 10.f));
 }
 
-// TODO: Refactor unnecessarily repeated parts to the Initialize method
-void ui::InfoLayerRenderer::DrawTo(sf::RenderWindow& window) {
-    UpdateDrawItems();
-    sf::RectangleShape background;
-    sf::Vector2f winSize = window.getView().getSize();
-    background.setSize(sf::Vector2f(winSize.x, constants::infoLayerHeight));
-    background.setFillColor(constants::infoLayerColor);
-    background.setOutlineColor(sf::Color::White);
-    background.setOutlineThickness(5.f);
-
-    // Keep background fixed relative to the view
-    background.setPosition(GetFixedPosition(window, sf::Vector2f(0.f, 0.f)));
-    window.draw(background);
-
-    int textLen = 0;
+// Draws the given items to the upper info layer
+void ui::InfoLayerRenderer::DrawItems(sf::RenderWindow& window, std::vector<ui::DrawItem<std::string>> items, int& textLen) {
     int maxTextLen = 0;
     int i = 0;
-    int parts = 2;
-    float inc = (constants::infoLayerHeight - float(constants::infoLayerTextSize)) / float(parts);
-    for (const auto& item : items_) {
-        if (i < parts) {
-            maxTextLen = std::max(maxTextLen, DrawItemAtLocation(window, item, sf::Vector2f(10.f + textLen, 10.f + i * inc)));
+    for (const auto& item : items) {
+        if (i < parts_) {
+            maxTextLen = std::max(maxTextLen, DrawItemAtLocation(window, item, sf::Vector2f(10.f + textLen, 10.f + i * inc_)));
             i++;
         } else {
             textLen += maxTextLen;
@@ -85,54 +118,39 @@ void ui::InfoLayerRenderer::DrawTo(sf::RenderWindow& window) {
             i = 1;
         }
     }
-    // TODO: Draw a separator here between general info and resource info
-    i = 0;
     textLen += maxTextLen;
-    maxTextLen = 0;
-    for (const auto& item : resource_items_) {
-        if (i < parts) {
-            maxTextLen = std::max(maxTextLen, DrawItemAtLocation(window, item, sf::Vector2f(10.f + textLen, 10.f + i * inc)));
-            i++;
-        } else {
-            textLen += maxTextLen;
-            maxTextLen = DrawItemAtLocation(window, item, sf::Vector2f(10.f + textLen, 10.f));
-            i = 1;
-        }
-    }
-    textLen += maxTextLen + 10.f;
+}
+
+// Draws the info layer, updates draw items on every call
+void ui::InfoLayerRenderer::DrawTo(sf::RenderWindow& window) {
+    UpdateDrawItems();
+    sf::Vector2f winSize = window.getView().getSize();
+
+    // Draw the background for the upper info bar
+    background_.setSize(sf::Vector2f(winSize.x, constants::infoLayerHeight));
+    // Keep background fixed relative to the view
+    background_.setPosition(GetFixedPosition(window, sf::Vector2f(0.f, 0.f)));
+    window.draw(background_);
+
+    int textLen = 0;
+    DrawItems(window, items_, textLen);
+    // TODO: Draw a separator here between general info and resource info
+    DrawItems(window, resource_items_, textLen);
+    textLen += 10.f;
 
     // Draw next turn button to top right corner of the info layer
-    sf::RectangleShape nextTurnButton;
-    nextTurnButton.setSize(sf::Vector2f(120.f, 40.f));
-    nextTurnButton.setFillColor(sf::Color(100, 200, 100, 255));
-    nextTurnButton.setOutlineColor(sf::Color::White);
-    nextTurnButton.setOutlineThickness(2.f);
-    nextTurnButton.setPosition(GetFixedPosition(window, sf::Vector2f(10.f + textLen, constants::infoLayerHeight / 2.f - nextTurnButton.getSize().y / 2.f)));
-    nextTurnButton_ = nextTurnButton; // Store for click detection
-    window.draw(nextTurnButton);
+    nextTurnButton_.setPosition(GetFixedPosition(window, sf::Vector2f(10.f + textLen, constants::infoLayerHeight / 2.f - nextTurnButton_.getSize().y / 2.f)));
+    window.draw(nextTurnButton_);
 
     // Draw next turn text over the button
-    sf::Text nextTurnText;
-    nextTurnText.setFont(*font_);
-    nextTurnText.setString("Next Turn");
-    nextTurnText.setCharacterSize(constants::infoLayerTextSize);
-    nextTurnText.setFillColor(sf::Color::Black);
-    nextTurnText.setStyle(sf::Text::Bold);
-    nextTurnText.setPosition(nextTurnButton.getPosition().x + 10.f, nextTurnButton.getPosition().y + 5.f);
-    window.draw(nextTurnText);
+    nextTurnText_.setPosition(nextTurnButton_.getPosition().x + 10.f, nextTurnButton_.getPosition().y + 5.f);
+    window.draw(nextTurnText_);
 
     // Draw a layer to the right lower corner showing selected tile info
-    sf::RectangleShape tileInfoBackground;
-    tileInfoBackground.setSize(sf::Vector2f(constants::kInitWindowWidth / 4.f, 2 * constants::kInitWindowHeight / 3.f));
-    tileInfoBackground.setFillColor(constants::infoLayerColor);
-    tileInfoBackground.setOutlineColor(sf::Color::White);
-    tileInfoBackground.setOutlineThickness(5.f);
-    tileInfoBackground.setPosition(GetFixedPosition(window, sf::Vector2f(winSize.x - (tileInfoBackground.getSize().x + 10.f), winSize.y - (tileInfoBackground.getSize().y + 10.f))));
-    window.draw(tileInfoBackground);
+    tileInfoBackground_.setPosition(GetFixedPosition(window, sf::Vector2f(winSize.x - (tileInfoBackground_.getSize().x + 10.f), winSize.y - (tileInfoBackground_.getSize().y + 10.f))));
+    window.draw(tileInfoBackground_);
 
-    // Draw tile info
-    sf::Text tileInfoText;
-    tileInfoText.setFont(*font_);
+    // Draw tile info (TODO: move this to Tile selection once its implemented)
     std::stringstream ss;
     ss << "Selected Tile Info:\n"; 
     ss << "- Terrain: ...\n" << "- Resources: ...\n";
@@ -140,12 +158,9 @@ void ui::InfoLayerRenderer::DrawTo(sf::RenderWindow& window) {
         ss << "   * " << resource << ": ...\n";
     }
     ss << "- Building: ...\n" << "- Unit: ...";
-    tileInfoText.setString(ss.str());
-    tileInfoText.setCharacterSize(constants::infoLayerTextSize);
-    tileInfoText.setFillColor(sf::Color::White);
-    tileInfoText.setStyle(sf::Text::Bold);
-    tileInfoText.setPosition(tileInfoBackground.getPosition() + sf::Vector2f(10.f, 10.f));
-    window.draw(tileInfoText);
+    tileInfoText_.setString(ss.str());
+    tileInfoText_.setPosition(tileInfoBackground_.getPosition() + sf::Vector2f(10.f, 10.f));
+    window.draw(tileInfoText_);
 }
 
 void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event) {
