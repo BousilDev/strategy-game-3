@@ -4,7 +4,6 @@
 #include <fstream>
 
 #include "core/game.hpp"
-#include "core/tests.hpp"
 #include "ui/user_interface.hpp"
 
 
@@ -23,10 +22,6 @@ int main() {
         std::cout << "No save file found." << std::endl;
     }
     */
-
-    // Run tests
-    core::TestGameInitializationAndTurns();
-    core::TestGameSaveAndLoad();
 
     // init game
     std::vector<core::Game::PlayerInit> players;

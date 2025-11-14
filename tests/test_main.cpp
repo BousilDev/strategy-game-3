@@ -1,5 +1,5 @@
 #include "core/game.hpp"
-#include "core/tests.hpp"
+#include "tests.hpp"
 
 #include <iostream>
 #include <string>

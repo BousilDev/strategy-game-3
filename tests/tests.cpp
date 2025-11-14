@@ -1,4 +1,4 @@
-#include "core/tests.hpp"
+#include "tests.hpp"
 #include "constants/constants.hpp"
 #include <iostream>
 #include <assert.h>

@@ -1,7 +1,7 @@
 #include "core/game.hpp"
 // Tests included here to avoid circular dependency issues in .hpp files
 // (Game needs PrintTestMsg, and Tests needs Game)
-#include "core/tests.hpp"
+#include "core/utils.hpp"
 #include <iostream>
 #include <sstream>
 #include <fstream>
