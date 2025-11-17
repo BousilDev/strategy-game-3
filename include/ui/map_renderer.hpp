@@ -17,7 +17,7 @@ public:
 
     std::shared_ptr<world::Tile> GetClickedTile(sf::RenderWindow& window);
 
-    std::shared_ptr<world::Tile> GetLastClickedTile(sf::RenderWindow& window);
+    std::shared_ptr<world::Tile> GetLastClickedTile();
 
    private:
     world::Map map_;

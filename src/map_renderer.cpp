@@ -116,7 +116,6 @@ std::shared_ptr<world::Tile> ui::MapRenderer::GetClickedTile(sf::RenderWindow& w
 }
 
 // Returns nullptr if no tile is currently selected !!
-std::shared_ptr<world::Tile> ui::MapRenderer::GetLastClickedTile(
-    sf::RenderWindow& window) {
+std::shared_ptr<world::Tile> ui::MapRenderer::GetLastClickedTile() {
   return selected_tile_;
 }
