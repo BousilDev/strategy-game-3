@@ -35,7 +35,12 @@ bool ui::UserInterface::PollEvent() {
     return window_.pollEvent(event_);
 }
 
-void ui::UserInterface::HandleEvent() {
+// TODO: Temp event getter thing for map rendering soz
+sf::Event& ui::UserInterface::GetEvent() {
+    return event_;
+}
+
+void ui::UserInterface::HandleEvent(bool start) {
     // Handle general events
     if (event_.type == sf::Event::Closed) window_.close();
     if (event_.type == sf::Event::Resized) {
@@ -44,8 +49,26 @@ void ui::UserInterface::HandleEvent() {
     }
 
     // Handle main menu events
-    main_menu_.Update(window_, mouse_pos_, event_);
-    info_layer_renderer_.Update(window_, mouse_pos_, event_);
+    if (!start) {
+        main_menu_.Update(window_, mouse_pos_, event_);
+    } else {
+        info_layer_renderer_->Update(window_, mouse_pos_, event_);
+        if (event_.type == sf::Event::MouseButtonReleased && 
+            event_.mouseButton.button == sf::Mouse::Left) {
+        // update map elements that do something when LMB is released
+            auto tile_pointer = map_renderer_.GetClickedTile(window_);
+            if (tile_pointer != nullptr) {
+                std::cout << "Tile number: " << tile_pointer->get_tile_number() 
+                        << "\nTile terrain: " << tile_pointer->get_terrain()->get_name() << std::endl;
+            }
+        } 
+    }
+
+}
+
+// Returns nullptr if no tile is currently selected !!
+std::shared_ptr<world::Tile> ui::UserInterface::GetLastClickedTile() {
+  return map_renderer_.GetLastClickedTile();
 }
 
 bool ui::UserInterface::IsPlayClicked() {
@@ -59,7 +82,7 @@ bool ui::UserInterface::IsLoadClicked() {
 // TODO: temporarily use start variable
 void ui::UserInterface::DrawAndDisplay(bool start) {
     // clear the screen
-    window_.clear();
+    window_.clear(sf::Color(0,123,167));
 
     // render main menu if game has not started, otherwise render the map etc.
     if (!start) {
