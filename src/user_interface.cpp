@@ -66,6 +66,11 @@ void ui::UserInterface::HandleEvent(bool start) {
 
 }
 
+// Returns nullptr if no tile is currently selected !!
+std::shared_ptr<world::Tile> ui::UserInterface::GetLastClickedTile() {
+  return map_renderer_.GetLastClickedTile();
+}
+
 bool ui::UserInterface::IsPlayClicked() {
     return main_menu_.IsPlayClicked(window_, mouse_pos_, event_);
 }
@@ -77,7 +82,7 @@ bool ui::UserInterface::IsLoadClicked() {
 // TODO: temporarily use start variable
 void ui::UserInterface::DrawAndDisplay(bool start) {
     // clear the screen
-    window_.clear();
+    window_.clear(sf::Color(0,123,167));
 
     // render main menu if game has not started, otherwise render the map etc.
     if (!start) {
