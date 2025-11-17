@@ -77,13 +77,13 @@ public:
         sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
         
         if(rightArrow_.getGlobalBounds().contains(mousePos)) {
-            rightArrow_.setScale(1.1, 1.1);
+            rightArrow_.setScale(1.3, 1.3);
         } else {
             rightArrow_.setScale(1.0, 1.0);
         }
 
         if(leftArrow_.getGlobalBounds().contains(mousePos)) {
-            leftArrow_.setScale(1.1, 1.1);
+            leftArrow_.setScale(1.3, 1.3);
         } else {
             leftArrow_.setScale(1.0, 1.0);
         }

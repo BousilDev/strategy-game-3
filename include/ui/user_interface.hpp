@@ -29,6 +29,8 @@ public:
     // Handle current event
     void HandleEvent(bool start);
 
+    std::shared_ptr<world::Tile> GetLastClickedTile();
+
     // check if play button is clicked
     bool IsPlayClicked();
 
