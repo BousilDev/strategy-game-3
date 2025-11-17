@@ -5,6 +5,7 @@
 
 void ui::MapRenderer::Initialize(world::Map map, sf::RenderWindow& window, float tile_size) {
     
+
     map_ = map;
     tile_size_ = tile_size;
 
@@ -21,7 +22,7 @@ void ui::MapRenderer::Initialize(world::Map map, sf::RenderWindow& window, float
     const float outline = 2.f;              // outline thickness
 
     // Get window size
-    auto window_size = window.getSize();
+    auto window_size = sf::Vector2f(window.getSize()) - sf::Vector2f(constants::kInitWindowWidth / 4.f, -constants::infoLayerHeight);
     const float window_w = window_size.x;
     const float window_h = window_size.y;
 
@@ -106,10 +107,16 @@ std::shared_ptr<world::Tile> ui::MapRenderer::GetClickedTile(sf::RenderWindow& w
         const auto& tile_shape = tiles_[i];
         if (tile_shape.getGlobalBounds().contains(mousePos)) {
             auto get_tile = map_.get_tile(i);
+            selected_tile_ = get_tile;
             return get_tile;
         }
     }
+    selected_tile_ = nullptr;
     return nullptr;
 }
 
-
+// Returns nullptr if no tile is currently selected !!
+std::shared_ptr<world::Tile> ui::MapRenderer::GetLastClickedTile(
+    sf::RenderWindow& window) {
+  return selected_tile_;
+}
