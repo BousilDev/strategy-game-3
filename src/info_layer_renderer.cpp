@@ -2,23 +2,20 @@
 #include <sstream>
 #include <string>
 
-ui::InfoLayerRenderer::InfoLayerRenderer(core::Game& game, const std::shared_ptr<sf::Font> font) :
-    game_(game), font_(font) {}
-
 void ui::InfoLayerRenderer::UpdateDrawItems() {
     items_.clear();
     resource_items_.clear();
-    items_.push_back({"Turn", std::to_string(game_.GetCurrentTurn())});
+    items_.push_back({"Turn", std::to_string(game_->GetCurrentTurn())});
     if (constants::debug) {
-        items_.push_back({"Players", std::to_string(game_.GetNofPlayers())});
+        items_.push_back({"Players", std::to_string(game_->GetNofPlayers())});
     }
-    items_.push_back({"Current Player", game_.GetCurrentPlayer().GetName()});
-    std::array<core::Resource, 4UL> resources = game_.GetCurrentPlayer().GetResources();
+    items_.push_back({"Current Player", game_->GetCurrentPlayer().GetName()});
+    std::array<core::Resource, 4UL> resources = game_->GetCurrentPlayer().GetResources();
     for (int i = 0; i < constants::resourceTypeNames.size(); ++i) {
         resource_items_.push_back({constants::resourceTypeNames[i], std::to_string(resources[i].amount)});
     }
-    items_.push_back({"Buildings", std::to_string(game_.GetCurrentPlayer().GetBuildings().size())});
-    items_.push_back({"Units", std::to_string(game_.GetCurrentPlayer().GetUnits().size())});
+    items_.push_back({"Buildings", std::to_string(game_->GetCurrentPlayer().GetBuildings().size())});
+    items_.push_back({"Units", std::to_string(game_->GetCurrentPlayer().GetUnits().size())});
     // Add more game state info as needed
 }
 
@@ -59,7 +56,7 @@ int ui::InfoLayerRenderer::DrawItemAtLocation(sf::RenderWindow& window, ui::Draw
     return std::max(0, static_cast<int>(box.getLocalBounds().width + 10.f));
 }
 
-// TODO: Refactor unnecessarily repeated parts to the constructor
+// TODO: Refactor unnecessarily repeated parts to the Initialize method
 void ui::InfoLayerRenderer::DrawTo(sf::RenderWindow& window) {
     UpdateDrawItems();
     sf::RectangleShape background;
@@ -154,7 +151,7 @@ void ui::InfoLayerRenderer::DrawTo(sf::RenderWindow& window) {
 void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event) {
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         if (isNextTurnClicked(window, mousePos)) {
-            game_.NextTurn();
+            game_->NextTurn();
             DrawTo(window);
         }
     }

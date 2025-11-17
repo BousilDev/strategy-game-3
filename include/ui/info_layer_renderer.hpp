@@ -13,14 +13,18 @@ struct DrawItem {
 
 class InfoLayerRenderer {
 public:
-    InfoLayerRenderer(core::Game& game, const std::shared_ptr<sf::Font> font);
+    InfoLayerRenderer() {};
+    void Initialize(core::Game& game, const std::shared_ptr<sf::Font> font) {
+        game_ = &game;
+        font_ = font;
+    };
 
     void DrawTo(sf::RenderWindow& window);
     void Update(sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event);
     bool isNextTurnClicked(const sf::RenderWindow& window, const sf::Vector2f& mousePos);
 
 private: 
-    core::Game& game_;
+    core::Game* game_ = nullptr;
     float tile_size_;
     std::shared_ptr<sf::Font> font_;
     std::vector<DrawItem<std::string>> items_;

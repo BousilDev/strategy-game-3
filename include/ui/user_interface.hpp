@@ -58,7 +58,7 @@ private:
     std::shared_ptr<sf::Font> font_ = std::make_shared<sf::Font>();
     ui::MainMenu main_menu_;
     ui::MapRenderer map_renderer_;
-    std::unique_ptr<ui::InfoLayerRenderer> info_layer_renderer_;
+    ui::InfoLayerRenderer info_layer_renderer_;
 };
 
 } // namespace ui
