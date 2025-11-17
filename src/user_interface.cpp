@@ -52,7 +52,7 @@ void ui::UserInterface::HandleEvent(bool start) {
     if (!start) {
         main_menu_.Update(window_, mouse_pos_, event_);
     } else {
-        info_layer_renderer_->Update(window_, mouse_pos_, event_);
+        info_layer_renderer_.Update(window_, mouse_pos_, event_);
         if (event_.type == sf::Event::MouseButtonReleased && 
             event_.mouseButton.button == sf::Mouse::Left) {
         // update map elements that do something when LMB is released
