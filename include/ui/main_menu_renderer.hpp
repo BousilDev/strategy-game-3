@@ -14,9 +14,9 @@ namespace ui {
 
 
 //TODO: group update methods into one method maybe? (might not be needed)
-class MainMenu {
+class MainMenuRenderer {
 public:
-    // Initialize a MainMenu object. Returns 0 if succesful and 1 if there are errors.
+    // Initialize a MainMenuRenderer object. Returns 0 if succesful and 1 if there are errors.
     // Errors are also printed to error stream
     int Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f view_size);
 

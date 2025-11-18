@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include "ui/main_menu.hpp"
+#include "ui/main_menu_renderer.hpp"
 #include "ui/map_renderer.hpp"
 #include "ui/info_layer_renderer.hpp"
 #include "constants/constants.hpp"
@@ -56,7 +56,7 @@ private:
     sf::Vector2f mouse_pos_;
     sf::Event event_;
     std::shared_ptr<sf::Font> font_ = std::make_shared<sf::Font>();
-    ui::MainMenu main_menu_;
+    ui::MainMenuRenderer main_menu_;
     ui::MapRenderer map_renderer_;
     ui::InfoLayerRenderer info_layer_renderer_;
 };

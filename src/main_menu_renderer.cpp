@@ -1,10 +1,10 @@
-#include "ui/main_menu.hpp"
+#include "ui/main_menu_renderer.hpp"
 
-int ui::MainMenu::Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f view_size) {
+int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f view_size) {
 
     // initialize sprite for background image
     if (!background_texture_.loadFromFile(constants::kBackgroundImagePath)) {
-        std::cerr << "Failed to load texture_ in ui::MainMenu::Initialize\n";
+        std::cerr << "Failed to load texture_ in ui::MainMenuRenderer::Initialize\n";
         return EXIT_FAILURE;
     }
     background_ = sf::Sprite(background_texture_);
@@ -41,7 +41,7 @@ int ui::MainMenu::Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f 
 
 // TODO: make compatible with different main menu windows (main, load, new)
 // Update the elements based on the event
-int ui::MainMenu::Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event) {
+int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event) {
     if (state_ == 1) {
     // new game
     
@@ -75,7 +75,7 @@ int ui::MainMenu::Update(const sf::RenderWindow& window, sf::Vector2f mousePos, 
     return 0;
 }
 
-void ui::MainMenu::DrawTo(sf::RenderWindow& window) {
+void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
     if (state_ == 1) {
     // new game
 
@@ -95,13 +95,13 @@ void ui::MainMenu::DrawTo(sf::RenderWindow& window) {
     }
 }
 
-bool ui::MainMenu::IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mouse_pos, sf::Event event) const {
+bool ui::MainMenuRenderer::IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mouse_pos, sf::Event event) const {
     return (event.type == sf::Event::MouseButtonReleased && 
         event.mouseButton.button == sf::Mouse::Left &&
         play_button_.getGlobalBounds().contains(mouse_pos));
 }
 
-bool ui::MainMenu::IsLoadClicked(const sf::RenderWindow& window, sf::Vector2f mouse_pos, sf::Event event) const {
+bool ui::MainMenuRenderer::IsLoadClicked(const sf::RenderWindow& window, sf::Vector2f mouse_pos, sf::Event event) const {
     return (event.type == sf::Event::MouseButtonReleased && 
         event.mouseButton.button == sf::Mouse::Left &&
         load_button_.getGlobalBounds().contains(mouse_pos));
@@ -109,7 +109,7 @@ bool ui::MainMenu::IsLoadClicked(const sf::RenderWindow& window, sf::Vector2f mo
 
 // TODO: improve: currently returns vector with elements (playerCount, map, deck)
 //                perhaps return a map?
-std::vector<int> ui::MainMenu::GetSelectedOptions() {
+std::vector<int> ui::MainMenuRenderer::GetSelectedOptions() {
     std::vector<int> selected_options;
     for (auto e : selections_) {
         selected_options.emplace_back(e.GetSelectedOption());
