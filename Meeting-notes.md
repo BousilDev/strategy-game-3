@@ -463,3 +463,39 @@ Info layer exists with a working 'next turn' button and initial Tile info (no ac
 ### TODOs
 
 1. Connect separate functionalities into UI and update existing code to manage new changes
+
+
+# Meeting 18.11.2025 12::00 - 13::00 @On site
+Sprint 3, "daily" 3
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+Map centered in UI, tile selection enhanced, tests and info layer refactored, some progress on Deck/Cards, added more functions to Building which help with Cards implementation
+
+## Challenges
+
+1. Resolving Deck and Card hierarchy
+
+## Actions
+
+1. Discussed how info layer could implement Cards and what the layout could look like
+
+## Project status
+
+Game has a working initial main menu, map rendering and info bar. Last smaller priority game logic classes should soon be ready to be linked to UI.
+
+### TODOs
+
+1. Add Cards to info layer
+2. Enhancing main menu, saving & loading in UI
+3. Add buildings to UI map
+4. Add actual selected Tile info to info layer
+5. Merge changes before review on Thursday

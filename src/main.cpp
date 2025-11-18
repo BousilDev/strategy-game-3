@@ -6,7 +6,6 @@
 #include "core/game.hpp"
 #include "ui/user_interface.hpp"
 
-
 // the main function
 int main() {
     
@@ -23,6 +22,8 @@ int main() {
     }
     */
 
+    bool start = false;
+
     // init game
     std::vector<core::Game::PlayerInit> players;
     core::Game game;
@@ -38,13 +39,16 @@ int main() {
 
         // Handle events
         while (user_interface.PollEvent()) {
-            user_interface.HandleEvent();
+            user_interface.HandleEvent(start);
 
             // main menu if game is not initialized yet
             if (!game.IsInitialized()) {
 
                 // Initialize game on pressing "Play"
                 if (user_interface.IsPlayClicked()) {
+
+                    // TODO: temp for ui map handling
+                    start = true;
 
                     // Get game initialization options from selectors
                     unsigned int player_count = user_interface.GetSelectedOptions()[0];
@@ -82,6 +86,7 @@ int main() {
                 }
             } else {
                 // TODO: temporarily keep this to accomodate other ui branches
+
             }
         }
         user_interface.DrawAndDisplay(game.IsInitialized());
