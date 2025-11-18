@@ -43,9 +43,9 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
 
 // Update the elements based on the event
 int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event) {
-    state_ = new_state_;
+    //current_state_ = new_state_;
 
-    if (state_ == 1) {
+    if (current_state_ == 1) {
     // new game
         start_new_button_.Update(window, mousePos, event);
         back_to_main_menu_button_.Update(window, mousePos, event);
@@ -59,7 +59,7 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
             new_state_ = 0;
         }
 
-    } else if (state_ == 2) {
+    } else if (current_state_ == 2) {
     // load game
         start_loaded_button_.Update(window, mousePos, event);
         back_to_main_menu_button_.Update(window, mousePos, event);
@@ -83,7 +83,9 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
 }
 
 void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
-    if (state_ == 1) {
+    current_state_ = new_state_;
+
+    if (current_state_ == 1) {
         // new game
         window.draw(background_);
         start_new_button_.DrawTo(window);
@@ -92,7 +94,7 @@ void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
         }
         back_to_main_menu_button_.DrawTo(window);
 
-    } else if (state_ == 2) {
+    } else if (current_state_ == 2) {
         // load game
         window.draw(background_);
         start_loaded_button_.DrawTo(window);
@@ -108,11 +110,11 @@ void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
 }
 
 bool ui::MainMenuRenderer::IsStartClicked(const sf::Vector2f& mouse_pos, const sf::Event& event) const {
-    return (state_ == 1 && start_new_button_.IsClicked(mouse_pos, event));
+    return (current_state_ == 1 && start_new_button_.IsClicked(mouse_pos, event));
 }
 
 bool ui::MainMenuRenderer::IsLoadClicked(const sf::Vector2f& mouse_pos, const sf::Event& event) const {
-    return (state_ == 2 && start_loaded_button_.IsClicked(mouse_pos, event));
+    return (current_state_ == 2 && start_loaded_button_.IsClicked(mouse_pos, event));
 }
 
 // TODO: improve: currently returns vector with elements (playerCount, map, deck)

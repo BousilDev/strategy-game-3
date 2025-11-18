@@ -40,7 +40,7 @@ int main() {
         // Handle events
         while (user_interface.PollEvent()) {
             user_interface.HandleEvent(start);
-
+            
             // main menu if game is not initialized yet
             if (!game.IsInitialized()) {
 

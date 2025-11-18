@@ -41,17 +41,20 @@ public:
     // TODO: add other stuff if needed
     // reset the state. Used when returning to main menu from somewhere.
     void Reset() {
-        state_ = 0;
+        current_state_ = 0;
         new_state_ = 0;
     }
 
 private:
     sf::Texture background_texture_;
     sf::Sprite background_;
-    int state_; // 0 main menu, 1 new game, 2 load game
+
+    //FIXME: handle these better, the main reason for these is the possibility to call IsPlayClicked after the internal state has been updated,
+    //       which causes it to return true when it should just be in the new game menu
+    int current_state_; // 0 main menu, 1 new game, 2 load game
     int new_state_;
 
-    ui::ClickableCircleShape back_to_main_menu_button_; // TODO: implement
+    ui::ClickableCircleShape back_to_main_menu_button_;
 
     // main menu
     sf::Text title_;
