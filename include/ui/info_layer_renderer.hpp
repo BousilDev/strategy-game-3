@@ -17,7 +17,7 @@ public:
     void Initialize(core::Game& game, const std::shared_ptr<sf::Font> font);
 
     void DrawTo(sf::RenderWindow& window);
-    void Update(sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event);
+    void Update(sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event, std::shared_ptr<world::Tile> tile_pointer);
     bool isNextTurnClicked(const sf::RenderWindow& window, const sf::Vector2f& mousePos);
 
 private: 
@@ -26,7 +26,7 @@ private:
     std::shared_ptr<sf::Font> font_;
     std::vector<DrawItem<std::string>> items_;
     std::vector<DrawItem<std::string>> resource_items_;
-    world::Tile* selected_tile_ = nullptr;
+    std::shared_ptr<world::Tile> selected_tile_ = nullptr;
 
     sf::RectangleShape background_;
     sf::RectangleShape nextTurnButton_;
@@ -42,6 +42,7 @@ private:
     sf::Vector2f GetFixedPosition(sf::RenderWindow& window, const sf::Vector2f& relativePos, bool absolute = true);
     int DrawItemAtLocation(sf::RenderWindow& window, DrawItem<std::string> item, sf::Vector2f location);
     void DrawItems(sf::RenderWindow& window, std::vector<DrawItem<std::string>> items, int& textLen);
+    std::string GetTileInfoString();
 };
 
 } // namespace ui

@@ -121,6 +121,26 @@ void ui::InfoLayerRenderer::DrawItems(sf::RenderWindow& window, std::vector<ui::
     textLen += maxTextLen;
 }
 
+std::string ui::InfoLayerRenderer::GetTileInfoString() {
+    std::stringstream ss;
+    ss << "Selected Tile Info:\n"; 
+    ss << "- Terrain: " << selected_tile_->get_terrain()->get_name() << "\n";
+    ss << "- Resources:\n";
+    std::vector<core::Resource> resources = selected_tile_->get_terrain()->get_resources();
+    for (unsigned int i = 0; i < resources.size(); i++) {
+        ss << "   * " << constants::resourceTypeNames[static_cast<int>(resources[i].type)] << ": " << resources[i].amount << "\n";
+    }
+    if (selected_tile_->get_building() != nullptr) {
+        ss << "- Building: " << constants::buildingTypeNames[static_cast<int>(selected_tile_->get_building()->GetType())] << "\n";
+    }
+    ss << "- Unit: TODO";
+    if (constants::debug) {
+        ss << "\n" << "DEBUG INFO:\n";
+        ss << "- Tile Number: " << selected_tile_->get_tile_number() << "\n";
+    }
+    return ss.str();
+}
+
 // Draws the info layer, updates draw items on every call
 void ui::InfoLayerRenderer::DrawTo(sf::RenderWindow& window) {
     UpdateDrawItems();
@@ -150,27 +170,27 @@ void ui::InfoLayerRenderer::DrawTo(sf::RenderWindow& window) {
     tileInfoBackground_.setPosition(GetFixedPosition(window, sf::Vector2f(winSize.x - (tileInfoBackground_.getSize().x + 10.f), winSize.y - (tileInfoBackground_.getSize().y + 10.f))));
     window.draw(tileInfoBackground_);
 
-    // Draw tile info (TODO: move this to Tile selection once its implemented)
-    std::stringstream ss;
-    ss << "Selected Tile Info:\n"; 
-    ss << "- Terrain: ...\n" << "- Resources: ...\n";
-    for (const auto& resource : constants::resourceTypeNames) {
-        ss << "   * " << resource << ": ...\n";
+    if (selected_tile_ != nullptr) {
+        std::string tileInfoString = GetTileInfoString();
+        tileInfoText_.setString(tileInfoString);
     }
-    ss << "- Building: ...\n" << "- Unit: ...";
-    tileInfoText_.setString(ss.str());
+
     tileInfoText_.setPosition(tileInfoBackground_.getPosition() + sf::Vector2f(10.f, 10.f));
     window.draw(tileInfoText_);
 }
 
-void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event) {
-    if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event, std::shared_ptr<world::Tile> tile_pointer) {
+    if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
         if (isNextTurnClicked(window, mousePos)) {
             game_->NextTurn();
             DrawTo(window);
         }
+        // Update Tile selection
+        if (tile_pointer != nullptr) {
+            selected_tile_ = tile_pointer;
+            DrawTo(window);
+        }
     }
-    // Update Tile selection here
 }
 
 bool ui::InfoLayerRenderer::isNextTurnClicked(const sf::RenderWindow& window, const sf::Vector2f& mousePos) {

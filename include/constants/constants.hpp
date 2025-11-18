@@ -31,6 +31,13 @@ const std::vector<std::string> resourceTypeNames = {
     "Gold",
     "Wood",
     "Metal",
-    "Food"
+    "Food",
+};
+const std::vector<std::string> buildingTypeNames = {
+    "Capital",
+    "Farm",
+    "Mine",
+    "Neighborhood",
+    "Power",
 };
 } // namespace constants

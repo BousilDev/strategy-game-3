@@ -52,16 +52,18 @@ void ui::UserInterface::HandleEvent(bool start) {
     if (!start) {
         main_menu_.Update(window_, mouse_pos_, event_);
     } else {
-        info_layer_renderer_.Update(window_, mouse_pos_, event_);
+        std::shared_ptr<world::Tile> tile_pointer = nullptr;
+        
         if (event_.type == sf::Event::MouseButtonReleased && 
             event_.mouseButton.button == sf::Mouse::Left) {
         // update map elements that do something when LMB is released
-            auto tile_pointer = map_renderer_.GetClickedTile(window_);
+            tile_pointer = map_renderer_.GetClickedTile(window_);
             if (tile_pointer != nullptr) {
                 std::cout << "Tile number: " << tile_pointer->get_tile_number() 
                         << "\nTile terrain: " << tile_pointer->get_terrain()->get_name() << std::endl;
             }
         } 
+        info_layer_renderer_.Update(window_, mouse_pos_, event_, tile_pointer);
     }
 
 }
