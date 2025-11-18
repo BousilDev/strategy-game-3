@@ -9,6 +9,7 @@
 #include "ui/selection.hpp"
 #include "ui/center_origin.hpp"
 #include "ui/clickable_text.hpp"
+#include "ui/clickable_circle_shape.hpp"
 #include "constants/constants.hpp"
 
 namespace ui {
@@ -49,7 +50,7 @@ private:
     int state_; // 0 main menu, 1 new game, 2 load game
     int new_state_;
 
-    sf::CircleShape back_button_; // TODO: implement
+    ui::ClickableCircleShape back_to_main_menu_button_; // TODO: implement
 
     // main menu
     sf::Text title_;

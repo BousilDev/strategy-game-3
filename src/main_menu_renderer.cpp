@@ -9,6 +9,9 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font> font, sf::V
     }
     background_ = sf::Sprite(background_texture_);
 
+    // Initialize back button
+    back_to_main_menu_button_ = ui::ClickableCircleShape(15, 3, sf::Vector2f(view_size.x*0.1, view_size.y*0.2), 270);
+
     // Initialize texts and set their position in the main menu
     title_ = sf::Text(constants::kGameTitle, *font, 50);
     title_.setPosition(view_size.x*0.1, view_size.y*0.1);
@@ -45,14 +48,25 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, sf::Vector2f mo
     if (state_ == 1) {
     // new game
         start_new_button_.Update(window, mousePos, event);
+        back_to_main_menu_button_.Update(window, mousePos, event);
     
         // Update selector states
         for (auto& e : selections_) {
             e.Update(window, mousePos, event);
         }
+
+        if (back_to_main_menu_button_.IsClicked(mousePos, event)) {
+            new_state_ = 0;
+        }
+
     } else if (state_ == 2) {
     // load game
         start_loaded_button_.Update(window, mousePos, event);
+        back_to_main_menu_button_.Update(window, mousePos, event);
+
+        if (back_to_main_menu_button_.IsClicked(mousePos, event)) {
+            new_state_ = 0;
+        }
     } else {
     // main menu
         new_game_button_.Update(window, mousePos, event);
@@ -70,20 +84,22 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, sf::Vector2f mo
 
 void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
     if (state_ == 1) {
-    // new game
+        // new game
         window.draw(background_);
         start_new_button_.DrawTo(window);
         for (auto selection : selections_) {
             selection.DrawTo(window);
         }
+        back_to_main_menu_button_.DrawTo(window);
 
     } else if (state_ == 2) {
-    // load game
+        // load game
         window.draw(background_);
         start_loaded_button_.DrawTo(window);
+        back_to_main_menu_button_.DrawTo(window);
 
     } else {
-    // main menu
+        // main menu
         window.draw(background_);
         window.draw(title_);
         new_game_button_.DrawTo(window);
