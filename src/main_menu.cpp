@@ -52,15 +52,10 @@ int ui::MainMenu::Update(const sf::RenderWindow& window, sf::Vector2f mousePos, 
     
     } else {
     // main menu
-        // Left mouse button released
-        if (event.type == sf::Event::MouseButtonReleased && 
-            event.mouseButton.button == sf::Mouse::Left) {
-            for (auto& e : selections_) { e.UpdateState(window); }
-        }
 
-        // Make selector buttons slightly larger if mouse is hovering on them
+        // Update selector states
         for (auto& e : selections_) {
-            e.UpdateHovered(window);
+            e.Update(window, mousePos, event);
         }
 
         // Make play button slightly larger if mouse is hovering on it
