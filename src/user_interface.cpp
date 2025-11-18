@@ -73,12 +73,12 @@ std::shared_ptr<world::Tile> ui::UserInterface::GetLastClickedTile() {
   return map_renderer_.GetLastClickedTile();
 }
 
-bool ui::UserInterface::IsPlayClicked() {
-    return main_menu_.IsPlayClicked(window_, mouse_pos_, event_);
+bool ui::UserInterface::IsStartClicked() {
+    return main_menu_.IsStartClicked(mouse_pos_, event_);
 }
 
 bool ui::UserInterface::IsLoadClicked() {
-    return main_menu_.IsLoadClicked(window_, mouse_pos_, event_);
+    return main_menu_.IsLoadClicked(mouse_pos_, event_);
 }
 
 // TODO: temporarily use start variable

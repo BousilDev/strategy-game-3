@@ -32,7 +32,7 @@ public:
     std::shared_ptr<world::Tile> GetLastClickedTile();
 
     // check if play button is clicked
-    bool IsPlayClicked();
+    bool IsStartClicked();
 
     // check if load button is clicked
     bool IsLoadClicked();

@@ -20,6 +20,9 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font> font, sf::V
     play_button_ = sf::Text("New Game", *font, 40);
     play_button_.setPosition(sf::Vector2f(view_size.x*0.1, view_size.y*0.3));
 
+    start_button_ = sf::Text("Start Game", *font, 40);
+    start_button_.setPosition(sf::Vector2f(view_size.x*0.5, view_size.y*0.3));
+
     //options_ = sf::Text("Options", *font, 35);
     //options_.setPosition(sf::Vector2f(view_size.x*0.1, view_size.y*0.2));
 
@@ -36,6 +39,9 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font> font, sf::V
         std::pair("Deck 1", 1), std::pair("Deck 2", 2), std::pair("Deck 3", 3) };
     selections_.emplace_back(deckTexts, font, 35, sf::Vector2f(view_size.x*0.25, view_size.y*0.65));
 
+    // reset the state of the object
+    Reset();
+
     return 0;
 }   
 
@@ -44,6 +50,13 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font> font, sf::V
 int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event) {
     if (state_ == 1) {
     // new game
+        
+        // Update selector states
+        for (auto& e : selections_) {
+            e.Update(window, mousePos, event);
+        }
+        
+        // TODO: start_button_
     
 
     } else if (state_ == 2) {
@@ -53,23 +66,25 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, sf::Vector2f mo
     } else {
     // main menu
 
-        // Update selector states
-        for (auto& e : selections_) {
-            e.Update(window, mousePos, event);
-        }
-
         // Make play button slightly larger if mouse is hovering on it
         if(play_button_.getGlobalBounds().contains(mousePos)) {
             play_button_.setScale(1.1,1.1);
+            if (event.type == sf::Event::MouseButtonReleased) {
+                state_ = 1;
+            }
         } else {
             play_button_.setScale(1,1);
         }
 
         if(load_button_.getGlobalBounds().contains(mousePos)) {
             load_button_.setScale(1.1,1.1);
+            if (event.type == sf::Event::MouseButtonReleased) {
+                state_ = 2;
+            }
         } else {
             load_button_.setScale(1,1);
         }
+
     }
     
     return 0;
@@ -78,16 +93,23 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, sf::Vector2f mo
 void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
     if (state_ == 1) {
     // new game
+        window.draw(background_);
+        for (auto selection : selections_) {
+            selection.DrawTo(window);
+        }
+
+        window.draw(start_button_);
+
 
     } else if (state_ == 2) {
     // load game
+        window.draw(background_);
+
 
     } else {
     // main menu
         window.draw(background_);
-        for (auto e : selections_) {
-            e.DrawTo(window);
-        }
+        
         window.draw(title_);
         window.draw(play_button_);
         //window.draw(options_);
@@ -95,14 +117,16 @@ void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
     }
 }
 
-bool ui::MainMenuRenderer::IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mouse_pos, sf::Event event) const {
-    return (event.type == sf::Event::MouseButtonReleased && 
+bool ui::MainMenuRenderer::IsStartClicked(const sf::Vector2f& mouse_pos, const sf::Event& event) const {
+    return (state_ == 1 &&
+        event.type == sf::Event::MouseButtonReleased && 
         event.mouseButton.button == sf::Mouse::Left &&
-        play_button_.getGlobalBounds().contains(mouse_pos));
+        start_button_.getGlobalBounds().contains(mouse_pos));
 }
 
-bool ui::MainMenuRenderer::IsLoadClicked(const sf::RenderWindow& window, sf::Vector2f mouse_pos, sf::Event event) const {
-    return (event.type == sf::Event::MouseButtonReleased && 
+bool ui::MainMenuRenderer::IsLoadClicked(const sf::Vector2f& mouse_pos, const sf::Event& event) const {
+    return (state_ == 2 &&
+        event.type == sf::Event::MouseButtonReleased && 
         event.mouseButton.button == sf::Mouse::Left &&
         load_button_.getGlobalBounds().contains(mouse_pos));
 }

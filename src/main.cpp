@@ -44,8 +44,8 @@ int main() {
             // main menu if game is not initialized yet
             if (!game.IsInitialized()) {
 
-                // Initialize game on pressing "Play"
-                if (user_interface.IsPlayClicked()) {
+                // Initialize game on pressing "Start"
+                if (user_interface.IsStartClicked()) {
 
                     // TODO: temp for ui map handling
                     start = true;
