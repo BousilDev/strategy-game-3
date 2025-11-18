@@ -39,44 +39,65 @@ int ui::MainMenu::Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f 
     return 0;
 }   
 
+// TODO: make compatible with different main menu windows (main, load, new)
 // Update the elements based on the event
 int ui::MainMenu::Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event) {
-    // Left mouse button released
-    if (event.type == sf::Event::MouseButtonReleased && 
-        event.mouseButton.button == sf::Mouse::Left) {
-        for (auto& e : selections_) { e.UpdateState(window); }
-    }
+    if (state_ == 1) {
+    // new game
+    
 
-    // Make selector buttons slightly larger if mouse is hovering on them
-    for (auto& e : selections_) {
-        e.UpdateHovered(window);
-    }
+    } else if (state_ == 2) {
+    // load game
 
-    // Make play button slightly larger if mouse is hovering on it
-    if(play_button_.getGlobalBounds().contains(mousePos)) {
-        play_button_.setScale(1.1,1.1);
+    
     } else {
-        play_button_.setScale(1,1);
-    }
+    // main menu
+        // Left mouse button released
+        if (event.type == sf::Event::MouseButtonReleased && 
+            event.mouseButton.button == sf::Mouse::Left) {
+            for (auto& e : selections_) { e.UpdateState(window); }
+        }
 
-    if(load_button_.getGlobalBounds().contains(mousePos)) {
-        load_button_.setScale(1.1,1.1);
-    } else {
-        load_button_.setScale(1,1);
+        // Make selector buttons slightly larger if mouse is hovering on them
+        for (auto& e : selections_) {
+            e.UpdateHovered(window);
+        }
+
+        // Make play button slightly larger if mouse is hovering on it
+        if(play_button_.getGlobalBounds().contains(mousePos)) {
+            play_button_.setScale(1.1,1.1);
+        } else {
+            play_button_.setScale(1,1);
+        }
+
+        if(load_button_.getGlobalBounds().contains(mousePos)) {
+            load_button_.setScale(1.1,1.1);
+        } else {
+            load_button_.setScale(1,1);
+        }
     }
     
     return 0;
 }
 
 void ui::MainMenu::DrawTo(sf::RenderWindow& window) {
-    window.draw(background_);
-    for (auto e : selections_) {
-        e.DrawTo(window);
+    if (state_ == 1) {
+    // new game
+
+    } else if (state_ == 2) {
+    // load game
+
+    } else {
+    // main menu
+        window.draw(background_);
+        for (auto e : selections_) {
+            e.DrawTo(window);
+        }
+        window.draw(title_);
+        window.draw(play_button_);
+        //window.draw(options_);
+        window.draw(load_button_);
     }
-    window.draw(title_);
-    window.draw(play_button_);
-    //window.draw(options_);
-    window.draw(load_button_);
 }
 
 bool ui::MainMenu::IsPlayClicked(const sf::RenderWindow& window, sf::Vector2f mouse_pos, sf::Event event) const {

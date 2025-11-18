@@ -36,6 +36,9 @@ public:
     // return the options selected in selectors
     std::vector<int> GetSelectedOptions();
 
+    // TODO: add other stuff if needed
+    // reset the state. Used when returning to main menu from somewhere.
+    void reset() { state_ = 0; }
 
 private:
     std::vector<ui::Selection> selections_;
@@ -45,6 +48,7 @@ private:
     //sf::Text options_;
     sf::Texture background_texture_;
     sf::Sprite background_;
+    int state_ = 0; // 0 main menu, 1 new game, 2 load game
 };
 
 } // namespace ui
