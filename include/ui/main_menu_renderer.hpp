@@ -8,6 +8,7 @@
 
 #include "ui/selection.hpp"
 #include "ui/center_origin.hpp"
+#include "ui/clickable_text.hpp"
 #include "constants/constants.hpp"
 
 namespace ui {
@@ -20,7 +21,6 @@ public:
     // Errors are also printed to error stream
     int Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f view_size);
 
-    //TODO: maybe use the return value to replace isPlayClicked etc?
     // Update the state of the main menu elements based on the event
     int Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event);
 
@@ -38,25 +38,30 @@ public:
 
     // TODO: add other stuff if needed
     // reset the state. Used when returning to main menu from somewhere.
-    void Reset() { state_ = 0; }
+    void Reset() {
+        state_ = 0;
+        new_state_ = 0;
+    }
 
 private:
     sf::Texture background_texture_;
     sf::Sprite background_;
     int state_; // 0 main menu, 1 new game, 2 load game
+    int new_state_;
 
     sf::CircleShape back_button_; // TODO: implement
 
     // main menu
     sf::Text title_;
-    sf::Text play_button_;
-    sf::Text load_button_;
+    ui::ClickableText new_game_button_;
+    ui::ClickableText load_game_button_;
 
     // new game
-    sf::Text start_button_;
+    ui::ClickableText start_new_button_;
     std::vector<ui::Selection> selections_;
-    
-    //sf::Text options_;
+
+    // load game
+    ui::ClickableText start_loaded_button_;
 };
 
 } // namespace ui

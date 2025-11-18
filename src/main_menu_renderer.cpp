@@ -14,17 +14,10 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font> font, sf::V
     title_.setPosition(view_size.x*0.1, view_size.y*0.1);
 
     // TODO: fix the positioning
-    load_button_ = sf::Text("Load Game", *font, 40);
-    load_button_.setPosition(sf::Vector2f(view_size.x*0.1, view_size.y*0.2));
-
-    play_button_ = sf::Text("New Game", *font, 40);
-    play_button_.setPosition(sf::Vector2f(view_size.x*0.1, view_size.y*0.3));
-
-    start_button_ = sf::Text("Start Game", *font, 40);
-    start_button_.setPosition(sf::Vector2f(view_size.x*0.5, view_size.y*0.3));
-
-    //options_ = sf::Text("Options", *font, 35);
-    //options_.setPosition(sf::Vector2f(view_size.x*0.1, view_size.y*0.2));
+    load_game_button_ =    ui::ClickableText("Load Game",          *font, sf::Vector2f(view_size.x*0.1, view_size.y*0.2), 40);
+    new_game_button_ =     ui::ClickableText("New Game",           *font, sf::Vector2f(view_size.x*0.1, view_size.y*0.3), 40);
+    start_loaded_button_ = ui::ClickableText("Load Selected Game", *font, sf::Vector2f(view_size.x*0.1, view_size.y*0.3), 40);
+    start_new_button_ =    ui::ClickableText("Start New Game",     *font, sf::Vector2f(view_size.x*0.1, view_size.y*0.3), 40);
 
     // Initialize option selectors for the main menu
     std::vector<std::pair<std::string, int>> playerCountTexts {
@@ -41,52 +34,37 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font> font, sf::V
 
     // reset the state of the object
     Reset();
-
+    
     return 0;
 }   
 
-// TODO: make compatible with different main menu windows (main, load, new)
 // Update the elements based on the event
 int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event) {
+    state_ = new_state_;
+
     if (state_ == 1) {
     // new game
-        
+        start_new_button_.Update(window, mousePos, event);
+    
         // Update selector states
         for (auto& e : selections_) {
             e.Update(window, mousePos, event);
         }
-        
-        // TODO: start_button_
-    
-
     } else if (state_ == 2) {
     // load game
-
-    
+        start_loaded_button_.Update(window, mousePos, event);
     } else {
     // main menu
+        new_game_button_.Update(window, mousePos, event);
+        load_game_button_.Update(window, mousePos, event);
 
-        // Make play button slightly larger if mouse is hovering on it
-        if(play_button_.getGlobalBounds().contains(mousePos)) {
-            play_button_.setScale(1.1,1.1);
-            if (event.type == sf::Event::MouseButtonReleased) {
-                state_ = 1;
-            }
-        } else {
-            play_button_.setScale(1,1);
+        if (new_game_button_.IsClicked(mousePos, event)) {
+            new_state_ = 1;
+        } else if (load_game_button_.IsClicked(mousePos, event)) {
+            new_state_ = 2;
         }
-
-        if(load_button_.getGlobalBounds().contains(mousePos)) {
-            load_button_.setScale(1.1,1.1);
-            if (event.type == sf::Event::MouseButtonReleased) {
-                state_ = 2;
-            }
-        } else {
-            load_button_.setScale(1,1);
-        }
-
     }
-    
+
     return 0;
 }
 
@@ -94,41 +72,31 @@ void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
     if (state_ == 1) {
     // new game
         window.draw(background_);
+        start_new_button_.DrawTo(window);
         for (auto selection : selections_) {
             selection.DrawTo(window);
         }
 
-        window.draw(start_button_);
-
-
     } else if (state_ == 2) {
     // load game
         window.draw(background_);
-
+        start_loaded_button_.DrawTo(window);
 
     } else {
     // main menu
         window.draw(background_);
-        
         window.draw(title_);
-        window.draw(play_button_);
-        //window.draw(options_);
-        window.draw(load_button_);
+        new_game_button_.DrawTo(window);
+        load_game_button_.DrawTo(window);
     }
 }
 
 bool ui::MainMenuRenderer::IsStartClicked(const sf::Vector2f& mouse_pos, const sf::Event& event) const {
-    return (state_ == 1 &&
-        event.type == sf::Event::MouseButtonReleased && 
-        event.mouseButton.button == sf::Mouse::Left &&
-        start_button_.getGlobalBounds().contains(mouse_pos));
+    return (state_ == 1 && start_new_button_.IsClicked(mouse_pos, event));
 }
 
 bool ui::MainMenuRenderer::IsLoadClicked(const sf::Vector2f& mouse_pos, const sf::Event& event) const {
-    return (state_ == 2 &&
-        event.type == sf::Event::MouseButtonReleased && 
-        event.mouseButton.button == sf::Mouse::Left &&
-        load_button_.getGlobalBounds().contains(mouse_pos));
+    return (state_ == 2 && start_loaded_button_.IsClicked(mouse_pos, event));
 }
 
 // TODO: improve: currently returns vector with elements (playerCount, map, deck)

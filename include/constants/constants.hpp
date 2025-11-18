@@ -18,6 +18,8 @@ const std::string faultySavesPath = "tests/faultySaves/";
 const int kInitWindowWidth = 800;
 const int kInitWindowHeight = 600;
 
+const sf::Vector2f kClickableTextHoveredScale = sf::Vector2f(1.1f, 1.1f); // sets the default scale change when hovering over a ui::ClickableText object
+
 const std::string kFontPath = "texture/times.ttf";
 const std::string kBackgroundImagePath = "texture/background.jpg";
 const std::string kGameTitle = "Strategy Game 3";
