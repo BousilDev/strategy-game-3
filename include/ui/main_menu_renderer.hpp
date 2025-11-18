@@ -20,10 +20,10 @@ class MainMenuRenderer {
 public:
     // Initialize a MainMenuRenderer object. Returns 0 if succesful and 1 if there are errors.
     // Errors are also printed to error stream
-    int Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f view_size);
+    int Initialize(const std::shared_ptr<sf::Font>& font, const sf::Vector2f& view_size);
 
     // Update the state of the main menu elements based on the event
-    int Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event);
+    int Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event);
 
     // Check if start is clicked
     bool IsStartClicked(const sf::Vector2f& mousePos, const sf::Event& event) const;
@@ -35,7 +35,7 @@ public:
     void DrawTo(sf::RenderWindow& window);
 
     // return the options selected in selectors
-    std::vector<int> GetSelectedOptions();
+    std::vector<int>& GetSelectedOptions() const;
 
     // TODO: add other stuff if needed
     // reset the state. Used when returning to main menu from somewhere.

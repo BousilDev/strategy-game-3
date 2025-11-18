@@ -1,6 +1,6 @@
 #include "ui/main_menu_renderer.hpp"
 
-int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font> font, sf::Vector2f view_size) {
+int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, const sf::Vector2f& view_size) {
 
     // initialize sprite for background image
     if (!background_texture_.loadFromFile(constants::kBackgroundImagePath)) {
@@ -42,7 +42,7 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font> font, sf::V
 }   
 
 // Update the elements based on the event
-int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, sf::Vector2f mousePos, sf::Event event) {
+int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event) {
     state_ = new_state_;
 
     if (state_ == 1) {
@@ -117,7 +117,7 @@ bool ui::MainMenuRenderer::IsLoadClicked(const sf::Vector2f& mouse_pos, const sf
 
 // TODO: improve: currently returns vector with elements (playerCount, map, deck)
 //                perhaps return a map?
-std::vector<int> ui::MainMenuRenderer::GetSelectedOptions() {
+std::vector<int>& ui::MainMenuRenderer::GetSelectedOptions() const {
     std::vector<int> selected_options;
     for (auto e : selections_) {
         selected_options.emplace_back(e.GetSelectedOption());

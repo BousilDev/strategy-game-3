@@ -58,7 +58,7 @@ public:
      * @param mouse_pos an sf::Vector2f containing the mouse coordinates
      * @param event an sf::Event
      */
-    void Update(const sf::RenderWindow& window, sf::Vector2f mouse_pos, sf::Event event) {
+    void Update(const sf::RenderWindow& window, const sf::Vector2f& mouse_pos, const sf::Event& event) {
         
         // if LMB is released on the selector
         if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
@@ -90,7 +90,7 @@ public:
      * 
      * @param window a reference to a window object
      */
-    void DrawTo(sf::RenderTarget& window) const {
+    void DrawTo(sf::RenderWindow& window) {
        
         window.draw(text_options_.at(selectedOption_).first);
         window.draw(leftArrow_);
