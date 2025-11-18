@@ -117,7 +117,7 @@ bool ui::MainMenuRenderer::IsLoadClicked(const sf::Vector2f& mouse_pos, const sf
 
 // TODO: improve: currently returns vector with elements (playerCount, map, deck)
 //                perhaps return a map?
-std::vector<int>& ui::MainMenuRenderer::GetSelectedOptions() const {
+std::vector<int> ui::MainMenuRenderer::GetSelectedOptions() const {
     std::vector<int> selected_options;
     for (auto e : selections_) {
         selected_options.emplace_back(e.GetSelectedOption());
