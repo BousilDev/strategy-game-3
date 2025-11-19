@@ -112,8 +112,6 @@ std::shared_ptr<Unit> CreateEmptyFromCopy();
    * @param damage The amount of damage to deal.
    */
   void dealDamageToTileContents(std::shared_ptr<world::Tile> tile, int damage);
-
-protected:
   /**
    * @brief Protected constructor used internally by the Create() factory method.
    *
@@ -129,6 +127,8 @@ protected:
        std::shared_ptr<core::Player> owner,
        int max_hp,
        UnitType build_type);
+
+protected:
 
   int max_hp_{0};  ///< The maximum health points of the unit.
   int current_hp_{0};  ///< The current health points of the unit.
@@ -163,7 +163,7 @@ public:
  static std::shared_ptr<Soldier> CreateEmpty(int max_hp);
 std::shared_ptr<Soldier> CreateEmptyFromCopy();
 
-protected:
+
   Soldier(std::shared_ptr<world::Tile> tile,
           std::shared_ptr<core::Player> owner,
           int max_hp);

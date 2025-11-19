@@ -1,4 +1,5 @@
 #include "core/game.hpp"
+#include "cards/card.hpp"
 // Tests included here to avoid circular dependency issues in .hpp files
 // (Game needs PrintTestMsg, and Tests needs Game)
 #include "core/utils.hpp"

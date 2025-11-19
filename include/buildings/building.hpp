@@ -125,9 +125,7 @@ public:
       return out;
   };
 
-
-protected:
-  /**
+/**
    * @brief Protected constructor used internally by the factory method.
    *
    * Initializes shared attributes like hit points, owner, and tile associations.
@@ -142,6 +140,8 @@ protected:
            std::shared_ptr<core::Player> owner,
            int max_hp,
            BuildingType build_type);
+protected:
+  
 
   int max_hp_{0};   ///< The maximum health of this building.
   int current_hp_{0}; ///< The current health of this building.
@@ -186,9 +186,7 @@ public:
       out << "CapitalBuilding";
       return out;
   };
-
-protected:
-  /**
+/**
    * @brief Constructs a CapitalBuilding.
    *
    * This constructor is protected; use `Create()` to instantiate safely.
@@ -236,9 +234,7 @@ public:
       out << "FarmBuilding";
       return out;
   };
-
-protected:
-  /**
+ /**
    * @brief Constructs a FarmBuilding.
    *
    * This constructor is protected; use `Create()` to instantiate safely.
@@ -252,4 +248,5 @@ protected:
                int max_hp);
 };
 
+ 
 } // namespace buildings
