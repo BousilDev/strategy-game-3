@@ -28,9 +28,7 @@ void core::Player::AddResources(const std::list<Resource>& resources) {
 void core::Player::RemoveResource(Resource resource) {
     Resource& res = resources_[static_cast<unsigned int>(resource.type)];
     if (res.amount < resource.amount) {
-        // Handle error: not enough resources
-        // For now, set to zero (do we want negative resources?)
-        res.amount = 0;
+        ThrowWithMessage("Not enough resources", __FILE__, __LINE__);
     } else {
         res.amount -= resource.amount;
     }

@@ -1,7 +1,7 @@
 #include "core/game.hpp"
 // Tests included here to avoid circular dependency issues in .hpp files
 // (Game needs PrintTestMsg, and Tests needs Game)
-#include "core/tests.hpp"
+#include "core/utils.hpp"
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -81,11 +81,10 @@ void core::Game::Load(std::istream& file){
     debug_ ? core::PrintTestMsg("Loaded game with ", nof_players_, " players.") : void();
 }
 
-bool core::Game::IsOver() {
+bool core::Game::IsOver() const {
     return nof_players_ == 1;
 }
 void core::Game::NextTurn() {
-    // TODO: Update resources for all players
 
     // Update alive players
     for (auto it = players_.begin(); it != players_.end(); ) {
@@ -121,6 +120,15 @@ void core::Game::NextTurn() {
         core::PrintTestMsg("It's now ", players_[current_turn_]->GetName(), "'s turn. ", "(global turn ", turn_, ")");
     }
 
+    auto& player = players_[current_turn_];
+
     // Draw new hand for the current player (In one round everyone gets to draw a hand once)
     players_[current_turn_]->DrawHand();
+
+    // TODO: Update resources for the current player based on their buildings
+    for (auto& building : player->GetBuildings()) {
+        //auto& tile = building->GetTile();
+        //std::vector<core::Resource>& resources = building->GetTile().GetTerrain()->GetResources();
+        //player->AddResources({resources.begin(), resources.end()});
+    }
 }

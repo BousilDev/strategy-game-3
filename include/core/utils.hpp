@@ -9,6 +9,14 @@
 #include <iostream>
 
 namespace core {
+    // Function to print test messages with debug prefix specified in constants.hpp
+    template <typename... Types>
+    // Uses universal references Types&&... (not sure if const works here)
+    void PrintTestMsg(Types&&... args) {
+        std::cout << constants::debug_prefix;
+        (std::cout << ... << args);
+        std::cout << std::endl;
+    }
     inline std::string GetStringFromLine(std::istream& in) {
         std::string line;
         std::getline(in, line);
@@ -16,5 +24,8 @@ namespace core {
     }
     inline unsigned int GetIntFromLine(std::istream& in) {
         return std::stoul(GetStringFromLine(in));
+    }
+    inline void ThrowWithMessage(const std::string& message, const std::string& file, int line) {
+        throw std::runtime_error(message + " at " + file + ":" + std::to_string(line));
     }
 }

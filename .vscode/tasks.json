@@ -65,7 +65,7 @@
             "command": "bash",
             "args": [
                 "-c",
-                "g++ -std=c++17 -Iinclude $(find src -name '*.cpp' ! -name 'main.cpp') tests/test_main.cpp -o build/tests -lsfml-graphics -lsfml-window -lsfml-system"
+                "g++ -std=c++17 -Iinclude $(find src -name '*.cpp' ! -name 'main.cpp') $(find tests -name '*.cpp') -o build/tests -lsfml-graphics -lsfml-window -lsfml-system"
             ],
             "group": {
                 "kind": "build",

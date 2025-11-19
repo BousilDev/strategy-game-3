@@ -83,7 +83,7 @@ public:
    * 
    * @return true if the game is over and false if not.
    */
-  bool IsOver();
+  bool IsOver() const;
 
   /**
    * @brief Tells if the game has been initialized.
