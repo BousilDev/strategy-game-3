@@ -1,4 +1,6 @@
 #include "units/unit.hpp"
+#include "world/tile.hpp"
+#include "core/player.hpp"
 #include <algorithm>
 
 namespace units {

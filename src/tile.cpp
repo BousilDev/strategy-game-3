@@ -1,4 +1,6 @@
 #include "world/tile.hpp"
+#include "buildings/building.hpp"
+#include "core/player.hpp"
 
 namespace world {
 

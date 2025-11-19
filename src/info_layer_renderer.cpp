@@ -126,18 +126,26 @@ std::string ui::InfoLayerRenderer::GetTileInfoString() {
     ss << "Selected Tile Info:\n"; 
     ss << "- Terrain: " << selected_tile_->get_terrain()->get_name() << "\n";
     ss << "- Resources:\n";
-    std::vector<core::Resource> resources = selected_tile_->get_terrain()->get_resources();
-    for (unsigned int i = 0; i < resources.size(); i++) {
-        ss << "   * " << constants::resourceTypeNames[static_cast<int>(resources[i].type)] << ": " << resources[i].amount << "\n";
+
+    std::list<core::Resource> resources = selected_tile_->get_terrain()->get_resources();
+    for (const auto& resource : resources) {
+        ss << "   * " << constants::resourceTypeNames[static_cast<int>(resource.type)]
+           << ": " << resource.amount << "\n";
     }
+
     if (selected_tile_->get_building() != nullptr) {
-        ss << "- Building: " << constants::buildingTypeNames[static_cast<int>(selected_tile_->get_building()->GetType())] << "\n";
+        ss << "- Building: " 
+           << constants::buildingTypeNames[static_cast<int>(selected_tile_->get_building()->GetType())] 
+           << "\n";
     }
+
     ss << "- Unit: TODO";
+
     if (constants::debug) {
-        ss << "\n" << "DEBUG INFO:\n";
+        ss << "\nDEBUG INFO:\n";
         ss << "- Tile Number: " << selected_tile_->get_tile_number() << "\n";
     }
+
     return ss.str();
 }
 
