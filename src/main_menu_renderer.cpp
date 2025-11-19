@@ -67,6 +67,7 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
         if (back_to_main_menu_button_.IsClicked(mousePos, event)) {
             new_state_ = 0;
         }
+
     } else {
     // main menu
         new_game_button_.Update(window, mousePos, event);

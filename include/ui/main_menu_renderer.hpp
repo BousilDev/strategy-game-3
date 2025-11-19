@@ -67,6 +67,7 @@ private:
 
     // load game
     ui::ClickableText start_loaded_button_;
+
 };
 
 } // namespace ui
