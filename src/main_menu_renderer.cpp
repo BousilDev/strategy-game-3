@@ -44,7 +44,7 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
         for (const auto& entry : fs::directory_iterator(saves_folder_)) {
             if (entry.is_regular_file()) {
                 std::cout << entry.path().string() << std::endl;
-                save_files_.emplace_back(entry.path().filename()); // stores only the filename
+                save_files_.emplace_back(entry.path());
             }
         }
     } catch (const fs::filesystem_error& error) {
@@ -98,6 +98,19 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
             }
         }
 
+        int i = scroll_;
+        for (;i < save_files_.size() || i < (scroll_ + visible_lines_); i++) {
+            float y = margin_ + (i - scroll_) * line_height_;
+            saves_text_.setString(save_files_[i].string());
+            saves_text_.setPosition(margin_, y);
+            if (event.type == sf::Event::MouseButtonReleased && 
+                event.mouseButton.button == sf::Mouse::Left &&
+                saves_text_.getGlobalBounds().contains(mousePos)) {
+                last_clicked_path_ = save_files_[i].string();
+            }
+        }
+
+
     } else {
     // main menu
         new_game_button_.Update(window, mousePos, event);
@@ -135,7 +148,7 @@ void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
         const int end = std::min((int)save_files_.size(), scroll_ + visible_lines_);
         for (int i = scroll_; i < end; ++i) {
             float y = margin_ + (i - scroll_) * line_height_;
-            saves_text_.setString(save_files_[i].string());
+            saves_text_.setString(save_files_[i].stem().string());
             saves_text_.setPosition(margin_, y);
             window.draw(saves_text_);
         }

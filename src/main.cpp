@@ -86,10 +86,7 @@ int main() {
                     }
                 } else if (user_interface.IsLoadClicked()) {
                     //TODO: things that are done when load is clicked
-                    std::cout << "Load has been clicked!" << std::endl;
-
-
-                    
+                    std::cout << "Load clicked! Save file path: " << user_interface.GetLastClickedSavePath() << std::endl;                 
                 }
             } else {
                 // TODO: things that are done when the game has been initialized

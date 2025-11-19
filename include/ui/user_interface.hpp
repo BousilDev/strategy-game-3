@@ -51,6 +51,8 @@ public:
     int GetSelectedMapSize() const { return main_menu_renderer_.GetSelectedMapSize(); }
     int GetSelectedDeck() const { return main_menu_renderer_.GetSelectedDeck(); }
 
+    std::string& GetLastClickedSavePath() { return main_menu_renderer_.GetLastClickedSavePath(); }
+
 private:
     sf::RenderWindow window_;
     sf::View view_;

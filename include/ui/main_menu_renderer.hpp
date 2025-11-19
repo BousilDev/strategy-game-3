@@ -41,6 +41,8 @@ public:
     int GetSelectedMapSize() const { return selections_[1].GetSelectedOption(); }
     int GetSelectedDeck() const { return selections_[2].GetSelectedOption(); }
 
+    std::string& GetLastClickedSavePath() { return last_clicked_path_; }
+
     // TODO: add other stuff if needed
     // reset the state. Used when returning to main menu from somewhere.
     void Reset() {
@@ -70,15 +72,17 @@ private:
 
     // load game
     ui::ClickableText start_loaded_button_;
+
     //TODO: save file display stuff
     const fs::path saves_folder_ = constants::kSavesPath;
     std::vector<fs::path> save_files_;
     sf::Text saves_text_;
+    std::string last_clicked_path_ = "No file has been selected!"; // path to last clicked file in the load game screen
 
     int scroll_ = 0; // index of the first visible line
-    int visible_lines_ = 2;
+    int visible_lines_ = 4;
     float margin_ = constants::kInitWindowWidth * 0.2f;
-    float line_height_ = constants::kInitWindowHeight * 0.05f;
+    float line_height_ = constants::kInitWindowHeight * 0.075f;
 };
 
 } // namespace ui
