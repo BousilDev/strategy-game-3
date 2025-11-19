@@ -54,6 +54,13 @@ void ui::InfoLayerRenderer::Initialize(core::Game& game, const std::shared_ptr<s
     infoText.setFillColor(sf::Color::White);
     infoText.setStyle(sf::Text::Bold);
     infoText_ = infoText;
+
+    sf::RectangleShape cardBackground;
+    cardBackground.setFillColor(constants::infoLayerCardColor);
+    cardBackground.setOutlineColor(sf::Color::White);
+    cardBackground.setOutlineThickness(1.f);
+    cardBackground.setSize(sf::Vector2f(constants::infoLayerCardWidth, constants::infoLayerCardHeight));
+    cardBackground_ = cardBackground;
 }
 
 // Updates the info items
@@ -121,6 +128,48 @@ void ui::InfoLayerRenderer::DrawItems(sf::RenderWindow& window, std::vector<ui::
     textLen += maxTextLen;
 }
 
+std::string ui::InfoLayerRenderer::GetCardInfoString() {
+    std::stringstream ss;
+    ss << selected_card_->GetName() << "\n";
+    ss << selected_card_->GetDescription();
+    return ss.str();
+}
+
+void ui::InfoLayerRenderer::DrawCardAtLocation(sf::RenderWindow& window, std::shared_ptr<cards::Card> card, sf::Vector2f location, int index) {
+    cardBackgrounds_[index].setPosition(GetFixedPosition(window, location));
+    // Change background color according to card type
+    cardBackgrounds_[index].setFillColor(constants::infoLayerCardColor + sf::Color(0, static_cast<int>(card->GetCardType()) * 100, 0, 255));
+
+    sf::Text cardText = tileInfoText_;
+    std::string cardInfo = GetCardInfoString();
+    cardText.setString(cardInfo);
+    cardText.setPosition(GetFixedPosition(window, sf::Vector2f(location.x + 10.f, location.y + 10.f)));
+
+    window.draw(cardBackgrounds_[index]);
+    window.draw(cardText);
+}
+
+void ui::InfoLayerRenderer::DrawCards(sf::RenderWindow& window) {
+    auto cards = game_->GetCurrentPlayer().GetHand().GetCards();
+    int cardsSize = cards.size();
+    float cardInc = constants::infoLayerCardsWidth / float(cardsSize);
+    int i = 0;
+    for (const auto& card : cards) {
+        // Check if existing background for this card already exists
+        // TODO : Make this more efficient and less error prone
+        if (cardBackgrounds_.size() <= i) {
+            sf::RectangleShape cardBackground = cardBackground_;
+            cardBackgrounds_.push_back(cardBackground);
+        }
+        DrawCardAtLocation(window, card, sf::Vector2f(constants::infoLayerCardsMargin + i * cardInc, constants::kInitWindowHeight - constants::infoLayerCardHeight), i);
+        i += 1;
+    }
+    // Free unnecessary backgrounds
+    while (cardBackgrounds_.size() > cardsSize) {
+        cardBackgrounds_.pop_back();
+    }
+}
+
 std::string ui::InfoLayerRenderer::GetTileInfoString() {
     std::stringstream ss;
     ss << "Selected Tile Info:\n"; 
@@ -171,12 +220,20 @@ void ui::InfoLayerRenderer::DrawTo(sf::RenderWindow& window) {
     window.draw(tileInfoBackground_);
 
     if (selected_tile_ != nullptr) {
-        std::string tileInfoString = GetTileInfoString();
-        tileInfoText_.setString(tileInfoString);
+        if (selected_card_ != nullptr) {
+            std::string cardInfoString = GetCardInfoString();
+            tileInfoText_.setString(cardInfoString);
+        } else {
+            std::string tileInfoString = GetTileInfoString();
+            tileInfoText_.setString(tileInfoString);
+        }
     }
 
     tileInfoText_.setPosition(tileInfoBackground_.getPosition() + sf::Vector2f(10.f, 10.f));
     window.draw(tileInfoText_);
+
+    // Draw cards here
+    DrawCards(window);
 }
 
 void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event, std::shared_ptr<world::Tile> tile_pointer) {
@@ -184,10 +241,17 @@ void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f&
         if (isNextTurnClicked(window, mousePos)) {
             game_->NextTurn();
             DrawTo(window);
+            return;
         }
         // Update Tile selection
         if (tile_pointer != nullptr) {
             selected_tile_ = tile_pointer;
+            DrawTo(window);
+            return;
+        }
+        std::shared_ptr<cards::Card> card = CardClicked(window, mousePos);
+        if (card != nullptr) {
+            selected_card_ = card;
             DrawTo(window);
         }
     }
@@ -195,4 +259,14 @@ void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f&
 
 bool ui::InfoLayerRenderer::isNextTurnClicked(const sf::RenderWindow& window, const sf::Vector2f& mousePos) {
     return nextTurnButton_.getGlobalBounds().contains(mousePos);
+}
+
+std::shared_ptr<cards::Card> ui::InfoLayerRenderer::CardClicked(const sf::RenderWindow& window, const sf::Vector2f& mousePos) {
+    // Travel the cardBackgrounds_ vector in reverse since last cards are printed on top
+    for (int i = cardBackgrounds_.size() - 1; i >= 0; i--) {
+        if (cardBackgrounds_[i].getGlobalBounds().contains(mousePos)) {
+            return game_->GetCurrentPlayer().GetHand().GetCards()[i];
+        }
+    }
+    return nullptr;
 }

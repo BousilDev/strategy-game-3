@@ -26,6 +26,11 @@ const std::string kGameTitle = "Strategy Game 3";
 const float infoLayerHeight = 100.f;
 const int infoLayerTextSize = 20;
 const sf::Color infoLayerColor = sf::Color(25, 217, 255, 255);
+const sf::Color infoLayerCardColor = sf::Color(100, 0, 0, 255);
+const float infoLayerCardsMargin = 20.f;
+const float infoLayerCardsWidth = kInitWindowWidth - 2 * infoLayerCardsMargin;
+const float infoLayerCardHeight = kInitWindowHeight / 4.f;
+const float infoLayerCardWidth = 100.f;
 
 const std::vector<std::string> resourceTypeNames = {
     "Gold",
