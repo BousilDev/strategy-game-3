@@ -38,6 +38,14 @@ std::shared_ptr<Unit> Unit::Create(std::shared_ptr<world::Tile> tile,
 
     return unit;
 }
+std::shared_ptr<Unit> Unit::CreateEmpty(int max_hp, UnitType unit_type){
+    auto unit = std::shared_ptr<Unit>(new Unit(nullptr, nullptr, max_hp, unit_type));
+    return unit;
+};
+std::shared_ptr<Unit> Unit::CreateEmptyFromCopy(){
+    auto unit = std::shared_ptr<Unit>(new Unit(nullptr, nullptr, max_hp_, unit_type_));
+    return unit;
+};
 
 int Unit::takeDamage(int damage)
 {
@@ -106,6 +114,13 @@ std::shared_ptr<Soldier> Soldier::Create(std::shared_ptr<world::Tile> tile,
 
     return soldier;
 }
-
+std::shared_ptr<Soldier> Soldier::CreateEmpty(int max_hp){
+    auto unit = std::shared_ptr<Soldier>(new Soldier(nullptr, nullptr, max_hp));
+    return unit;
+};
+std::shared_ptr<Soldier> Soldier::CreateEmptyFromCopy(){
+    auto unit = std::shared_ptr<Soldier>(new Soldier(nullptr, nullptr, max_hp_));
+    return unit;
+};
 
 } // namespace units

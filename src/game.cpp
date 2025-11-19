@@ -14,7 +14,8 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
     for (const auto& player : players) {
         players_.push_back(std::make_unique<Player>(Player(player.name, player.deck)));
         // Add a capital building to each player
-        players_.back()->AddBuilding(std::make_shared<buildings::CapitalBuilding>());
+        //switch from create empty to create when want to store the player and tile to building
+        players_.back()->AddBuilding(buildings::CapitalBuilding::CreateEmpty(100));
     }
     nof_players_ = players_.size();
     is_initialized_ = true;

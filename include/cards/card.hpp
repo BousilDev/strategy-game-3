@@ -101,7 +101,7 @@ public:
    * @param building The building the card constructs when played.
    */
   BuildingCard(std::string name, std::string description, const std::shared_ptr<buildings::Building> building)
-    : Card(name, description), building_(building) {}
+    : Card(name, description), building_(building->CreateEmptyFromCopy()) {}
 
   /**
    * @brief Copy constructor for the BuildingCard.
@@ -110,7 +110,7 @@ public:
    */
   BuildingCard(const BuildingCard& other)
     : Card(other),
-      building_(other.building_ ? other.building_->Clone() : nullptr) {}
+      building_(other.building_ ? other.building_->CreateEmptyFromCopy() : nullptr) {}
 
   /**
    * @brief Clone the card.
@@ -149,7 +149,7 @@ public:
    * @param unit The unit the card deploys when played.
    */
   UnitCard(std::string name, std::string description, const std::shared_ptr<units::Unit> unit)
-    : Card(name, description), unit_(unit) {}
+    : Card(name, description), unit_(unit->CreateEmptyFromCopy()) {}
 
   /**
    * @brief Copy constructor for the UnitCard.
@@ -158,7 +158,7 @@ public:
    */
   UnitCard(const UnitCard& other)
     : Card(other),
-      unit_(other.unit_ ? other.unit_->Clone() : nullptr) {}
+      unit_(other.unit_ ? other.unit_->CreateEmptyFromCopy() : nullptr) {}
 
   /**
    * @brief Clone the card.

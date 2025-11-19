@@ -18,7 +18,7 @@ Building::Building(std::shared_ptr<world::Tile> tile,
       current_tile_(tile),
       owner_(owner)
 {
-    // Nothing else here: cannot safely call shared_from_this() yet
+    
 }
 
 // Factory function to safely construct and register buildings
@@ -37,6 +37,18 @@ std::shared_ptr<Building> Building::Create(std::shared_ptr<world::Tile> tile,
         owner->AddBuilding(building);
     }
 
+    return building;
+}
+std::shared_ptr<Building> Building::CreateEmpty(int max_hp,BuildingType build_type)
+{
+    auto building = std::shared_ptr<Building>(
+        new Building(nullptr, nullptr, max_hp, build_type));
+
+    return building;
+}
+std::shared_ptr<Building> Building::CreateEmptyFromCopy(){
+    auto building = std::shared_ptr<Building>(
+        new Building(nullptr, nullptr, max_hp_, building_type_));
     return building;
 }
 
@@ -73,6 +85,18 @@ std::shared_ptr<CapitalBuilding> CapitalBuilding::Create(
 
     return capital;
 }
+std::shared_ptr<CapitalBuilding> CapitalBuilding::CreateEmpty(int max_hp)
+{
+    auto capital = std::shared_ptr<CapitalBuilding>(
+        new CapitalBuilding(nullptr, nullptr, max_hp));
+
+    return capital;
+}
+std::shared_ptr<CapitalBuilding> CapitalBuilding::CreateEmptyFromCopy(){
+    auto building = std::shared_ptr<CapitalBuilding>(
+        new CapitalBuilding(nullptr, nullptr, max_hp_));
+    return building;
+}
 
 void CapitalBuilding::atTurnEnd()
 {
@@ -105,6 +129,18 @@ std::shared_ptr<FarmBuilding> FarmBuilding::Create(
     }
 
     return farm;
+}
+std::shared_ptr<FarmBuilding> FarmBuilding::CreateEmpty(int max_hp)
+{
+    auto farm = std::shared_ptr<FarmBuilding>(
+        new FarmBuilding(nullptr, nullptr, max_hp));
+
+    return farm;
+}
+std::shared_ptr<FarmBuilding> FarmBuilding::CreateEmptyFromCopy(){
+    auto building = std::shared_ptr<FarmBuilding>(
+        new FarmBuilding(nullptr, nullptr, max_hp_));
+    return building;
 }
 
 void FarmBuilding::atTurnEnd()

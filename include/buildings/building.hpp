@@ -71,7 +71,7 @@ public:
                                           BuildingType build_type);
 
   static std::shared_ptr<Building> CreateEmpty(int max_hp, BuildingType build_type);
-  static std::shared_ptr<Building> CreateEmptyFromCopy(std::shared_ptr<Building>);
+ std::shared_ptr<Building> CreateEmptyFromCopy();
   virtual bool setPlayer(std::shared_ptr<core::Player>);
   virtual bool setTile(std::shared_ptr<world::Tile>);
 
@@ -112,6 +112,20 @@ public:
    */
   virtual void atTurnEnd() {}
 
+  BuildingType GetType() const { return building_type_; }
+
+  friend std::istream& operator>>(std::istream &in, std::shared_ptr<Building>& other) {
+      std::string typeStr;
+      std::getline(in, typeStr);
+      return in;
+  };
+
+  friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Building>& other) {
+      out << "Building";
+      return out;
+  };
+
+
 protected:
   /**
    * @brief Protected constructor used internally by the factory method.
@@ -135,19 +149,7 @@ protected:
 
   std::weak_ptr<world::Tile> current_tile_;   ///< Weak reference to the tile this building occupies.
   std::weak_ptr<core::Player> owner_;         ///< Weak reference to the player that owns this building.
-  BuildingType GetType() const { return BuildingType::kCapital; }
-
-  friend std::istream& operator>>(std::istream &in, std::shared_ptr<Building>& other) {
-      std::string typeStr;
-      std::getline(in, typeStr);
-      return in;
-  };
-
-  friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Building>& other) {
-      out << "Building";
-      return out;
-  };
-
+  
 };
 
 /**
@@ -170,6 +172,8 @@ public:
   static std::shared_ptr<CapitalBuilding> Create(std::shared_ptr<world::Tile> tile,
                                                  std::shared_ptr<core::Player> owner,
                                                  int max_hp);
+    static std::shared_ptr<CapitalBuilding> CreateEmpty(int max_hp);
+ std::shared_ptr<CapitalBuilding> CreateEmptyFromCopy();
 
   /**
    * @brief Executes per-turn effects for the capital.
@@ -177,6 +181,11 @@ public:
    * Default implementation currently performs no actions.
    */
   void atTurnEnd() override;
+
+  friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<CapitalBuilding>& other) {
+      out << "CapitalBuilding";
+      return out;
+  };
 
 protected:
   /**
@@ -191,14 +200,7 @@ protected:
   CapitalBuilding(std::shared_ptr<world::Tile> tile,
                   std::shared_ptr<core::Player> owner,
                   int max_hp);
-  std::shared_ptr<Building> Clone() override { return std::make_shared<CapitalBuilding>(*this); }
 
-  BuildingType GetType() const { return kCapital; } 
-
-  friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<CapitalBuilding>& other) {
-      out << "CapitalBuilding";
-      return out;
-  };
 };
 
 /**
@@ -220,6 +222,8 @@ public:
   static std::shared_ptr<FarmBuilding> Create(std::shared_ptr<world::Tile> tile,
                                               std::shared_ptr<core::Player> owner,
                                               int max_hp);
+        static std::shared_ptr<FarmBuilding> CreateEmpty(int max_hp);
+ std::shared_ptr<FarmBuilding> CreateEmptyFromCopy();
 
   /**
    * @brief Executes per-turn effects for the farm.
@@ -227,6 +231,11 @@ public:
    * Typically, this adds terrain-specific resources to the owning player.
    */
   void atTurnEnd() override;
+
+  friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<FarmBuilding>& other) {
+      out << "FarmBuilding";
+      return out;
+  };
 
 protected:
   /**

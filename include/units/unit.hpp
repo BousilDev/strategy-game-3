@@ -65,6 +65,8 @@ public:
    * @brief Returns the type of this unit.
    * @return The UnitType enumeration value representing this unit's type.
    */
+  static std::shared_ptr<Unit> CreateEmpty(int max_hp, UnitType unit_type);
+std::shared_ptr<Unit> CreateEmptyFromCopy();
   UnitType GetType() const { return unit_type_; }
 
   /**
@@ -158,6 +160,8 @@ public:
   static std::shared_ptr<Soldier> Create(std::shared_ptr<world::Tile> tile,
                                          std::shared_ptr<core::Player> owner,
                                          int max_hp);
+ static std::shared_ptr<Soldier> CreateEmpty(int max_hp);
+std::shared_ptr<Soldier> CreateEmptyFromCopy();
 
 protected:
   Soldier(std::shared_ptr<world::Tile> tile,
