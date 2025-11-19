@@ -13,11 +13,13 @@ void core::TestGameInitializationAndTurns() {
   std::cout << "Testing Game class..." << std::endl;
   unsigned int map_size = 5;
   Game game;
+  std::vector<std::shared_ptr<cards::Card>> empty_cards = {};
+  cards::Deck test_deck = cards::Deck(empty_cards, 0U);
   const std::vector<Game::PlayerInit> players = {
-    {"Test Gamer", cards::Deck()},
-    {"Bob the Builder", cards::Deck()},
-    {"Jari the Destroyer", cards::Deck()},
-    {"Markku the Conqueror", cards::Deck()}
+    {"Test Gamer", test_deck.Clone()},
+    {"Bob the Builder", test_deck.Clone()},
+    {"Jari the Destroyer", test_deck.Clone()},
+    {"Markku the Conqueror", test_deck.Clone()}
   };
   game.Initialize(players, map_size);
   AssertWithMessage(game.IsInitialized() && !game.IsOver(), "Game should be initialized and not over after initialization.");
@@ -74,10 +76,12 @@ void core::TestGameSaveAndLoad() {
     Game game;
     std::vector<core::Game::PlayerInit> players;
     unsigned int player_count = 4;
+    std::vector<std::shared_ptr<cards::Card>> empty_cards = {};
+    cards::Deck test_deck = cards::Deck(empty_cards, 0U);
     for (unsigned int i = 0; i < player_count; ++i) {
         players.emplace_back(core::Game::PlayerInit{
             "Player " + std::to_string(i + 1),
-            cards::Deck() // TODO: add custom starter decks
+            test_deck.Clone() // TODO: add custom starter decks
         });
     }
     game.Initialize(players, map_size);
