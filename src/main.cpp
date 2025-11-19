@@ -54,11 +54,13 @@ int main() {
                     unsigned int player_count = user_interface.GetSelectedOptions()[0];
                     unsigned int map_size = user_interface.GetSelectedOptions()[1];
 
+                    std::vector<std::shared_ptr<cards::Card>> empty_cards = {};
+                    cards::Deck test_deck = cards::Deck(empty_cards, 0U);
                     // Create players
                     for (unsigned int i = 0; i < player_count; ++i) {
                         players.emplace_back(core::Game::PlayerInit{
                             "Player " + std::to_string(i + 1),
-                            cards::Deck() // TODO: add custom starter decks
+                            test_deck.Clone() // TODO: add custom starter decks
                         });
                     }
 
