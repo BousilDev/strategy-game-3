@@ -86,23 +86,10 @@ int main() {
                     }
                 } else if (user_interface.IsLoadClicked()) {
                     //TODO: things that are done when load is clicked
-
                     std::cout << "Load has been clicked!" << std::endl;
+
+
                     
-                    const std::filesystem::path saves_folder_ = constants::kSavesPath;
-                    try {
-                        if (!std::filesystem::exists(saves_folder_) || !std::filesystem::is_directory(saves_folder_)) {
-                            std::cerr << "Not a directory: " << saves_folder_ << "\n";
-                        }
-                    
-                        for (const auto& entry : std::filesystem::directory_iterator(saves_folder_)) {
-                            if (entry.is_regular_file()) {
-                                std::cout << entry.path().string() << std::endl;
-                            }
-                        }
-                    } catch (const std::filesystem::filesystem_error& error) {
-                        std::cerr << "Filesystem error: " << error.what() << "\n";
-                    }
                 }
             } else {
                 // TODO: things that are done when the game has been initialized

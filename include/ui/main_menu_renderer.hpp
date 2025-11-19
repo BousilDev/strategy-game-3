@@ -5,12 +5,15 @@
 #include <memory>
 #include <assert.h>
 #include <vector>
+#include <filesystem>
 
 #include "ui/selection.hpp"
 #include "ui/center_origin.hpp"
 #include "ui/clickable_text.hpp"
 #include "ui/clickable_circle_shape.hpp"
 #include "constants/constants.hpp"
+
+namespace fs = std::filesystem;
 
 namespace ui {
 
@@ -67,7 +70,15 @@ private:
 
     // load game
     ui::ClickableText start_loaded_button_;
+    //TODO: save file display stuff
+    const fs::path saves_folder_ = constants::kSavesPath;
+    std::vector<fs::path> save_files_;
+    sf::Text saves_text_;
 
+    int scroll_ = 0; // index of the first visible line
+    int visible_lines_ = 2;
+    float margin_ = constants::kInitWindowWidth * 0.2f;
+    float line_height_ = constants::kInitWindowHeight * 0.05f;
 };
 
 } // namespace ui
