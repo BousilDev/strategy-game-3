@@ -19,12 +19,13 @@ public:
 
     //FIXME: using this in the event handling loop in main causes a weird bug
     // Update mousepos, poll next event and handle it
-    //bool PollAndHandleEvent();
+    //bool PollAndHandleEvent(bool start);
 
     // Update mouse position and poll events. Returns true if event found.
     bool PollEvent();
 
-    sf::Event& GetEvent();
+    // TODO: Temp event getter thing for map rendering soz
+    sf::Event& GetEvent() { return event_; };
 
     // Handle current event
     void HandleEvent(bool start);
@@ -46,17 +47,23 @@ public:
 
     sf::RenderWindow& GetWindow() { return window_; }
 
-    // return the options selected in main menu selectors
-    std::vector<int> GetSelectedOptions() { return main_menu_.GetSelectedOptions(); }
+    int GetSelectedPlayerCount() const { return main_menu_renderer_.GetSelectedPlayerCount(); }
+    int GetSelectedMapSize() const { return main_menu_renderer_.GetSelectedMapSize(); }
+    int GetSelectedDeck() const { return main_menu_renderer_.GetSelectedDeck(); }
+
+    std::string& GetLastClickedSavePath() { return main_menu_renderer_.GetLastClickedSavePath(); }
 
 private:
     sf::RenderWindow window_;
     sf::View view_;
     sf::Vector2f view_size_;
     sf::Vector2f mouse_pos_;
+    
+    // TODO: fix event handling stuff
     sf::Event event_;
+
     std::shared_ptr<sf::Font> font_ = std::make_shared<sf::Font>();
-    ui::MainMenuRenderer main_menu_;
+    ui::MainMenuRenderer main_menu_renderer_;
     ui::MapRenderer map_renderer_;
     ui::InfoLayerRenderer info_layer_renderer_;
 };
