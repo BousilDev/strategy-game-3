@@ -4,6 +4,7 @@ int ui::UserInterface::Initialize(core::Game& game) {
 
     // Graphics init
     window_.create(sf::VideoMode(constants::kInitWindowWidth, constants::kInitWindowHeight), constants::kGameTitle);
+    window_.setFramerateLimit(60);
     view_ = window_.getDefaultView();
     view_size_ = view_.getSize();
 
@@ -31,8 +32,13 @@ int ui::UserInterface::Initialize(core::Game& game) {
 
 
 bool ui::UserInterface::PollEvent() {
-    mouse_pos_ = window_.mapPixelToCoords(sf::Mouse::getPosition(window_));
-    return window_.pollEvent(event_);
+    if (window_.pollEvent(event_)) {
+        mouse_pos_ = window_.mapPixelToCoords(sf::Mouse::getPosition(window_));
+        return true;
+    } else {
+        event_ = sf::Event();
+        return false;
+    }
 }
 
 // TODO: Temp event getter thing for map rendering soz
@@ -73,12 +79,12 @@ std::shared_ptr<world::Tile> ui::UserInterface::GetLastClickedTile() {
   return map_renderer_.GetLastClickedTile();
 }
 
-bool ui::UserInterface::IsPlayClicked() {
-    return main_menu_.IsPlayClicked(window_, mouse_pos_, event_);
+bool ui::UserInterface::IsStartClicked() {
+    return main_menu_.IsStartClicked(mouse_pos_, event_);
 }
 
 bool ui::UserInterface::IsLoadClicked() {
-    return main_menu_.IsLoadClicked(window_, mouse_pos_, event_);
+    return main_menu_.IsLoadClicked(mouse_pos_, event_);
 }
 
 // TODO: temporarily use start variable

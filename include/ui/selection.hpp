@@ -55,38 +55,34 @@ public:
      * @brief Update the state of the object.
      * 
      * @param window a reference to a window object
+     * @param mouse_pos an sf::Vector2f containing the mouse coordinates
+     * @param event an sf::Event
      */
-    void UpdateState(const sf::RenderWindow& window) {
+    void Update(const sf::RenderWindow& window, const sf::Vector2f& mouse_pos, const sf::Event& event) {
         
-        sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-        if(rightArrow_.getGlobalBounds().contains(mousePos)) {
-            selectedOption_ = (selectedOption_ + 1) % text_options_.size();
+        // if LMB is released on the selector
+        if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+            if (leftArrow_.getGlobalBounds().contains(mouse_pos)) {
+                selectedOption_ = (selectedOption_ - 1) < 0 ? (text_options_.size() - 1) : (selectedOption_ - 1);
+            }
+            if (rightArrow_.getGlobalBounds().contains(mouse_pos)) {
+                selectedOption_ = (selectedOption_ + 1) % text_options_.size();
+            }
         }
-        if(leftArrow_.getGlobalBounds().contains(mousePos)) {
-            selectedOption_ = (selectedOption_ - 1) < 0 ? text_options_.size() - 1 : selectedOption_ - 1;
-        }
-    }
 
-    /**
-     * @brief Update the state of the obect when mouse hovers over.
-     * 
-     * @param window a reference to a window object
-     */
-    void UpdateHovered(const sf::RenderWindow& window) {
-        
-        sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-        
-        if(rightArrow_.getGlobalBounds().contains(mousePos)) {
+        // if mouse hovers over
+        if(leftArrow_.getGlobalBounds().contains(mouse_pos)) {
+            leftArrow_.setScale(1.3, 1.3);
+        } else {
+            leftArrow_.setScale(1.0, 1.0);
+        }
+
+        if(rightArrow_.getGlobalBounds().contains(mouse_pos)) {
             rightArrow_.setScale(1.3, 1.3);
         } else {
             rightArrow_.setScale(1.0, 1.0);
         }
 
-        if(leftArrow_.getGlobalBounds().contains(mousePos)) {
-            leftArrow_.setScale(1.3, 1.3);
-        } else {
-            leftArrow_.setScale(1.0, 1.0);
-        }
     }
 
     /**
@@ -94,7 +90,7 @@ public:
      * 
      * @param window a reference to a window object
      */
-    void DrawTo(sf::RenderTarget& window) const {
+    void DrawTo(sf::RenderWindow& window) {
        
         window.draw(text_options_.at(selectedOption_).first);
         window.draw(leftArrow_);
