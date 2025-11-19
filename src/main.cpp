@@ -1,148 +1,98 @@
 #include <iostream>
 #include <assert.h>
 #include <string>
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
+#include <fstream>
+#include <filesystem>
 
 #include "core/game.hpp"
-#include "core/tests.hpp"
-#include "ui/selection.hpp"
-#include "ui/center_origin.hpp"
+#include "ui/user_interface.hpp"
 
 // the main function
-int main(){
+int main() {
     
-    // Graphics init
-    sf::RenderWindow window(sf::VideoMode(constants::kInitWindowWidth, constants::kInitWindowHeight), "StrategyGame");
-    sf::View view = window.getDefaultView();
-    sf::Vector2f view_size = view.getSize();
+    /*
+    // Load game from save file
+    core::Game game;
+    std::ifstream inFile("saveFile.txt");
+    if (inFile.is_open()) {
+        game.Load(inFile);
+        inFile.close();
+        core::DebugGameState(game);
+    } else {
+        std::cout << "No save file found." << std::endl;
+    }
+    */
 
-    // initialize sprite for background image
-    sf::Texture texture;
-    if (!texture.loadFromFile("./texture/background.jpg")){
+    bool start = false;
+
+    // init game
+    std::vector<core::Game::PlayerInit> players;
+    core::Game game;
+
+    // init user interface
+    ui::UserInterface user_interface;
+    if (user_interface.Initialize(game)) {
         return EXIT_FAILURE;
     }
-    sf::Sprite sprite(texture);
 
-    // Initialize font with shared_ptr
-    auto font = std::make_shared<sf::Font>();
-    if (!font->loadFromFile("./texture/times.ttf")){
-        return EXIT_FAILURE;
-    }
-    
-    // Initialize texts and set their position in the main menu
-    sf::Text name("Placeholder", *font, 50);
-    name.setPosition(view_size.x*0.1, view_size.y*0.1);
-
-    sf::Text play("Play", *font, 40);
-    play.setPosition(sf::Vector2f(view_size.x*0.1, view_size.y*0.2));
-
-    sf::Text options("Options", *font, 35);
-    play.setPosition(sf::Vector2f(view_size.x*0.1, view_size.y*0.2));
-
-    // Initialize option selectors for the main menu
-    std::vector<std::pair<std::string, int>> playerCountTexts {
-        std::pair("Two players", 2), std::pair("Three players", 3), std::pair("Four players", 4) };
-    ui::Selection playerCountSelection(playerCountTexts, font, 35, sf::Vector2f(view_size.x*0.25, view_size.y*0.35));
-
-    std::vector<std::pair<std::string, int>> mapSizeTexts {
-        std::pair("Small map", 3), std::pair("Normal map", 5), std::pair("Large map", 7) };
-    ui::Selection mapSelection(mapSizeTexts, font, 35, sf::Vector2f(view_size.x*0.25, view_size.y*0.45));
-
-    std::vector<std::pair<std::string, int>> deckTexts {
-        std::pair("Deck 1", 1), std::pair("Deck 2", 2), std::pair("Deck 3", 3) };
-    ui::Selection deckSelection(deckTexts, font, 35, sf::Vector2f(view_size.x*0.25, view_size.y*0.55));
-
-
-    // Main menu graphics loop
-    while (window.isOpen()) {
-        
-        sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+    // Main graphics loop
+    while (user_interface.GetWindow().isOpen()) {
 
         // Handle events
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            
-            if (event.type == sf::Event::Closed)
-                window.close();
+        while (user_interface.PollEvent()) {
+            user_interface.HandleEvent(start);
+   
+            // main menu if game is not initialized yet
+            if (!game.IsInitialized()) {
 
-            if (event.type == sf::Event::Resized) {
-                view.setSize(sf::Vector2f(event.size.width, event.size.height));
-                window.setView(view);
-            }
+                // Initialize game on pressing "Start"
+                if (user_interface.IsStartClicked()) {
 
-            if (event.type == sf::Event::MouseButtonReleased && 
-                event.mouseButton.button == sf::Mouse::Left) {
-                playerCountSelection.UpdateState(window);
-                mapSelection.UpdateState(window);
-                deckSelection.UpdateState(window); 
-            }
+                    // TODO: temp for ui map handling
+                    start = true;
 
-            // Initialize game on pressing "Play"
-            if (event.type == sf::Event::MouseButtonReleased && 
-                event.mouseButton.button == sf::Mouse::Left) {
-                if(play.getGlobalBounds().contains(mousePos)) {
-                    
-                    unsigned int map_size = mapSelection.GetSelectedOption();
-                    unsigned int player_count = playerCountSelection.GetSelectedOption();
-                    std::vector<core::Game::PlayerInit> players;
-                    core::Game game;
+                    // Get game initialization options from selectors
+                    unsigned int player_count = user_interface.GetSelectedPlayerCount();
+                    unsigned int map_size = user_interface.GetSelectedMapSize();
+                    unsigned int deck = user_interface.GetSelectedDeck();
 
+                    std::vector<std::shared_ptr<cards::Card>> empty_cards = {};
+                    cards::Deck test_deck = cards::Deck(empty_cards, 0U);
                     // Create players
                     for (unsigned int i = 0; i < player_count; ++i) {
                         players.emplace_back(core::Game::PlayerInit{
                             "Player " + std::to_string(i + 1),
-                            cards::Deck() // TODO: add custom starter decks
+                            test_deck.Clone() // TODO: add custom starter decks
                         });
                     }
 
                     // Initializing through main menu testing
                     game.Initialize(players, map_size);
+                    user_interface.InitializeMapRenderer(game.GetMap());
+
                     assert(game.IsInitialized() && !game.IsOver());
                     assert(game.GetCurrentPlayer().GetName() == "Player 1");
                     for (int i = 0; i < 5; i++) {
                         game.NextTurn();
                         assert(game.GetCurrentTurn() == i + 1);
+                        // Add resources to the current player for testing
+                        game.GetCurrentPlayer().AddResources({core::Resource(core::ResourceType::kGold, 10 + 2 * i)});
                     }
-                    for (int i = 0; i < player_count - 1; i++) {
-                        const std::shared_ptr<buildings::Building> capital = game.GetCurrentPlayer().GetBuildings().front();
-                        game.GetCurrentPlayer().RemoveBuilding(capital);
-                        game.NextTurn();
-                        assert(game.GetNofPlayers() == player_count - (i + 1));
+                    // Save game state after initialization
+                    std::ofstream outFile("saveFile.txt");
+                    if (outFile.is_open()) {
+                        game.Save(outFile);
+                        outFile.close();
                     }
-                    assert(game.IsOver());
-                    return 0;  
+                } else if (user_interface.IsLoadClicked()) {
+                    //TODO: things that are done when load is clicked
+                    std::cout << "Load clicked! Save file path: " << user_interface.GetLastClickedSavePath() << std::endl;                 
                 }
+            } else {
+                // TODO: things that are done when the game has been initialized
             }
         }
-
-        // Make play button slightly larger if mouse is hovering on it
-        if(play.getGlobalBounds().contains(mousePos)) {
-            play.setScale(1.1,1.1);
-        } else {
-            play.setScale(1,1);
-        }
-
-        playerCountSelection.UpdateHovered(window);
-        mapSelection.UpdateHovered(window);
-        deckSelection.UpdateHovered(window); 
-
-        // Clear the screen
-        window.clear();
-
-        // Draw the sprites and selectors
-        window.draw(sprite);
-        playerCountSelection.DrawTo(window);
-        mapSelection.DrawTo(window);
-        deckSelection.DrawTo(window); 
-        window.draw(name);
-        window.draw(play);
-
-        // Update the window
-        window.display();
+        user_interface.DrawAndDisplay(game.IsInitialized());
     }
-
-    core::TestGameInitializationAndTurns();
-
     return 0;
 }

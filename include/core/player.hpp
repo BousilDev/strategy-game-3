@@ -18,6 +18,7 @@
 #include "core/resource.hpp"
 #include "units/unit.hpp"
 #include "world/tile.hpp"
+#include "core/utils.hpp"
 
 namespace core {
 
@@ -45,8 +46,12 @@ public:
    * @param name The name of the player.
    * @param deck The starting deck of the player.
    */
-  Player(const std::string& name, cards::Deck deck) :
-    name_(name), deck_(deck), resources_({}), buildings_({}), units_({}) {};
+  Player(const std::string& name, std::shared_ptr<cards::Deck> deck) :
+    name_(name), 
+    deck_(deck), 
+    resources_({Resource(ResourceType::kGold, 0), Resource(ResourceType::kWood, 0), Resource(ResourceType::kMetal, 0), Resource(ResourceType::kFood, 0)}), 
+    buildings_({}), 
+    units_({}) {};
 
   /**
    * @brief Get the name of the player.
@@ -60,14 +65,14 @@ public:
    * 
    * @return The deck of the player.
    */
-  cards::Deck& GetDeck() { return deck_; };
+  std::shared_ptr<cards::Deck> GetDeck() { return deck_; };
 
   /**
    * @brief Get the current hand of the player stored in the player's deck.
    * 
    * @return The hand of the player.
    */
-  cards::Hand& GetHand() { return deck_.GetHand(); };
+  cards::Hand* DrawHand() { return deck_->DrawHand(); };
 
   /**
    * @brief Get the buildings owned by the player.
@@ -143,13 +148,6 @@ public:
   void RemoveResource(Resource resource);
 
   /**
-   * @brief Use the deck's drawHand() to draw a new hand which is stored in the deck.
-   * 
-   * This is used at the start of the turn to get a new set of cards for the turn.
-   */
-  void DrawHand() { deck_.DrawHand(); };
-
-  /**
    * @brief Checks if the player is alive or not i.e. if the capital building of the player
    * is still standing.
    * 
@@ -193,9 +191,13 @@ public:
    */
   void UseUnit(std::shared_ptr<units::Unit> unit, world::Tile& target); 
 
+  friend std::ostream& operator<<(std::ostream &out, const Player& other);
+
+  friend std::istream& operator>>(std::istream &in, Player& other);
+
 private:
   const std::string name_; ///< The name of the player.
-  cards::Deck deck_; ///< The current deck of the player.
+  std::shared_ptr<cards::Deck> deck_; ///< The current deck of the player.
   std::list<std::shared_ptr<buildings::Building>> buildings_; ///< The buildings owned by the player.
   std::list<std::shared_ptr<units::Unit>> units_; ///< The units owned by the player.
   std::array<Resource, constants::kNumberOfResourceTypes> resources_; ///< The resources the player currently has.

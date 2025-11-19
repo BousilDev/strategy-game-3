@@ -59,5 +59,19 @@
                 }
             ]
         },
+        {
+            "label": "build tests",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "g++ -std=c++17 -Iinclude $(find src -name '*.cpp' ! -name 'main.cpp') $(find tests -name '*.cpp') -o build/tests -lsfml-graphics -lsfml-window -lsfml-system"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"]
+        }
     ]
 }

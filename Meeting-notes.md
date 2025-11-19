@@ -289,3 +289,213 @@ Project advancing according to schedule. Main menu, header files, basic game and
 
 1. Add rest Sprint 2 items to issue board
 2. Test whether new CMake configuration with SFML works
+
+
+# Meeting 29.10.2025 12::00 - 13::00 @On site
+Sprint 2, sprint planning
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+Game saving and loading works for pretty well for the current state of the project.
+
+## Challenges
+
+Current CMake configuration (including SFML) doesn't work in all environments
+
+## Actions
+
+1. Scheduled next meeting, 4.11 Tuesday at 12.00
+2. Tried to fix the CMake issue
+3. Added Sprint 2 backlog items to issue board and assigned tasks to developers
+
+## Project status
+
+Apart from the CMake issues everything is looking fine. Sprint 2 items have been set to issue board and assigned to developers. 
+
+### TODOs
+
+1. Fix CMake configuration and verify the fix as soon as possible
+2. Start implementing Sprint 2 items
+
+
+# Meeting 4.11.2025 12::00 - 13::00 @On site
+Sprint 2, "daily" 1
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki (Remotely)
+
+## Summary of works
+
+Building class and its basic methods implemented further. UI shows the map correctly.
+
+## Challenges
+
+1. Problems with inconsistencies in building the project
+
+## Actions
+
+1. Fixed building issues, so that everyone's master branch now builds correctly.
+2. Agreed on the todos for the sprint review
+
+## Project status
+
+A working UI with the static map works along with the game saving and loading.
+
+### TODOs
+
+1. Merge all changes to master before sprint review at thursday
+
+
+# Meeting 6.11.2025 16::00 - 17::00 @On site
+Sprint 2, review
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+6. Rami Ghoniem (TA)
+
+## Summary of works
+
+Merged all changes to master.
+
+## Challenges
+
+1. Some segmentation fault issues in UI
+
+## Actions
+
+1. Reviewed Sprint 2 with TA
+2. Discussed Sprint 3 deliverables
+3. Scheduled time for the next meeting, Monday 10.11 at 10:00
+
+## Project status
+
+Main menu, saving & loading, initial map UI and some tests for Game & Player implemented
+
+### TODOs
+
+1. Add Sprint 3 items to issue board
+2. Update NextTurn() and operator overloads for Building, Map, Unit
+3. Add some kind of distance function for Tile/Map
+4. Implement UI info screen layer and saving & loading UI interface
+5. Implement Card, Hand and Deck
+
+
+# Meeting 10.11.2025 10::00 - 10::45 @On site
+Sprint 3, "daily" 1
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+Added a VS code test configuration to project, implemented initial version of Tile selecting in UI, implemented a rough info layer for UI.
+
+## Challenges
+
+1. When selecting a Tile, the selection is somewhat inaccurate due to SFML shapes, we discussed a possible fix for this
+
+## Actions
+
+1. Discussed what the info layer should include and how it gets the information it needs.
+
+## Project status
+
+Working main menu and game with Tile selection and rough info layer.
+
+### TODOs
+
+1. Implement the info layer further
+2. Add helper function(s) to Building to help calculate the gained resources per turn in Game
+3. Continue implementing other sprint items
+
+
+# Meeting 13.11.2025 16::30 - 17::30 @On site
+Sprint 3, "daily" 2
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+UI info layer works, main refactored using User Interface class, initial implementation of Cards, more Building and Unit functionalities
+
+## Challenges
+
+1. Making Buildings and Units compatible with Cards (Cloning or Creating)
+
+## Actions
+
+1. Discussed the UI changes, possible UI improvements and a possible solution to the challenge described above
+2. Scheduled a time for next meeting, Tuesday 18.11 at 12.00
+
+## Project status
+
+Info layer exists with a working 'next turn' button and initial Tile info (no actual Tile info yet). The implementation of Cards has begun.
+
+### TODOs
+
+1. Connect separate functionalities into UI and update existing code to manage new changes
+
+
+# Meeting 18.11.2025 12::00 - 13::00 @On site
+Sprint 3, "daily" 3
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+Map centered in UI, tile selection enhanced, tests and info layer refactored, some progress on Deck/Cards, added more functions to Building which help with Cards implementation
+
+## Challenges
+
+1. Resolving Deck and Card hierarchy
+
+## Actions
+
+1. Discussed how info layer could implement Cards and what the layout could look like
+
+## Project status
+
+Game has a working initial main menu, map rendering and info bar. Last smaller priority game logic classes should soon be ready to be linked to UI.
+
+### TODOs
+
+1. Add Cards to info layer
+2. Enhancing main menu, saving & loading in UI
+3. Add buildings to UI map
+4. Add actual selected Tile info to info layer
+5. Merge changes before review on Thursday

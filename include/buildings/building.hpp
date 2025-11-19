@@ -3,6 +3,7 @@
 #include "world/tile.hpp"
 #include "core/player.hpp"
 #include <memory>
+#include <iostream>
 
 /**
  * @file building.hpp
@@ -134,6 +135,19 @@ protected:
 
   std::weak_ptr<world::Tile> current_tile_;   ///< Weak reference to the tile this building occupies.
   std::weak_ptr<core::Player> owner_;         ///< Weak reference to the player that owns this building.
+  BuildingType GetType() const { return BuildingType::kCapital; }
+
+  friend std::istream& operator>>(std::istream &in, std::shared_ptr<Building>& other) {
+      std::string typeStr;
+      std::getline(in, typeStr);
+      return in;
+  };
+
+  friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Building>& other) {
+      out << "Building";
+      return out;
+  };
+
 };
 
 /**
@@ -177,6 +191,14 @@ protected:
   CapitalBuilding(std::shared_ptr<world::Tile> tile,
                   std::shared_ptr<core::Player> owner,
                   int max_hp);
+  std::shared_ptr<Building> Clone() override { return std::make_shared<CapitalBuilding>(*this); }
+
+  BuildingType GetType() const { return kCapital; } 
+
+  friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<CapitalBuilding>& other) {
+      out << "CapitalBuilding";
+      return out;
+  };
 };
 
 /**

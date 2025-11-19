@@ -12,7 +12,6 @@
 #include "core/player.hpp"
 #include "world/map.hpp"
 #include "cards/deck.hpp"
-#include "core/tests.hpp"
 
 namespace core {
 
@@ -40,7 +39,7 @@ public:
 
   struct PlayerInit {
     std::string name;
-    cards::Deck deck;
+    std::shared_ptr<cards::Deck> deck;
   };
 
   /**
@@ -84,7 +83,7 @@ public:
    * 
    * @return true if the game is over and false if not.
    */
-  bool IsOver();
+  bool IsOver() const;
 
   /**
    * @brief Tells if the game has been initialized.
