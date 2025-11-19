@@ -17,7 +17,7 @@ Unit::Unit(std::shared_ptr<world::Tile> tile,
       current_tile_(tile),
       owner_(owner)
 {
-    // Constructor does not register itself — handled by Create()
+    
 }
 
 // Factory function to safely construct and register units

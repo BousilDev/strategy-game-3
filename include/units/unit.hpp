@@ -130,6 +130,8 @@ protected:
 
   int max_hp_{0};  ///< The maximum health points of the unit.
   int current_hp_{0};  ///< The current health points of the unit.
+  bool has_attacked_{false};
+  int turn_movement_{0};
   UnitType unit_type_{UnitType::kSoldier};  ///< The type of this unit.
 
   std::weak_ptr<world::Tile> current_tile_;  ///< Weak reference to the tile this unit occupies.

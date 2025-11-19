@@ -69,6 +69,11 @@ public:
                                           int max_hp,
                                           BuildingType build_type);
 
+  static std::shared_ptr<Building> CreateEmpty(int max_hp, BuildingType build_type);
+  static std::shared_ptr<Building> CreateEmptyFromCopy(std::shared_ptr<Building>);
+  virtual bool setPlayer(std::shared_ptr<core::Player>);
+  virtual bool setTile(std::shared_ptr<world::Tile>);
+
   /**
    * @brief Gets the type of this building.
    * @return The building type.
