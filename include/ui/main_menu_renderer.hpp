@@ -34,9 +34,9 @@ public:
     // Draw the sprites and selectors
     void DrawTo(sf::RenderWindow& window);
 
-    //TODO: causes a segfault when indexing if passing vector by reference? currently in a safe state
-    // return the options selected in selectors
-    std::vector<int> GetSelectedOptions() const;
+    int GetSelectedPlayerCount() const { return selections_[0].GetSelectedOption(); }
+    int GetSelectedMapSize() const { return selections_[1].GetSelectedOption(); }
+    int GetSelectedDeck() const { return selections_[2].GetSelectedOption(); }
 
     // TODO: add other stuff if needed
     // reset the state. Used when returning to main menu from somewhere.

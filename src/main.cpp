@@ -40,7 +40,7 @@ int main() {
         // Handle events
         while (user_interface.PollEvent()) {
             user_interface.HandleEvent(start);
-            
+   
             // main menu if game is not initialized yet
             if (!game.IsInitialized()) {
 
@@ -51,8 +51,9 @@ int main() {
                     start = true;
 
                     // Get game initialization options from selectors
-                    unsigned int player_count = user_interface.GetSelectedOptions()[0];
-                    unsigned int map_size = user_interface.GetSelectedOptions()[1];
+                    unsigned int player_count = user_interface.GetSelectedPlayerCount();
+                    unsigned int map_size = user_interface.GetSelectedMapSize();
+                    unsigned int deck = user_interface.GetSelectedDeck();
 
                     std::vector<std::shared_ptr<cards::Card>> empty_cards = {};
                     cards::Deck test_deck = cards::Deck(empty_cards, 0U);
@@ -87,7 +88,7 @@ int main() {
                     //TODO: things that are done when load is clicked
                 }
             } else {
-                // TODO: temporarily keep this to accomodate other ui branches
+                // TODO: temporarily keep this to accommodate other ui branches
 
             }
         }

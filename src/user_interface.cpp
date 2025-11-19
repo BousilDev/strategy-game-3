@@ -17,16 +17,16 @@ int ui::UserInterface::Initialize(core::Game& game) {
     info_layer_renderer_.Initialize(game, font_);
 
     // Main menu init
-    if (main_menu_.Initialize(font_, view_size_)) {
+    if (main_menu_renderer_.Initialize(font_, view_size_)) {
         return EXIT_FAILURE;
     }
 
     return 0;
 }
 
-//bool ui::UserInterface::PollAndHandleEvent() {
+//bool ui::UserInterface::PollAndHandleEvent(bool start) {
 //    bool event_found = PollEvent();
-//    HandleEvent();
+//    HandleEvent(start);
 //    return event_found;
 //}
 
@@ -41,11 +41,6 @@ bool ui::UserInterface::PollEvent() {
     }
 }
 
-// TODO: Temp event getter thing for map rendering soz
-sf::Event& ui::UserInterface::GetEvent() {
-    return event_;
-}
-
 void ui::UserInterface::HandleEvent(bool start) {
     // Handle general events
     if (event_.type == sf::Event::Closed) window_.close();
@@ -56,13 +51,13 @@ void ui::UserInterface::HandleEvent(bool start) {
 
     // Handle main menu events
     if (!start) {
-        main_menu_.Update(window_, mouse_pos_, event_);
+        main_menu_renderer_.Update(window_, mouse_pos_, event_);
     } else {
-        std::shared_ptr<world::Tile> tile_pointer = nullptr;
+        std::shared_ptr<world::Tile> tile_pointer = std::make_shared<world::Tile>(); // was nullptr
         
         if (event_.type == sf::Event::MouseButtonReleased && 
             event_.mouseButton.button == sf::Mouse::Left) {
-        // update map elements that do something when LMB is released
+            // update map elements that do something when LMB is released
             tile_pointer = map_renderer_.GetClickedTile(window_);
             if (tile_pointer != nullptr) {
                 std::cout << "Tile number: " << tile_pointer->get_tile_number() 
@@ -80,11 +75,11 @@ std::shared_ptr<world::Tile> ui::UserInterface::GetLastClickedTile() {
 }
 
 bool ui::UserInterface::IsStartClicked() {
-    return main_menu_.IsStartClicked(mouse_pos_, event_);
+    return main_menu_renderer_.IsStartClicked(mouse_pos_, event_);
 }
 
 bool ui::UserInterface::IsLoadClicked() {
-    return main_menu_.IsLoadClicked(mouse_pos_, event_);
+    return main_menu_renderer_.IsLoadClicked(mouse_pos_, event_);
 }
 
 // TODO: temporarily use start variable
@@ -94,7 +89,7 @@ void ui::UserInterface::DrawAndDisplay(bool start) {
 
     // render main menu if game has not started, otherwise render the map etc.
     if (!start) {
-        main_menu_.DrawTo(window_);
+        main_menu_renderer_.DrawTo(window_);
     } else {
         map_renderer_.DrawTo(window_);
         info_layer_renderer_.DrawTo(window_);
