@@ -52,10 +52,14 @@ void core::Game::Load(std::istream& file){
     is_initialized_ = (GetStringFromLine(file) == "1");
     nof_players_ = GetIntFromLine(file);
 
+    // Temporary deck for player initialization.
+    std::vector<std::shared_ptr<cards::Card>> empty_cards = {};
+    cards::Deck test_deck = cards::Deck(empty_cards, 0U);
+
     // Load players
     players_.clear();
     for (unsigned int i = 0; i < nof_players_; ++i) {
-        Player player(GetStringFromLine(file), cards::Deck());
+        Player player(GetStringFromLine(file), test_deck.Clone());
         file >> player;
         players_.push_back(std::make_unique<Player>(std::move(player)));
     }
@@ -65,7 +69,7 @@ void core::Game::Load(std::istream& file){
     // Load dead players
     dead_players_.clear();
     for (unsigned int i = 0; i < dead_players_size; ++i) {
-        Player player(GetStringFromLine(file), cards::Deck());
+        Player player(GetStringFromLine(file), test_deck.Clone());
         file >> player;
         dead_players_.push_back(std::make_unique<Player>(std::move(player)));
     }

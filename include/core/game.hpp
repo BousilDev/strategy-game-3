@@ -39,7 +39,7 @@ public:
 
   struct PlayerInit {
     std::string name;
-    cards::Deck deck;
+    std::shared_ptr<cards::Deck> deck;
   };
 
   /**
