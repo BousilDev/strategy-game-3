@@ -13,7 +13,7 @@ public:
 
     ClickableCircleShape() {}
 
-    ClickableCircleShape(float radius, std::size_t point_count, sf::Vector2f position, float angle = 0, sf::Vector2f hovered_scale = constants::kClickableCircleShapeHoveredScale)
+    ClickableCircleShape(float radius, std::size_t point_count, sf::Vector2f position, float angle = 0, sf::Vector2f hovered_scale = sf::Vector2f(1.3f, 1.3f))
                         : position_(position), hovered_scale_(hovered_scale) {
         circle_shape_ = sf::CircleShape(radius, point_count);
         centerOrigin(circle_shape_);

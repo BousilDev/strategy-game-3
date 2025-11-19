@@ -13,7 +13,7 @@ public:
     ClickableText() {}
 
     ClickableText(const sf::String& string, const sf::Font& font, sf::Vector2f position, unsigned int characterSize = 30U,
-                  sf::Vector2f hovered_scale = constants::kClickableTextHoveredScale)
+                  sf::Vector2f hovered_scale = sf::Vector2f(1.1f, 1.1f))
                   : position_(position), hovered_scale_(hovered_scale) {
         text_ = sf::Text(string, font, characterSize);
         text_.setPosition(position_);

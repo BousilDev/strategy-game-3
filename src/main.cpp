@@ -88,8 +88,7 @@ int main() {
                     //TODO: things that are done when load is clicked
                 }
             } else {
-                // TODO: temporarily keep this to accommodate other ui branches
-
+                // TODO: things that are done when the game has been initialized
             }
         }
         user_interface.DrawAndDisplay(game.IsInitialized());
