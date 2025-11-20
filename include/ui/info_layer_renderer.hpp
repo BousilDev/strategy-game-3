@@ -48,7 +48,7 @@ private:
     void DrawCardAtLocation(sf::RenderWindow& window, std::shared_ptr<cards::Card> card, sf::Vector2f location, int index);
     void DrawCards(sf::RenderWindow& window);
     std::string GetTileInfoString();
-    std::string GetCardInfoString();
+    std::string GetCardInfoString(std::shared_ptr<cards::Card> card);
 
     bool isNextTurnClicked(const sf::RenderWindow& window, const sf::Vector2f& mousePos);
     std::shared_ptr<cards::Card> CardClicked(const sf::RenderWindow& window, const sf::Vector2f& mousePos);
