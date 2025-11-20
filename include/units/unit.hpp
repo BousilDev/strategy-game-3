@@ -1,19 +1,67 @@
 #pragma once
+#include <memory>
 
-/**
- * @file unit.hpp
- * @brief Declares the Unit class which is a deployable and movable unit owned by the 
- * player and operating on the game map. Units are used to attack and defend.
- */
+namespace world { class Tile; }  // forward declaration
+namespace core { class Player; } // forward declaration
 
 namespace units {
-  
-class Unit {
-public:
-  std::shared_ptr<Unit> Clone() { return std::make_shared<Unit>(*this); }
-  
-private:
 
+enum class UnitType {
+    kSoldier,
 };
-  
+
+class Unit : public std::enable_shared_from_this<Unit> {
+public:
+    virtual ~Unit() = default;
+
+    static std::shared_ptr<Unit> Create(std::shared_ptr<world::Tile> tile,
+                                        std::shared_ptr<core::Player> owner,
+                                        int max_hp,
+                                        UnitType unit_type);
+
+    static std::shared_ptr<Unit> CreateEmpty(int max_hp, UnitType unit_type);
+    std::shared_ptr<Unit> CreateEmptyFromCopy();
+       void setPlayer(std::shared_ptr<core::Player> player){
+        owner_ = player;
+    };
+    void setTile(std::shared_ptr<world::Tile> tile_location){
+        current_tile_ = tile_location;
+    };
+    UnitType GetType() const { return unit_type_; }
+    int getMaxHp() const { return max_hp_; }
+    int getCurrentHp() const { return current_hp_; }
+
+    int takeDamage(int damage);
+    bool moveToTile(std::shared_ptr<world::Tile> tile);
+    void dealDamageToTileContents(std::shared_ptr<world::Tile> tile, int damage);
+
+protected:
+    Unit(std::shared_ptr<world::Tile> tile,
+         std::shared_ptr<core::Player> owner,
+         int max_hp,
+         UnitType unit_type);
+
+    int max_hp_{0};
+    int current_hp_{0};
+    bool has_attacked_{false};
+    int turn_movement_{0};
+    UnitType unit_type_{UnitType::kSoldier};
+
+    std::weak_ptr<world::Tile> current_tile_;
+    std::weak_ptr<core::Player> owner_;
+};
+
+class Soldier : public Unit {
+public:
+    static std::shared_ptr<Soldier> Create(std::shared_ptr<world::Tile> tile,
+                                           std::shared_ptr<core::Player> owner,
+                                           int max_hp);
+    static std::shared_ptr<Soldier> CreateEmpty(int max_hp);
+    std::shared_ptr<Soldier> CreateEmptyFromCopy();
+
+    Soldier(std::shared_ptr<world::Tile> tile,
+            std::shared_ptr<core::Player> owner,
+            int max_hp);
+};
+
 } // namespace units

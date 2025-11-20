@@ -1,4 +1,5 @@
 #include "core/player.hpp"
+#include "cards/card.hpp"
 #include <iostream>
 #include <string>
 

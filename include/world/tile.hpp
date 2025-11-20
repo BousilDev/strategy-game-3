@@ -9,6 +9,7 @@
 #include <memory>
 #include <array>
 #include "terrain.hpp"
+#include <array>
 #include "buildings/building.hpp"
 #include "units/unit.hpp"
 namespace world {
@@ -20,7 +21,7 @@ namespace world {
  * Each tile that is generated when a map is created also contains a terrain. 
  * Tiles possible contain a building, unit and effects.
  * 
- * Tiles know their neighbours. But not their general location on a map. 
+ * Tiles know their neighbours. and their index.
  */
 class Tile {
     public:
@@ -31,7 +32,7 @@ class Tile {
 
         /**
         * @brief getter for the terrain of this Tile.
-        * @return returns a reference to terrain_ that has a sharedpointer holding this tiles terrain.   
+        * @return returns a reference to terrain_ that has a sharedpointer holding this tile's terrain.   
         */
         std::shared_ptr<Terrain>& get_terrain();
 
@@ -47,6 +48,8 @@ class Tile {
         * @return returns a copy of current_building_ shared pointer. This might be empty.
         */
         std::shared_ptr<buildings::Building> get_building();
+
+        std::shared_ptr<units::Unit> get_unit(){return current_unit_;};
 
 //std::list<Effect>& get_effect();
 
@@ -98,9 +101,9 @@ class Tile {
         
     protected:
         unsigned int tile_number_;///< the tile number in the tiles_ vector of map.
-        std::shared_ptr<Terrain> terrain_;///< The terrain this tile has. also contains resources.
-        std::shared_ptr<buildings::Building> current_building_;///< the building this tile might have.
-        std::shared_ptr<units::Unit> current_unit_;///< the unit this tile might have.
+        std::shared_ptr<Terrain> terrain_{nullptr};///< The terrain this tile has. also contains resources.
+        std::shared_ptr<buildings::Building> current_building_{nullptr};///< the building this tile might have.
+        std::shared_ptr<units::Unit> current_unit_{nullptr};///< the unit this tile might have.
  //Effect std::list<Effect> effects_;
         std::array<std::weak_ptr<Tile>, 6> neighbours_;///< The neighbours of the tile. The order is from the righmost counter-clockwise. nullptr means no neighbour. 
 };

@@ -1,4 +1,6 @@
 #include "world/tile.hpp"
+#include "buildings/building.hpp"
+#include "core/player.hpp"
 
 namespace world {
 
@@ -11,6 +13,7 @@ std::shared_ptr<buildings::Building> Tile::get_building(){
 std::array<std::weak_ptr<Tile>, 6>& Tile::get_neighbours(){
     return neighbours_;
 }
+// TODO: set this tile as the tile of the building.
 bool Tile::place_building(std::shared_ptr<buildings::Building> building) {
     if(current_building_){
         return false;
@@ -22,6 +25,7 @@ bool Tile::place_building(std::shared_ptr<buildings::Building> building) {
 void Tile::destroy_current_building(){
     current_building_ = nullptr;
 }
+// TODO: set this tile as the tile of the unit.
 bool Tile::place_unit(std::shared_ptr<units::Unit> unit){
     if(current_unit_){
         return false;

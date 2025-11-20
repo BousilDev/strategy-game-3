@@ -5,9 +5,11 @@
  * @brief Declares the Deck class which manages and stores the playable cards of a player.
  */
 
-#include <list>
 #include <memory>
+#include <random>
+#include <vector>
 
+#include "cards/card.hpp"
 #include "cards/hand.hpp"
 
 namespace cards {
@@ -29,33 +31,35 @@ public:
    * @param cards The cards initially in the deck. They start in the draw pile in pseudo-random order.
    * @param hand_size The initial hand size of the deck.
    */
-  Deck(const std::list<std::shared_ptr<Card>>& cards, unsigned int hand_size);
+  Deck(const std::vector<std::shared_ptr<Card>>& cards, unsigned int hand_size);
 
   /**
-   * @brief Default deck constructor for testing purposes.
-   */
-  Deck() {}
-
-  /**
-   * @brief Get the Hand of the deck.
+   * @brief Clone the deck including its current draw and discard piles. The hand is not cloned.
    * 
-   * @return The hand of the deck.
+   * @return A copy of the deck.
    */
-  Hand& GetHand() { return hand_; };
+  std::shared_ptr<Deck> Clone() const;
+
+  /**
+   * @brief Discard the previous hand and draw a new full hand.
+   * 
+   * @return A pointer to the new hand of the deck.
+   */
+  Hand* DrawHand();
 
   /**
    * @brief Get the draw pile of the deck.
    * 
-   * @return A list of cards in the draw pile.
+   * @return A vector of cards in the draw pile.
    */
-  const std::list<std::shared_ptr<Card>>& GetDraw() const;
+  const std::vector<std::shared_ptr<Card>>& GetDraw() const { return draw_; }
 
   /**
    * @brief Get the discard pile of the deck.
    * 
-   * @return A list of cards in the discard pile.
+   * @return A vector of cards in the discard pile.
    */
-  const std::list<std::shared_ptr<Card>>& GetDiscard() const;
+  const std::vector<std::shared_ptr<Card>>& GetDiscard() const { return discard_; }
 
   /**
    * @brief Returns a pseudo-randomly picked card from the entire deck.
@@ -65,66 +69,55 @@ public:
    * 
    * @return A random card from the deck.
    */
-  std::shared_ptr<Card>& GetRandomCard() const;
+  // Unimplemented for now.
+  // std::shared_ptr<Card>& GetRandomCard() const;
 
   /**
-   * @brief Draws a card from the draw pile of the deck into the hand. 
-   * 
-   * If the draw pile is empty, tries to shuffle the discard pile and make a new draw pile from that. 
-   * If successful, draws a card from this new draw pile. If the discard pile is also empty, simply 
-   * returns false. Also returns false and does not draw a card if the hand is full.
-   * 
-   * @return true if the card was successfully drawn, false otherwise.
+   * @brief Pseudo-randomizes the order of the cards in the draw pile.
    */
-  bool DrawCard();
+  void ShuffleDraw();
 
   /**
-   * @brief Draws cards to the hand until it is full or there are no cards to draw.
-   */
-  void DrawHand() {}
-
-  /**
-   * @brief Discards the card at index i from the hand and places it in the discard pile. If there is no
-   * card at index i in the hand, throws std::out_of_range.
-   * 
-   * @param i The index of the card to discard.
-   */
-  void DiscardCard(int i);
-
-  /**
-   * @brief Discards the entire hand, placing all cards in the discard pile.
-   */
-  void DiscardHand();
-
-  /**
-   * @brief Pseudo-randomizes the order of the cards in the discard pile.
-   */
-  void ShuffleDiscard();
-
-  /**
-   * @brief Places all cards from the discard pile into the draw pile.
+   * @brief Places all cards from the discard pile into the draw pile and shuffles the draw pile.
    */
   void NewDraw();
 
   /**
-   * @brief Adds the given card to the draw pile of the deck.
+   * @brief Adds the given card to the discard pile of the deck.
    * 
    * @param card The card to add.
    */
   void AddCard(const std::shared_ptr<Card>& card);
 
   /**
-   * @brief Removes the given card from the deck. If the card is not in the draw pile, discard pile, or
-   * hand, does nothing.
+   * @brief Draws a card from the draw pile. If the draw pile is empty, shuffles the discard pile
+   * into the draw pile first.
+   * 
+   * @return The drawn card. If both the draw and discard piles are empty, returns nullptr.
+   */
+  std::shared_ptr<Card> DrawCard();
+
+  /**
+   * @brief Discards the given card to the discard pile.
+   * 
+   * @param card The card to discard.
+   */
+  void DiscardCard(const std::shared_ptr<Card>& card);
+
+  /**
+   * @brief Removes the given card from the deck. If the card is not in the draw pile or discard pile does nothing.
+   * Does not remove a card from the hand.
    * 
    * @param card The card to remove from the hand.
    */
   void RemoveCard(const std::shared_ptr<Card>& card);
 
 private:
-  Hand hand_; ///< The hand of the deck
-  std::list<std::shared_ptr<Card>> draw_; ///< The draw pile of the deck.
-  std::list<std::shared_ptr<Card>> discard_; ///< The discard pile of the deck.
+  std::unique_ptr<Hand> hand_; ///< The hand of the deck
+  std::vector<std::shared_ptr<Card>> draw_; ///< The draw pile of the deck.
+  std::vector<std::shared_ptr<Card>> discard_; ///< The discard pile of the deck.
+  std::random_device rd_;
+  std::mt19937 gen_; 
 };
   
 } // namespace cards

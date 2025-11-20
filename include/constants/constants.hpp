@@ -13,13 +13,11 @@ const int kNumberOfTerrainTypes = 4;
 const bool debug = true;
 const std::string debug_prefix = "###: ";
 const std::string faultySavesPath = "tests/faultySaves/";
+const std::string kSavesPath = "saves/";
 
 // UI constants
 const int kInitWindowWidth = 800;
 const int kInitWindowHeight = 600;
-
-const sf::Vector2f kClickableTextHoveredScale = sf::Vector2f(1.1f, 1.1f); // sets the default scale change when hovering over a ui::ClickableText object
-const sf::Vector2f kClickableCircleShapeHoveredScale = sf::Vector2f(1.3f, 1.3f); // sets the default scale change when hovering over a ui::ClickableCircleShape object
 
 const std::string kFontPath = "texture/times.ttf";
 const std::string kBackgroundImagePath = "texture/background.jpg";

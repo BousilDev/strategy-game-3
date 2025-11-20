@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <string>
 #include <fstream>
+#include <filesystem>
 
 #include "core/game.hpp"
 #include "ui/user_interface.hpp"
@@ -40,7 +41,7 @@ int main() {
         // Handle events
         while (user_interface.PollEvent()) {
             user_interface.HandleEvent(start);
-            
+   
             // main menu if game is not initialized yet
             if (!game.IsInitialized()) {
 
@@ -51,14 +52,17 @@ int main() {
                     start = true;
 
                     // Get game initialization options from selectors
-                    unsigned int player_count = user_interface.GetSelectedOptions()[0];
-                    unsigned int map_size = user_interface.GetSelectedOptions()[1];
+                    unsigned int player_count = user_interface.GetSelectedPlayerCount();
+                    unsigned int map_size = user_interface.GetSelectedMapSize();
+                    unsigned int deck = user_interface.GetSelectedDeck();
 
+                    std::vector<std::shared_ptr<cards::Card>> empty_cards = {};
+                    cards::Deck test_deck = cards::Deck(empty_cards, 0U);
                     // Create players
                     for (unsigned int i = 0; i < player_count; ++i) {
                         players.emplace_back(core::Game::PlayerInit{
                             "Player " + std::to_string(i + 1),
-                            cards::Deck() // TODO: add custom starter decks
+                            test_deck.Clone() // TODO: add custom starter decks
                         });
                     }
 
@@ -81,12 +85,11 @@ int main() {
                         outFile.close();
                     }
                 } else if (user_interface.IsLoadClicked()) {
-                    std::cout << "Load has been clicked!" << std::endl;
                     //TODO: things that are done when load is clicked
+                    std::cout << "Load clicked! Save file path: " << user_interface.GetLastClickedSavePath() << std::endl;                 
                 }
             } else {
-                // TODO: temporarily keep this to accomodate other ui branches
-
+                // TODO: things that are done when the game has been initialized
             }
         }
         user_interface.DrawAndDisplay(game.IsInitialized());

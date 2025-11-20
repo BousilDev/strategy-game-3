@@ -1,44 +1,46 @@
 #pragma once
-
+#include <memory>
 #include <iostream>
 
-/**
- * @file building.hpp
- * @brief Declares the Building class which is owned by a player and located on the game 
- * map. Gives the owner resources at the start of a turn.
- */
+namespace world { class Tile; }  // forward declaration
+namespace core { class Player; }
 
 namespace buildings {
 
-enum BuildingType {
-  kCapital,
-  kFarm,
-  kMine,
-  kNeighbourhood,
-  kPower
+enum class BuildingType {
+    kCapital,
+    kFarm,
+    kMine,
+    kNeighbourhood,
+    kPower
 };
-  
-class Building {
+
+class Building : public std::enable_shared_from_this<Building> {
 public:
-  Building() {}
+    virtual ~Building() = default;
 
-  ~Building() = default;
-  
-  /**
-   * @brief Explicit clone method for a building. Prevents slicing
-   * 
-   * @return A clone of the building wrapped in a shared pointer.
-   */
-  virtual std::shared_ptr<Building> Clone() = 0;
+    static std::shared_ptr<Building> Create(std::shared_ptr<world::Tile> tile,
+                                            std::shared_ptr<core::Player> owner,
+                                            int max_hp,
+                                            BuildingType build_type);
 
-  /**
-   * @brief Get the type of the building.
-   * 
-   * @return The type of the building.
-   */
-  BuildingType GetType() const { return BuildingType::kCapital; }
+    static std::shared_ptr<Building> CreateEmpty(int max_hp, BuildingType build_type);
+    std::shared_ptr<Building> CreateEmptyFromCopy();
 
-  friend std::istream& operator>>(std::istream &in, std::shared_ptr<Building>& other) {
+    void setPlayer(std::shared_ptr<core::Player> player){
+        owner_ = player;
+    };
+    void setTile(std::shared_ptr<world::Tile> tile_location){
+        current_tile_ = tile_location;
+    };
+
+    BuildingType GetType() const { return building_type_; }
+    int getMaxHp() const { return max_hp_; }
+    int getCurrentHp() const { return current_hp_; }
+    int takeDamage(int damage);
+    virtual void atTurnEnd() {}
+
+    friend std::istream& operator>>(std::istream &in, std::shared_ptr<Building>& other) {
       std::string typeStr;
       std::getline(in, typeStr);
       return in;
@@ -49,20 +51,63 @@ public:
       return out;
   };
 
+
+protected:
+    Building(std::shared_ptr<world::Tile> tile,
+             std::shared_ptr<core::Player> owner,
+             int max_hp,
+             BuildingType build_type);
+
+    int max_hp_{0};
+    int current_hp_{0};
+    BuildingType building_type_{BuildingType::kFarm};
+
+    std::weak_ptr<world::Tile> current_tile_;
+    std::weak_ptr<core::Player> owner_;
 };
 
+// CapitalBuilding
 class CapitalBuilding : public Building {
 public:
-  CapitalBuilding() : Building() {}
+    static std::shared_ptr<CapitalBuilding> Create(std::shared_ptr<world::Tile> tile,
+                                                   std::shared_ptr<core::Player> owner,
+                                                   int max_hp);
+    static std::shared_ptr<CapitalBuilding> CreateEmpty(int max_hp);
+    std::shared_ptr<CapitalBuilding> CreateEmptyFromCopy();
 
-  std::shared_ptr<Building> Clone() override { return std::make_shared<CapitalBuilding>(*this); }
+    void atTurnEnd() override;
 
-  BuildingType GetType() const { return kCapital; } 
+    CapitalBuilding(std::shared_ptr<world::Tile> tile,
+                    std::shared_ptr<core::Player> owner,
+                    int max_hp);
 
-  friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<CapitalBuilding>& other) {
+ friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<CapitalBuilding>& other) {
       out << "CapitalBuilding";
       return out;
   };
+
 };
-  
+
+// FarmBuilding
+class FarmBuilding : public Building {
+public:
+    static std::shared_ptr<FarmBuilding> Create(std::shared_ptr<world::Tile> tile,
+                                                std::shared_ptr<core::Player> owner,
+                                                int max_hp);
+    static std::shared_ptr<FarmBuilding> CreateEmpty(int max_hp);
+    std::shared_ptr<FarmBuilding> CreateEmptyFromCopy();
+
+    void atTurnEnd() override;
+
+    FarmBuilding(std::shared_ptr<world::Tile> tile,
+                 std::shared_ptr<core::Player> owner,
+                 int max_hp);
+
+  friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<FarmBuilding>& other) {
+      out << "FarmBuilding";
+      return out;
+  };
+
+};
+
 } // namespace buildings
