@@ -19,6 +19,15 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
         players_.back()->AddBuilding(buildings::CapitalBuilding::CreateEmpty(100));
     }
     nof_players_ = players_.size();
+
+
+    // Temp generate capital locations
+    spawn_tiles_ = map_.get_n_spawn(nof_players_);
+    for (unsigned int i = 0; i < nof_players_; i++ ) {
+        spawn_tiles_[i]->place_building(players_[i]->GetBuildings().front());
+    }
+
+
     is_initialized_ = true;
     if (debug_) {
         // Use PrintTestMsg for cleaner test message handling

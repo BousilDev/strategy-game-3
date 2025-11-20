@@ -2,6 +2,7 @@
 #include "constants/constants.hpp"
 #include <SFML/Graphics.hpp>
 #include "world/map.hpp"
+#include "core/game.hpp"
 #define TILE_SIZE 48.f
 
 namespace ui {
@@ -9,7 +10,7 @@ namespace ui {
 class MapRenderer {
 public:
     MapRenderer() {}
-    void Initialize(world::Map map, sf::RenderWindow& window, float tile_size = TILE_SIZE);
+    void Initialize(core::Game& game, sf::RenderWindow& window, float tile_size = TILE_SIZE);
 
     void DrawTo(sf::RenderWindow& window);
 
@@ -20,9 +21,12 @@ public:
     std::shared_ptr<world::Tile> GetLastClickedTile();
 
    private:
+    core::Game* game_ = nullptr;
+    std::vector<std::shared_ptr<world::Tile>> spawn_tiles_;
     world::Map map_;
     float tile_size_;
     std::vector<sf::CircleShape> tiles_;
+    std::vector<sf::RectangleShape> buildings_;
     std::shared_ptr<world::Tile> selected_tile_ = nullptr;
     //sf::RenderWindow& window_;
 
