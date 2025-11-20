@@ -68,7 +68,7 @@ int main() {
 
                     // Initializing through main menu testing
                     game.Initialize(players, map_size);
-                    user_interface.InitializeMapRenderer(game.GetMap());
+                    user_interface.InitializeMapRenderer(game);
 
                     assert(game.IsInitialized() && !game.IsOver());
                     assert(game.GetCurrentPlayer().GetName() == "Player 1");

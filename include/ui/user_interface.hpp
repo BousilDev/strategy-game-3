@@ -38,8 +38,8 @@ public:
     // check if load button is clicked
     bool IsLoadClicked();
 
-    void InitializeMapRenderer(world::Map map) {
-        map_renderer_.Initialize(map, window_);
+    void InitializeMapRenderer(core::Game& game) {
+        map_renderer_.Initialize(game, window_);
     }
 
     // clears the window and draws sprites

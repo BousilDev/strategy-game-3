@@ -3,10 +3,11 @@
 #include <cmath>
 #include "ui/map_renderer.hpp"
 
-void ui::MapRenderer::Initialize(world::Map map, sf::RenderWindow& window, float tile_size) {
-    
+void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, float tile_size) {
 
-    map_ = map;
+    
+    game_ = &game;
+    map_ = game_->GetMap();
     tile_size_ = tile_size;
 
     const size_t map_w  = map_.get_map_width();
@@ -70,7 +71,7 @@ void ui::MapRenderer::Initialize(world::Map map, sf::RenderWindow& window, float
         topLeft.y - minY + (hex_h * 0.5f) + outline
     );
 
-    // Create shapes at final positions
+    // Create shapes at final positions, TEMP: add capitol buildings
     for (size_t i = 0; i < tile_data.size(); ++i) {
         const sf::Vector2f pos = centers[i] + shift;
 
@@ -90,13 +91,44 @@ void ui::MapRenderer::Initialize(world::Map map, sf::RenderWindow& window, float
         tile.setOutlineThickness(outline);
         tiles_.push_back(tile);
     }
+
+
 }
 
 void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
 
-    for (auto v :  tiles_) {
-        window.draw(v);
+
+    for (size_t i = 0; i < tiles_.size(); i++) {
+        window.draw(tiles_[i]);
     }
+
+
+
+    // Draw buildings
+    for (auto v : map_.get_tiles()) {
+        sf::RectangleShape building(sf::Vector2f(10,10));
+        centerOrigin(building);
+        auto b = v->get_building();
+            if (b) {
+            switch (b->GetType()) {
+                case buildings::BuildingType::kCapital:
+                    building.setFillColor(sf::Color(233,233,133));
+                    break;
+
+                case buildings::BuildingType::kFarm:
+                    building.setFillColor(sf::Color(6,233,133));
+                    break;
+
+                default:
+                    building.setFillColor(sf::Color(255,255,255));
+                    break;
+            }
+            building.setPosition(tiles_[v->get_tile_number()].getPosition());
+            window.draw(building);
+        } // not nullptr
+
+    }
+    
 }
 
 // Returns the tile that was clicked with Mouse 1 on the map. Returns nullptr when no tile is clicked!!
@@ -107,6 +139,8 @@ std::shared_ptr<world::Tile> ui::MapRenderer::GetClickedTile(sf::RenderWindow& w
         const auto& tile_shape = tiles_[i];
         if (tile_shape.getGlobalBounds().contains(mousePos)) {
             auto get_tile = map_.get_tile(i);
+
+            std::cout << get_tile->get_building() << std::endl;
             selected_tile_ = get_tile;
             return get_tile;
         }

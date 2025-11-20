@@ -58,12 +58,13 @@ public:
    */
   void Initialize(const std::vector<PlayerInit>& players, unsigned int map_size);
 
+
   /**
-   * @brief Saves the state of the game. 
-   * Saves the state of the map and the states of the players along with the state of this
-   * class into a text file. If the file already contains data, it will be erased. An 
-   * uninitialized game cannot be saved.
-   * 
+   * @brief Saves the state of the game.
+   * Saves the state of the map and the states of the players along with the
+   * state of this class into a text file. If the file already contains data, it
+   * will be erased. An uninitialized game cannot be saved.
+   *
    * @param filename The name of the file to save to.
    */
   void Save(std::ostream& out) const;
@@ -140,6 +141,7 @@ private:
   std::vector<std::unique_ptr<Player>> dead_players_; ///< All players that have lost the game.
   unsigned int nof_players_; ///< The number of players in the game.
   world::Map map_; ///< The map of the game.
+  std::vector<std::shared_ptr<world::Tile>> spawn_tiles_;
   unsigned int current_turn_; ///< The index of the current player in players_.
   unsigned int turn_; ///< Global turn count.
   bool is_initialized_; ///< Indicator for whether the game has been initialized.
