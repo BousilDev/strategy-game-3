@@ -27,10 +27,10 @@ public:
     static std::shared_ptr<Building> CreateEmpty(int max_hp, BuildingType build_type);
     std::shared_ptr<Building> CreateEmptyFromCopy();
 
-    bool setPlayer(std::shared_ptr<core::Player> player){
+    void setPlayer(std::shared_ptr<core::Player> player){
         owner_ = player;
     };
-    bool setTile(std::shared_ptr<world::Tile> tile_location){
+    void setTile(std::shared_ptr<world::Tile> tile_location){
         current_tile_ = tile_location;
     };
 

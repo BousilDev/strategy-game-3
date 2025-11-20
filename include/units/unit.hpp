@@ -21,7 +21,12 @@ public:
 
     static std::shared_ptr<Unit> CreateEmpty(int max_hp, UnitType unit_type);
     std::shared_ptr<Unit> CreateEmptyFromCopy();
-
+       void setPlayer(std::shared_ptr<core::Player> player){
+        owner_ = player;
+    };
+    void setTile(std::shared_ptr<world::Tile> tile_location){
+        current_tile_ = tile_location;
+    };
     UnitType GetType() const { return unit_type_; }
     int getMaxHp() const { return max_hp_; }
     int getCurrentHp() const { return current_hp_; }
