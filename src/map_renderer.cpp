@@ -5,6 +5,7 @@
 
 void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, float tile_size) {
 
+    
     game_ = &game;
     map_ = game_->GetMap();
     tile_size_ = tile_size;
@@ -89,18 +90,9 @@ void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, flo
         tile.setOutlineColor(sf::Color(0,0,0));
         tile.setOutlineThickness(outline);
         tiles_.push_back(tile);
-
-        // Capital buildings
-        for (auto v : game_->GetSpawnTiles()) {
-            int capitol_tile_num = v->get_tile_number();
-            sf::RectangleShape building(sf::Vector2f(10,10));
-            centerOrigin(building);
-            building.setPosition(tiles_[capitol_tile_num].getPosition());
-            building.setFillColor(sf::Color(233,233,133));
-            buildings_.push_back(building);
-        }
-
     }
+
+
 }
 
 void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
@@ -108,11 +100,33 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
 
     for (size_t i = 0; i < tiles_.size(); i++) {
         window.draw(tiles_[i]);
-        
     }
 
-    for (auto v : buildings_) {
-        window.draw(v);
+
+
+    // Draw buildings
+    for (auto v : map_.get_tiles()) {
+        sf::RectangleShape building(sf::Vector2f(10,10));
+        centerOrigin(building);
+        auto b = v->get_building();
+            if (b) {
+            switch (b->GetType()) {
+                case buildings::BuildingType::kCapital:
+                    building.setFillColor(sf::Color(233,233,133));
+                    break;
+
+                case buildings::BuildingType::kFarm:
+                    building.setFillColor(sf::Color(6,233,133));
+                    break;
+
+                default:
+                    building.setFillColor(sf::Color(255,255,255));
+                    break;
+            }
+            building.setPosition(tiles_[v->get_tile_number()].getPosition());
+            window.draw(building);
+        } // not nullptr
+
     }
     
 }

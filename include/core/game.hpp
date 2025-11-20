@@ -136,10 +136,6 @@ public:
    */
   unsigned int GetCurrentTurn() const { return turn_; }
 
-
-
-  std::vector<std::shared_ptr<world::Tile>> GetSpawnTiles() const { return spawn_tiles_; }
-
 private:
   std::vector<std::unique_ptr<Player>> players_; ///< All players in the game.
   std::vector<std::unique_ptr<Player>> dead_players_; ///< All players that have lost the game.
