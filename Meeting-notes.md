@@ -499,3 +499,40 @@ Game has a working initial main menu, map rendering and info bar. Last smaller p
 3. Add buildings to UI map
 4. Add actual selected Tile info to info layer
 5. Merge changes before review on Thursday
+
+
+# Meeting 20.11.2025 16::00 - 18::00 @On site
+Sprint 3, review and sprint planning
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+6. Rami Ghoniem (TA)
+
+## Summary of works
+
+Merged all changes to master. Started implementing cards to UI.
+
+## Challenges
+
+1. SFML freezes on one machine, seems like a one machine issue
+
+## Actions
+
+1. Reviewed sprint 3
+2. Discussed sprint 4 goals
+3. Noticed some bugs in tests
+
+## Project status
+
+Game exists but controlling the game itself through UI is not implemented.
+
+### TODOs
+
+1. Fix code (saving & loading) so that it passes tests
+2. Finish unfinished parts
+3. Add sprint 4 issues to issue board
