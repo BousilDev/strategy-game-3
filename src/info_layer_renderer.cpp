@@ -234,19 +234,21 @@ void ui::InfoLayerRenderer::DrawTo(sf::RenderWindow& window) {
     nextTurnText_.setPosition(nextTurnButton_.getPosition().x + 10.f, nextTurnButton_.getPosition().y + 5.f);
     window.draw(nextTurnText_);
 
-    // Draw a layer to the right lower corner showing selected tile info
-    tileInfoBackground_.setPosition(GetFixedPosition(window, sf::Vector2f(winSize.x - (tileInfoBackground_.getSize().x + 10.f), winSize.y - (tileInfoBackground_.getSize().y + 10.f))));
-    window.draw(tileInfoBackground_);
-
     if (selected_tile_ != nullptr) {
         if (selected_card_ != nullptr) {
             std::string cardInfoString = GetCardInfoString(selected_card_, tileInfoBackground_.getGlobalBounds().width);
             tileInfoText_.setString(cardInfoString);
+            tileInfoBackground_.setFillColor(constants::infoLayerCardColor + sf::Color(0, static_cast<int>(selected_card_->GetCardType()) * 100, 0, 255));
         } else {
             std::string tileInfoString = GetTileInfoString();
             tileInfoText_.setString(tileInfoString);
+            tileInfoBackground_.setFillColor(constants::infoLayerColor);
         }
     }
+
+    // Draw a layer to the right lower corner showing selected tile info
+    tileInfoBackground_.setPosition(GetFixedPosition(window, sf::Vector2f(winSize.x - (tileInfoBackground_.getSize().x + 10.f), winSize.y - (tileInfoBackground_.getSize().y + 10.f))));
+    window.draw(tileInfoBackground_);
 
     tileInfoText_.setPosition(tileInfoBackground_.getPosition() + sf::Vector2f(10.f, 10.f));
     window.draw(tileInfoText_);
