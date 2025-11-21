@@ -136,10 +136,12 @@ void ui::InfoLayerRenderer::DrawItems(sf::RenderWindow& window, std::vector<ui::
     textLen += maxTextLen;
 }
 
-std::string ui::InfoLayerRenderer::GetCardInfoString(std::shared_ptr<cards::Card> card) {
+std::string ui::InfoLayerRenderer::GetCardInfoString(std::shared_ptr<cards::Card> card, float width) {
     std::stringstream ss;
-    ss << card->GetName() << "\n";
-    ss << card->GetDescription();
+    std::string name = card->GetName();
+    std::string description = card->GetDescription();
+    ss << name << "\n";
+    ss << description;
     return ss.str();
 }
 
@@ -150,7 +152,7 @@ void ui::InfoLayerRenderer::DrawCardAtLocation(sf::RenderWindow& window, std::sh
 
     sf::Text cardText = tileInfoText_;
     cardText.setCharacterSize(constants::infoLayerTextSize / 2.f);
-    std::string cardInfo = GetCardInfoString(card);
+    std::string cardInfo = GetCardInfoString(card, cardBackgrounds_[index].getGlobalBounds().width);
     cardText.setString(cardInfo);
     cardText.setPosition(GetFixedPosition(window, sf::Vector2f(location.x + 10.f, location.y + 10.f)));
 
@@ -238,7 +240,7 @@ void ui::InfoLayerRenderer::DrawTo(sf::RenderWindow& window) {
 
     if (selected_tile_ != nullptr) {
         if (selected_card_ != nullptr) {
-            std::string cardInfoString = GetCardInfoString(selected_card_);
+            std::string cardInfoString = GetCardInfoString(selected_card_, tileInfoBackground_.getGlobalBounds().width);
             tileInfoText_.setString(cardInfoString);
         } else {
             std::string tileInfoString = GetTileInfoString();
@@ -260,16 +262,26 @@ void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f&
             DrawTo(window);
             return;
         }
-        // Update Tile selection
-        if (tile_pointer != nullptr) {
-            selected_tile_ = tile_pointer;
+        // Update Card selection
+        std::shared_ptr<cards::Card> card = CardClicked(window, mousePos);
+        if (card != nullptr) {
+            if (selected_card_ == card) {
+                selected_card_ = nullptr;
+            } else {
+                selected_card_ = card;
+            }
             DrawTo(window);
             return;
         }
-        std::shared_ptr<cards::Card> card = CardClicked(window, mousePos);
-        if (card != nullptr) {
-            selected_card_ = card;
+        // Update Tile selection
+        if (tile_pointer != nullptr) {
+            if (selected_card_ != nullptr) {
+                std::cout << selected_card_->Play(*tile_pointer) << std::endl;
+                selected_card_ = nullptr;
+            }
+            selected_tile_ = tile_pointer;
             DrawTo(window);
+            return;
         }
     }
 }
