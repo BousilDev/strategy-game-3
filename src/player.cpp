@@ -72,9 +72,16 @@ std::istream& operator>>(std::istream &in, core::Player& other) {
     // get deck here
     size_t buildSize = GetIntFromLine(in);
     while (buildSize--) {
-        std::shared_ptr<buildings::Building> building;
-        in >> building;
-        other.AddBuilding(building);
+        std::string buildingType = GetStringFromLine(in);
+        for (size_t i = 0; i < constants::buildingTypeNames.size(); i++) {
+            if (buildingType == constants::buildingTypeNames[i]) {
+                std::shared_ptr<buildings::Building> building = buildings::Building::CreateEmpty(GetIntFromLine(in), static_cast<buildings::BuildingType>(i));
+                building->setPlayer(std::make_shared<core::Player>(other));
+                in >> building;
+                other.AddBuilding(building);
+                break;
+            }
+        }
     }
 
     /*

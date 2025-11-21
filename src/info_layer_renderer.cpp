@@ -62,13 +62,14 @@ void ui::InfoLayerRenderer::Initialize(core::Game& game, const std::shared_ptr<s
     cardBackground.setSize(sf::Vector2f(constants::infoLayerCardWidth, constants::infoLayerCardHeight));
     cardBackground_ = cardBackground;
 }
-
+/*
 void CopyTextProperties(sf::Text& source, sf::Text& target) {
     target.setFont(*source.getFont());
     target.setCharacterSize(source.getCharacterSize());
     target.setFillColor(source.getFillColor());
     target.setStyle(source.getStyle());
-}
+}  
+*/
 
 // Updates the info items
 void ui::InfoLayerRenderer::UpdateDrawItems() {
@@ -103,9 +104,7 @@ sf::Vector2f ui::InfoLayerRenderer::GetFixedPosition(sf::RenderWindow& window, c
 
 // Returns the width of the drawn item
 int ui::InfoLayerRenderer::DrawItemAtLocation(sf::RenderWindow& window, ui::DrawItem<std::string> item, sf::Vector2f location) {
-    sf::Text text;
-    CopyTextProperties(infoText_, text);
-    //sf::Text text = infoText_;
+    sf::Text text = infoText_;
     text.setString(item.description + ": " + item.value);
 
     // Draw background box for the text

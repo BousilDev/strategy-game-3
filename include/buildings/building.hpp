@@ -2,6 +2,9 @@
 #include <memory>
 #include <iostream>
 
+#include "constants/constants.hpp"
+#include "core/utils.hpp"
+
 namespace world { class Tile; }  // forward declaration
 namespace core { class Player; }
 
@@ -41,13 +44,16 @@ public:
     virtual void atTurnEnd() {}
 
     friend std::istream& operator>>(std::istream &in, std::shared_ptr<Building>& other) {
-      std::string typeStr;
-      std::getline(in, typeStr);
+      other->current_hp_ = core::GetIntFromLine(in);
+      //other->setTile(std::make_shared<world::Tile>());
       return in;
   };
 
   friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Building>& other) {
-      out << "Building";
+      BuildingType type = other->GetType();
+      out << constants::buildingTypeNames[static_cast<int>(type)] << "\n";
+      out << other->getMaxHp() << "\n";
+      out << other->getCurrentHp();
       return out;
   };
 
@@ -82,7 +88,7 @@ public:
                     int max_hp);
 
  friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<CapitalBuilding>& other) {
-      out << "CapitalBuilding";
+      out << "Capital";
       return out;
   };
 
@@ -104,7 +110,7 @@ public:
                  int max_hp);
 
   friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<FarmBuilding>& other) {
-      out << "FarmBuilding";
+      out << "Farm";
       return out;
   };
 
