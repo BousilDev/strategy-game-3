@@ -90,6 +90,8 @@ void core::TestGameSaveAndLoad() {
         game.NextTurn();
         // Add resources to the current player for testing
         game.GetCurrentPlayer().AddResources({core::Resource(core::ResourceType::kGold, 10 + 2 * i)});
+        // Make the capital of the players take damage
+        game.GetCurrentPlayer().GetBuildings().front()->takeDamage(20 * i);
     }
     // Save the game state
     std::ofstream outFile("testSaveFile.txt");
@@ -133,10 +135,22 @@ void core::TestGameSaveAndLoad() {
         const core::Player& loadedPlayer = loadedGame.GetCurrentPlayer();
         const auto& originalResources = originalPlayer.GetResources();
         const auto& loadedResources = loadedPlayer.GetResources();
+        AssertWithMessage(originalPlayer.GetName() == loadedPlayer.GetName(), "Player names for player " + std::to_string(i + 1) + " should match.");
         AssertWithMessage(originalResources.size() == loadedResources.size(), "Resource size for player " + std::to_string(i + 1) + " should match.");
         for (size_t j = 0; j < originalResources.size(); ++j) {
             AssertWithMessage(originalResources[j].type == loadedResources[j].type, "Resource types for player " + std::to_string(i + 1) + " should match.");
             AssertWithMessage(originalResources[j].amount == loadedResources[j].amount, "Resource amounts for player " + std::to_string(i + 1) + " should match.");
+        }
+        auto& originalBuildings = originalPlayer.GetBuildings();
+        auto& loadedBuildings = loadedPlayer.GetBuildings();
+        const auto& originalBuildingsVector = std::vector<std::shared_ptr<buildings::Building>>(originalBuildings.begin(), originalBuildings.end());
+        const auto& loadedBuildingsVector = std::vector<std::shared_ptr<buildings::Building>>(loadedBuildings.begin(), loadedBuildings.end());
+        for (size_t j = 0; j < originalBuildings.size(); ++j) {
+            const auto& originalBuilding = originalBuildingsVector[j];
+            const auto& loadedBuilding = loadedBuildingsVector[j];
+            AssertWithMessage(originalBuilding->GetType() == loadedBuilding->GetType(), "Building types for player " + std::to_string(i + 1) + " should match.");
+            AssertWithMessage(originalBuilding->getMaxHp() == loadedBuilding->getMaxHp(), "Building max HP for player " + std::to_string(i + 1) + " should match.");
+            AssertWithMessage(originalBuilding->getCurrentHp() == loadedBuilding->getCurrentHp(), "Building current HP for player " + std::to_string(i + 1) + " should match.");
         }
         game.NextTurn();
         loadedGame.NextTurn();

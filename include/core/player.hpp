@@ -68,11 +68,20 @@ public:
   std::shared_ptr<cards::Deck> GetDeck() { return deck_; };
 
   /**
+   * @brief Set the deck of the player.
+   * 
+   * @param deck The new deck of the player.
+   */
+  void SetDeck(std::shared_ptr<cards::Deck> deck) { deck_ = deck; }
+
+  /**
    * @brief Get the current hand of the player stored in the player's deck.
    * 
    * @return The hand of the player.
    */
-  cards::Hand* DrawHand() { return deck_->DrawHand(); };
+  cards::Hand* GetHand() { return hand_; };
+
+  void DrawHand() { hand_ = deck_->DrawHand(); }
 
   /**
    * @brief Get the buildings owned by the player.
@@ -201,6 +210,7 @@ private:
   std::list<std::shared_ptr<buildings::Building>> buildings_; ///< The buildings owned by the player.
   std::list<std::shared_ptr<units::Unit>> units_; ///< The units owned by the player.
   std::array<Resource, constants::kNumberOfResourceTypes> resources_; ///< The resources the player currently has.
+  cards::Hand* hand_; ///< The current hand of the player.
 };
 
 } // namespace core

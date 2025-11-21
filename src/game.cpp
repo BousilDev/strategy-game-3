@@ -17,6 +17,7 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
         // Add a capital building to each player
         //switch from create empty to create when want to store the player and tile to building
         players_.back()->AddBuilding(buildings::CapitalBuilding::CreateEmpty(100));
+        players_.back()->SetDeck(player.deck);
     }
     nof_players_ = players_.size();
 
@@ -136,10 +137,8 @@ void core::Game::NextTurn() {
     // Draw new hand for the current player (In one round everyone gets to draw a hand once)
     players_[current_turn_]->DrawHand();
 
-    // TODO: Update resources for the current player based on their buildings
+    // Update resources for the current player based on their buildings
     for (auto& building : player->GetBuildings()) {
-        //auto& tile = building->GetTile();
-        //std::vector<core::Resource>& resources = building->GetTile().GetTerrain()->GetResources();
-        //player->AddResources({resources.begin(), resources.end()});
+        building->atTurnEnd();
     }
 }

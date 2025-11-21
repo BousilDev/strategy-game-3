@@ -56,8 +56,8 @@ int main() {
                     unsigned int map_size = user_interface.GetSelectedMapSize();
                     unsigned int deck = user_interface.GetSelectedDeck();
 
-                    std::vector<std::shared_ptr<cards::Card>> empty_cards = {};
-                    cards::Deck test_deck = cards::Deck(empty_cards, 0U);
+                    std::vector<std::shared_ptr<cards::Card>> empty_cards = {std::make_shared<cards::BuildingCard>("Test card", "This is a test card", buildings::FarmBuilding::CreateEmpty(10))};
+                    cards::Deck test_deck = cards::Deck(empty_cards, 1U);
                     // Create players
                     for (unsigned int i = 0; i < player_count; ++i) {
                         players.emplace_back(core::Game::PlayerInit{
