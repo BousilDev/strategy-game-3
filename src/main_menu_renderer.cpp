@@ -35,8 +35,7 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
         std::pair("Deck 1", 1), std::pair("Deck 2", 2), std::pair("Deck 3", 3) };
     selections_.emplace_back(deckTexts, font, 35, sf::Vector2f(view_size.x*0.25, view_size.y*0.65));
 
-    //TODO: Initialize save file selector
-    //if (save_file_selection_.Initialize(constants::kSavesPath, font)) { return EXIT_FAILURE; }
+    // Initialize save file selector
     save_file_selection_.Initialize(font);
 
     // reset the state of the object
