@@ -19,6 +19,11 @@ const std::string kSavesPath = "saves/";
 const int kInitWindowWidth = 800;
 const int kInitWindowHeight = 600;
 
+const int kMainMenuClickablesSize = 40;
+const int kFileSelectionFontSize = 40;
+const sf::Color kFSselectedTextColor = sf::Color(255, 0, 0, 255); // ui::FileSelection selected text color
+const sf::Color kFStextColor = sf::Color(255, 255, 255, 255);     // ui::FileSelection default text color
+
 const std::string kFontPath = "texture/times.ttf";
 const std::string kBackgroundImagePath = "texture/background.jpg";
 const std::string kGameTitle = "Strategy Game 3";

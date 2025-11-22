@@ -12,13 +12,13 @@
 #include "ui/clickable_text.hpp"
 #include "ui/clickable_circle_shape.hpp"
 #include "constants/constants.hpp"
+#include "ui/file_selection.hpp"
 
 namespace fs = std::filesystem;
 
 namespace ui {
 
 
-//TODO: group update methods into one method maybe? (might not be needed)
 class MainMenuRenderer {
 public:
     // Initialize a MainMenuRenderer object. Returns 0 if succesful and 1 if there are errors.
@@ -29,10 +29,14 @@ public:
     int Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event);
 
     // Check if start is clicked
-    bool IsStartClicked(const sf::Vector2f& mousePos, const sf::Event& event) const;
+    bool IsStartClicked(const sf::Vector2f& mouse_pos, const sf::Event& event) const {
+        return (current_state_ == 1 && start_new_button_.IsClicked(mouse_pos, event));
+    }
 
     // Check if load is clicked
-    bool IsLoadClicked(const sf::Vector2f& mousePos, const sf::Event& event) const;
+    bool IsLoadClicked(const sf::Vector2f& mouse_pos, const sf::Event& event) const {
+        return (current_state_ == 2 && start_loaded_button_.IsClicked(mouse_pos, event) && save_file_selection_.IsSelected());
+    }
 
     // Draw the sprites and selectors
     void DrawTo(sf::RenderWindow& window);
@@ -41,7 +45,7 @@ public:
     int GetSelectedMapSize() const { return selections_[1].GetSelectedOption(); }
     int GetSelectedDeck() const { return selections_[2].GetSelectedOption(); }
 
-    std::string& GetLastClickedSavePath() { return last_clicked_path_; }
+    std::string& GetLastClickedSavePath() { return save_file_selection_.GetLastClickedPath(); }
 
     // TODO: add other stuff if needed
     // reset the state. Used when returning to main menu from somewhere.
@@ -72,17 +76,7 @@ private:
 
     // load game
     ui::ClickableText start_loaded_button_;
-
-    //TODO: save file display stuff
-    const fs::path saves_folder_ = constants::kSavesPath;
-    std::vector<fs::path> save_files_;
-    sf::Text saves_text_;
-    std::string last_clicked_path_ = "No file has been selected!"; // path to last clicked file in the load game screen
-
-    int scroll_ = 0; // index of the first visible line
-    int visible_lines_ = 4;
-    float margin_ = constants::kInitWindowWidth * 0.2f;
-    float line_height_ = constants::kInitWindowHeight * 0.075f;
+    ui::FileSelection save_file_selection_;
 };
 
 } // namespace ui
