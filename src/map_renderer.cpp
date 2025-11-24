@@ -9,6 +9,7 @@ void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, flo
     game_ = &game;
     map_ = game_->GetMap();
     tile_size_ = tile_size;
+    pan_move_dir_ = {0, 0};
 
     const size_t map_w  = map_.get_map_width();
     // const size_t map_height = map_.get_map_height();
@@ -153,3 +154,29 @@ std::shared_ptr<world::Tile> ui::MapRenderer::GetClickedTile(sf::RenderWindow& w
 std::shared_ptr<world::Tile> ui::MapRenderer::GetLastClickedTile() {
   return selected_tile_;
 }
+
+void ui::MapRenderer::PanMap(sf::RenderWindow& window) {
+    
+    sf::Vector2f dir(0.f, 0.f);
+    float speed = constants::kMapPanSpeed;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        dir.y -= 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+        dir.y += 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        dir.x -= 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        dir.x += 1.f;
+
+    if (dir != sf::Vector2f(0.f, 0.f))
+    {
+        sf::View view = window.getView();
+        view.move(dir * speed);
+        window.setView(view);
+    }
+}
+
+/* void ui::MapRenderer::SetViewOnPlayer() {
+    
+} */

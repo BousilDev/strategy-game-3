@@ -28,6 +28,8 @@ const std::string kFontPath = "texture/times.ttf";
 const std::string kBackgroundImagePath = "texture/background.jpg";
 const std::string kGameTitle = "Strategy Game 3";
 
+const float kMapPanSpeed = 3;
+
 // Info layer constants
 const float infoLayerHeight = 100.f;
 const int infoLayerTextSize = 20;

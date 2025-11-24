@@ -63,7 +63,8 @@ void ui::UserInterface::HandleEvent(bool start) {
                 std::cout << "Tile number: " << tile_pointer->get_tile_number() 
                         << "\nTile terrain: " << tile_pointer->get_terrain()->get_name() << std::endl;
             }
-        } 
+        }
+
         info_layer_renderer_.Update(window_, mouse_pos_, event_, tile_pointer);
     }
 
@@ -97,4 +98,9 @@ void ui::UserInterface::DrawAndDisplay(bool start) {
     
     // Update the window
     window_.display();
+}
+
+// Outside of event loop
+void ui::UserInterface::UpdatePanning() {
+    map_renderer_.PanMap(window_);
 }

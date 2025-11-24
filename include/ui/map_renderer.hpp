@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "world/map.hpp"
 #include "core/game.hpp"
-#define TILE_SIZE 48.f
+#define TILE_SIZE 64.f
 
 namespace ui {
 
@@ -20,6 +20,8 @@ public:
 
     std::shared_ptr<world::Tile> GetLastClickedTile();
 
+    void PanMap(sf::RenderWindow& window);
+
    private:
     core::Game* game_ = nullptr;
     std::vector<std::shared_ptr<world::Tile>> spawn_tiles_;
@@ -28,7 +30,7 @@ public:
     std::vector<sf::CircleShape> tiles_;
     std::vector<sf::RectangleShape> buildings_;
     std::shared_ptr<world::Tile> selected_tile_ = nullptr;
-    //sf::RenderWindow& window_;
+    sf::Vector2f pan_move_dir_;
 
     void BuildTiles();
     sf::Vector2f hex_to_pixel(unsigned int index) const;

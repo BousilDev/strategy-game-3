@@ -38,6 +38,11 @@ int main() {
     // Main graphics loop
     while (user_interface.GetWindow().isOpen()) {
 
+        // No delay map panning
+        if (start) {
+            user_interface.UpdatePanning();
+        }
+
         // Handle events
         while (user_interface.PollEvent()) {
             user_interface.HandleEvent(start);

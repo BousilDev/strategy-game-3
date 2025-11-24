@@ -38,6 +38,8 @@ public:
     // check if load button is clicked
     bool IsLoadClicked();
 
+    bool IsKeyPressed();
+
     void InitializeMapRenderer(core::Game& game) {
         map_renderer_.Initialize(game, window_);
     }
@@ -52,6 +54,9 @@ public:
     int GetSelectedDeck() const { return main_menu_renderer_.GetSelectedDeck(); }
 
     std::string& GetLastClickedSavePath() { return main_menu_renderer_.GetLastClickedSavePath(); }
+
+    // Outside of event loop
+    void UpdatePanning();
 
 private:
     sf::RenderWindow window_;
