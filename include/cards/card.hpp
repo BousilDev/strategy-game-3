@@ -82,9 +82,10 @@ public:
    * This is implemented in the subclasses. 
    * 
    * @param target The tile the card is played on.
+   * @param player The player who is playing the card.
    * @return true If the card was played and false otherwise. 
    */
-  virtual bool Play(world::Tile& target) = 0;
+  virtual bool Play(world::Tile& target, std::shared_ptr<core::Player> player) = 0;
 
 private:
   std::string name_; ///< The name of the card.
@@ -131,9 +132,10 @@ public:
    * If the card is succesfully played, the hand will discard the card.
    * 
    * @param target The tile the card is played on and thus where its building is constructed.
+   * @param player The player who is playing the card.
    * @return true If the building was successfully constructed on the target tile, false otherwise.
    */
-  bool Play(world::Tile& target) override;
+  bool Play(world::Tile& target, std::shared_ptr<core::Player> player) override;
 
 private:
   std::shared_ptr<buildings::Building> building_; ///< The building the card constructs a copy of.
@@ -179,9 +181,10 @@ public:
    * If the card is succesfully played, the hand will discard the card.
    * 
    * @param target The tile the card is played on and thus where its unit is deployed.
+   * @param player The player who is playing the card.
    * @return true If the unit was successfully deployed on the target tile, false otherwise.
    */
-  bool Play(world::Tile& target) override;
+  bool Play(world::Tile& target, std::shared_ptr<core::Player> player) override;
 
 private:
   std::shared_ptr<units::Unit> unit_; ///< The unit the card deploys a copy of.

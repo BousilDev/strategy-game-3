@@ -13,7 +13,7 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
     map_ = world::Map(map_size);
     // Initialize players
     for (const auto& player : players) {
-        players_.push_back(std::make_unique<Player>(Player(player.name, player.deck)));
+        players_.push_back(std::make_shared<Player>(Player(player.name, player.deck)));
         // Add a capital building to each player
         //switch from create empty to create when want to store the player and tile to building
         players_.back()->AddBuilding(buildings::CapitalBuilding::CreateEmpty(100));
@@ -73,7 +73,7 @@ void core::Game::Load(std::istream& file){
     for (unsigned int i = 0; i < nof_players_; ++i) {
         Player player(GetStringFromLine(file), test_deck.Clone());
         file >> player;
-        players_.push_back(std::make_unique<Player>(std::move(player)));
+        players_.push_back(std::make_shared<Player>(std::move(player)));
     }
 
     size_t dead_players_size = GetIntFromLine(file);
@@ -83,7 +83,7 @@ void core::Game::Load(std::istream& file){
     for (unsigned int i = 0; i < dead_players_size; ++i) {
         Player player(GetStringFromLine(file), test_deck.Clone());
         file >> player;
-        dead_players_.push_back(std::make_unique<Player>(std::move(player)));
+        dead_players_.push_back(std::make_shared<Player>(std::move(player)));
     }
 
     current_turn_ = GetIntFromLine(file);
@@ -140,5 +140,12 @@ void core::Game::NextTurn() {
     // Update resources for the current player based on their buildings
     for (auto& building : player->GetBuildings()) {
         building->atTurnEnd();
+    }
+}
+
+void core::Game::PlayCardOnTile(std::shared_ptr<cards::Card> card, std::shared_ptr<world::Tile> tile) {
+    auto& player = players_[current_turn_];
+    if (!player->GetHand()->PlayCard(card, *tile, player)) {
+        throw std::runtime_error("Game::PlayCardOnTile: Failed to play card on tile.");
     }
 }

@@ -278,7 +278,7 @@ void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f&
         // Update Tile selection
         if (tile_pointer != nullptr) {
             if (selected_card_ != nullptr) {
-                std::cout << selected_card_->Play(*tile_pointer) << std::endl;
+                game_->PlayCardOnTile(selected_card_, tile_pointer);
                 selected_card_ = nullptr;
             }
             selected_tile_ = tile_pointer;

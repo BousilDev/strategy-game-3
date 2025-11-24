@@ -136,9 +136,17 @@ public:
    */
   unsigned int GetCurrentTurn() const { return turn_; }
 
+  /**
+   * @brief Plays a card on a tile for the current player.
+   * 
+   * @param card The card to be played.
+   * @param tile The tile the card is played on.
+   */
+  void PlayCardOnTile(std::shared_ptr<cards::Card> card, std::shared_ptr<world::Tile> tile);
+
 private:
-  std::vector<std::unique_ptr<Player>> players_; ///< All players in the game.
-  std::vector<std::unique_ptr<Player>> dead_players_; ///< All players that have lost the game.
+  std::vector<std::shared_ptr<Player>> players_; ///< All players in the game.
+  std::vector<std::shared_ptr<Player>> dead_players_; ///< All players that have lost the game.
   unsigned int nof_players_; ///< The number of players in the game.
   world::Map map_; ///< The map of the game.
   std::vector<std::shared_ptr<world::Tile>> spawn_tiles_;
