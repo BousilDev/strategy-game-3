@@ -21,14 +21,6 @@ class Deck;
  * The hand is a part of every deck. At the beginning of a turn, a player draws cards to their hand until
  * the hand has cards equal to the hand size. Cards can be played from the hand to influence the game state.
  * At the end of the turn, the cards which have not been played are discarded so that the hand is empty.
- * 
- * @code
- * cards::Hand hand = deck.DrawHand(); // some deck defined earlier
- * hand.DrawHand();
- * cards::Card first = hand.getCard(0);
- * hand.PlayCard(0);
- * hand.DiscardHand();
- * @endcode
  */
 class Hand {
 public:
@@ -100,11 +92,11 @@ public:
    * @brief Plays the card at index i in the hand on the target if possible. Throws std::out_of_range 
    * if the card index is out of bounds. Discards the card if it was successfully played.
    * 
-   * @param i The index of the card in the hand.
+   * @param card The card to be played.
    * @param target The tile the card will attempt to be played on.
    * @return true if the card is successfully played on the target tile, false otherwise.
    */
-  bool PlayCard(int i, world::Tile& target);
+  bool PlayCard(std::shared_ptr<Card> card, world::Tile& target, std::shared_ptr<core::Player> player);
 
   /**
    * @brief Adds a card from the deck to the current hand if there is sufficient room. If there are no cards
@@ -118,9 +110,9 @@ public:
    * @brief Removes the card at index i from the hand. Throws std::out_of_range if the index is out of 
    * bounds.
    * 
-   * @param i The index of the card to be removed.
+   * @param card The card to be discarded.
    */
-  void DiscardCard(int i);
+  void DiscardCard(std::shared_ptr<Card> card);
 
   /**
    * @brief Removes all cards from the hand so that the contents_ of the hand becomes empty. Places the cards

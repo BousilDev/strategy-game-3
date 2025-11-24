@@ -10,14 +10,14 @@ const std::shared_ptr<Card>& Hand::GetCard(int i) {
     return contents_[i];
 }
 
-bool Hand::PlayCard(int i, world::Tile& target) {
-    if (i < 0 || i >= static_cast<int>(contents_.size())) throw std::out_of_range( "Index " + std::to_string(i) 
-        + " is out of bounds for a hand with " + std::to_string(contents_.size()) + " cards." );
-    auto it = contents_.begin();
-    std::advance(it, i);
-    bool played = (*it)->Play(target);
+bool Hand::PlayCard(std::shared_ptr<Card> card, world::Tile& target, std::shared_ptr<core::Player> player) {
+    auto it = std::find(contents_.begin(), contents_.end(), card);
+    if (it == contents_.end()) {
+        throw std::out_of_range("Hand::PlayCard card not found in hand.");
+    }
+    bool played = (*it)->Play(target, player);
     if (played) {
-        DiscardCard(i);
+        DiscardCard(card);
     }
     return played;
 }
@@ -30,14 +30,13 @@ bool Hand::DrawCard() {
     return true;
 }
 
-void Hand::DiscardCard(int i) {
-    if (i < 0 || i >= static_cast<int>(contents_.size())) throw std::out_of_range( "Index " + std::to_string(i) 
-        + " is out of bounds for a hand with " + std::to_string(contents_.size()) + " cards." );
-    auto it = contents_.begin();
-    std::advance(it, i);
-    std::shared_ptr<Card> discarded_card = *it;
+void Hand::DiscardCard(std::shared_ptr<Card> card) {
+    auto it = std::find(contents_.begin(), contents_.end(), card);
+    if (it == contents_.end()) {
+        throw std::out_of_range("Hand::DiscardCard card not found in hand.");
+    }
     contents_.erase(it);
-    deck_->DiscardCard(discarded_card);
+    deck_->DiscardCard(card);
 }
 
 void Hand::DiscardHand() {
