@@ -141,8 +141,10 @@ public:
    * 
    * @param card The card to be played.
    * @param tile The tile the card is played on.
+   * 
+   * @return true if the card was successfully played on the tile, false otherwise.
    */
-  void PlayCardOnTile(std::shared_ptr<cards::Card> card, std::shared_ptr<world::Tile> tile);
+  bool PlayCardOnTile(std::shared_ptr<cards::Card> card, std::shared_ptr<world::Tile> tile);
 
 private:
   std::vector<std::shared_ptr<Player>> players_; ///< All players in the game.

@@ -143,9 +143,7 @@ void core::Game::NextTurn() {
     }
 }
 
-void core::Game::PlayCardOnTile(std::shared_ptr<cards::Card> card, std::shared_ptr<world::Tile> tile) {
+bool core::Game::PlayCardOnTile(std::shared_ptr<cards::Card> card, std::shared_ptr<world::Tile> tile) {
     auto& player = players_[current_turn_];
-    if (!player->GetHand()->PlayCard(card, *tile, player)) {
-        throw std::runtime_error("Game::PlayCardOnTile: Failed to play card on tile.");
-    }
+    return player->GetHand()->PlayCard(card, *tile, player);
 }
