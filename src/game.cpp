@@ -55,8 +55,7 @@ void core::Game::Save(std::ostream& file) const{
 
 void core::Game::Load(std::istream& file){
     // Loads timestamp
-    std::time_t timestamp = static_cast<std::time_t>(GetIntFromLine(file));
-    std::string timeStr = asctime(std::localtime(&timestamp));
+    std::string timeStr = core::DecodeTimeFromFile(file);
     timeStr.pop_back(); // Remove newline for consistent debug output
     debug_ ? core::PrintTestMsg("Loading game saved at: ", timeStr) : void();
 

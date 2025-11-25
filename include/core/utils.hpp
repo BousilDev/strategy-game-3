@@ -28,4 +28,8 @@ namespace core {
     inline void ThrowWithMessage(const std::string& message, const std::string& file, int line) {
         throw std::runtime_error(message + " at " + file + ":" + std::to_string(line));
     }
+    inline std::string DecodeTimeFromFile(std::istream& file) {
+        std::time_t timestamp = static_cast<std::time_t>(GetIntFromLine(file));
+        return asctime(std::localtime(&timestamp));
+    }
 }
