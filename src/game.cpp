@@ -12,22 +12,21 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
     // Create map with given size
     map_ = world::Map(map_size);
     // Initialize players
+    nof_players_ = players.size();
+
+    // Temp generate capital locations
+    spawn_tiles_ = map_.get_n_spawn(nof_players_);
+
+    unsigned int playerNum = 0;
     for (const auto& player : players) {
         players_.push_back(std::make_shared<Player>(Player(player.name, player.deck)));
         // Add a capital building to each player
         //switch from create empty to create when want to store the player and tile to building
-        players_.back()->AddBuilding(buildings::CapitalBuilding::CreateEmpty(100));
+        players_.back()->AddBuilding(buildings::CapitalBuilding::Create(spawn_tiles_[playerNum], players_.back(), 100));
         players_.back()->SetDeck(player.deck);
+        playerNum += 1;
     }
     nof_players_ = players_.size();
-
-
-    // Temp generate capital locations
-    spawn_tiles_ = map_.get_n_spawn(nof_players_);
-    for (unsigned int i = 0; i < nof_players_; i++ ) {
-        spawn_tiles_[i]->place_building(players_[i]->GetBuildings().front());
-    }
-
 
     is_initialized_ = true;
     if (debug_) {

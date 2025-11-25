@@ -139,8 +139,8 @@ std::shared_ptr<world::Tile> ui::MapRenderer::GetClickedTile(sf::RenderWindow& w
         const auto& tile_shape = tiles_[i];
         if (tile_shape.getGlobalBounds().contains(mousePos)) {
             auto get_tile = map_.get_tile(i);
-
-            std::cout << get_tile->get_building() << std::endl;
+            if (get_tile != nullptr && get_tile->get_building() != nullptr)
+                std::cout << get_tile->get_building() << std::endl;
             selected_tile_ = get_tile;
             return get_tile;
         }
