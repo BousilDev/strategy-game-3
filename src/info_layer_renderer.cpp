@@ -222,7 +222,15 @@ void ui::InfoLayerRenderer::DrawTo(sf::RenderWindow& window) {
 
     int textLen = 0;
     DrawItems(window, items_, textLen);
-    // TODO: Draw a separator here between general info and resource info
+    
+    // Draws a separator between general info and resource info
+    sf::RectangleShape separator;
+    separator.setSize(sf::Vector2f(4.f, constants::infoLayerHeight));
+    separator.setFillColor(sf::Color::White);
+    separator.setPosition(GetFixedPosition(window, sf::Vector2f(textLen + 5.f, 0.f)));
+    window.draw(separator);
+    textLen += 5.f;
+
     DrawItems(window, resource_items_, textLen);
     textLen += 10.f;
 
