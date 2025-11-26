@@ -4,8 +4,11 @@
 #include <SFML/Graphics.hpp>
 #include <filesystem>
 #include <iostream>
+#include <fstream>
+#include <tuple>
 
 #include "constants/constants.hpp"
+#include "core/utils.hpp"
 
 namespace fs = std::filesystem;
 
@@ -18,8 +21,8 @@ public:
     FileSelection() {}
 
     void Initialize(const std::shared_ptr<sf::Font>& font) {
-        text_.setFont(*font);
-        text_.setCharacterSize(constants::kFileSelectionFontSize);
+        default_text_.setFont(*font);
+        default_text_.setCharacterSize(constants::kFileSelectionFontSize);
     }
 
 
@@ -34,13 +37,18 @@ public:
                 std::cerr << "Not a directory: " << saves_folder_ << "\n";
                 return EXIT_FAILURE;
             }
-            for (const auto& entry : fs::directory_iterator(saves_folder_)) {
-                if (entry.is_regular_file()) {
-                    save_files_.emplace_back(entry.path());
-                    save_file_texts_.emplace_back(text_);
-                    save_file_texts_[save_file_texts_.size() - 1].setString(entry.path().stem().string());
+            for (const auto& file : fs::directory_iterator(saves_folder_)) {
+                if (file.is_regular_file()) {
+                    std::ifstream inFile(file.path().string());
+                    std::string timeStr = core::DecodeTimeFromFile(inFile);
+                    std::time_t timestamp = static_cast<std::time_t>(core::GetIntFromLine(inFile));
+
+                    std::tuple<fs::path, sf::Text, time_t> textTuple = std::make_tuple(file.path(), default_text_, timestamp);
+                    std::get<1>(textTuple).setString(timeStr + " " + file.path().stem().string());
+                    texts_.emplace_back(textTuple);
+
                     if (constants::debug) {
-                        std::cout << constants::debug_prefix << entry.path().string() << std::endl;
+                        std::cout << constants::debug_prefix << "found: " << file.path().string() << "   created at: " << timeStr << std::endl;
                     }
                 }
             }
@@ -48,6 +56,9 @@ public:
             std::cerr << "Filesystem error: " << error.what() << "\n";
             return EXIT_FAILURE;
         }
+        
+        // sort texts_ to reverse chronological order
+        std::sort(texts_.begin(), texts_.end(), [](auto const& x, auto const& y) { return std::get<2>(x) > std::get<2>(y); });
 
         return 0;
     };
@@ -58,21 +69,21 @@ public:
 
         if (event.type == sf::Event::MouseWheelScrolled) {
             if (event.mouseWheelScroll.delta < 0) {
-                if (scroll_ + visible_lines_ < static_cast<int>(save_files_.size())) scroll_++;
+                if (scroll_ + visible_lines_ < static_cast<int>(texts_.size())) scroll_++;
             } else {
                 if (scroll_ > 0) scroll_--;
             }
         }
 
-        const int end = std::min((int)save_files_.size(), scroll_ + visible_lines_);
+        const int end = std::min((int)texts_.size(), scroll_ + visible_lines_);
         for (int i = scroll_; i < end; ++i) {
             float y = margin_ + (i - scroll_) * line_height_;
-            save_file_texts_[i].setPosition(margin_, y);
+            std::get<1>(texts_[i]).setPosition(margin_, y);
 
             if (event.type == sf::Event::MouseButtonReleased && 
                 event.mouseButton.button == sf::Mouse::Left &&
-                save_file_texts_[i].getGlobalBounds().contains(mousePos)) {
-                last_clicked_path_ = save_files_[i].string();
+                std::get<1>(texts_[i]).getGlobalBounds().contains(mousePos)) {
+                last_clicked_path_ = std::get<0>(texts_[i]).string();
                 last_clicked_index_ = i;
             }
 
@@ -86,20 +97,19 @@ public:
     void Reset() { 
         last_clicked_path_.erase();
         scroll_ = 0;
-        save_files_.clear();
-        save_file_texts_.clear();
         last_clicked_index_ = -1;
+        texts_.clear();
     }
 
     void DrawTo(sf::RenderWindow& window) {
-        const int end = std::min((int)save_files_.size(), scroll_ + visible_lines_);
+        const int end = std::min((int)texts_.size(), scroll_ + visible_lines_);
         for (int i = scroll_; i < end; ++i) {
             if (i == last_clicked_index_) {
-                save_file_texts_[i].setColor(constants::kFSselectedTextColor);
+                std::get<1>(texts_[i]).setColor(constants::kFSselectedTextColor);
             } else {
-                save_file_texts_[i].setColor(constants::kFStextColor);
+                std::get<1>(texts_[i]).setColor(constants::kFStextColor);
             }
-            window.draw(save_file_texts_[i]);
+            window.draw(std::get<1>(texts_[i]));
         }
     }
 
@@ -108,9 +118,9 @@ public:
 
 private:
     const fs::path saves_folder_ = constants::kSavesPath;
-    std::vector<fs::path> save_files_;
-    std::vector<sf::Text> save_file_texts_;
-    sf::Text text_;
+    std::vector<std::tuple<fs::path, sf::Text, time_t>> texts_; // file path, text object, timestamp
+
+    sf::Text default_text_;
     const std::string no_file_selected_ = "No file has been selected!";
     std::string last_clicked_path_; // path to last clicked file in the load game screen
     int last_clicked_index_ = -1;
