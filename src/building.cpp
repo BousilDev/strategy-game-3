@@ -60,6 +60,25 @@ int Building::takeDamage(int damage)
     return current_hp_;
 }
 
+std::istream& operator>>(std::istream &in, std::shared_ptr<Building>& other) {
+    other->current_hp_ = core::GetIntFromLine(in);
+    return in;
+}
+
+std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Building>& other) {
+    BuildingType type = other->GetType();
+    out << constants::buildingTypeNames[static_cast<int>(type)] << "\n";
+    out << other->getMaxHp() << "\n";
+    out << other->getCurrentHp() << "\n";
+    if (other->current_tile_.expired() == false) {
+        std::shared_ptr<world::Tile> tile = other->current_tile_.lock();
+        out << tile->get_tile_number();
+    } else {
+        out << -1; // Indicate no tile
+    }
+    return out;
+}
+
 // ============================================================
 // CapitalBuilding
 // ============================================================
