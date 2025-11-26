@@ -96,7 +96,7 @@ public:
    * @param target The tile the card will attempt to be played on.
    * @return true if the card is successfully played on the target tile, false otherwise.
    */
-  bool PlayCard(std::shared_ptr<Card> card, world::Tile& target, std::shared_ptr<core::Player> player);
+  bool PlayCard(std::shared_ptr<Card> card, std::shared_ptr<world::Tile> target, std::shared_ptr<core::Player> player);
 
   /**
    * @brief Adds a card from the deck to the current hand if there is sufficient room. If there are no cards
