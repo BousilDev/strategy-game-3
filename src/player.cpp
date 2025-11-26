@@ -47,7 +47,8 @@ bool core::Player::IsAlive() const {
 namespace core {
 std::ostream& operator<<(std::ostream &out, const core::Player& other) {
     out << other.GetName() << "\n";
-    //out << other.GetDeck() << "\n";
+    //out << other.deck_ << "\n";
+    //out << other.hand_ << "\n";
     
     out << other.GetBuildings().size() << "\n";
     for (const auto& building : other.GetBuildings()) {
@@ -61,7 +62,6 @@ std::ostream& operator<<(std::ostream &out, const core::Player& other) {
         */
     out << other.GetResources().size() << "\n";
     for (const auto& resource : other.GetResources()) {
-        //out << static_cast<int>(resource.type) << "\n";
         out << resource.amount << "\n";
     }
     return out;
@@ -70,19 +70,9 @@ std::ostream& operator<<(std::ostream &out, const core::Player& other) {
 std::istream& operator>>(std::istream &in, core::Player& other) {
     
     // get deck here
-    size_t buildSize = GetIntFromLine(in);
-    while (buildSize--) {
-        std::string buildingType = GetStringFromLine(in);
-        for (size_t i = 0; i < constants::buildingTypeNames.size(); i++) {
-            if (buildingType == constants::buildingTypeNames[i]) {
-                std::shared_ptr<buildings::Building> building = buildings::Building::CreateEmpty(GetIntFromLine(in), static_cast<buildings::BuildingType>(i));
-                building->setPlayer(std::make_shared<core::Player>(other));
-                in >> building;
-                other.AddBuilding(building);
-                break;
-            }
-        }
-    }
+    //std::shared_ptr<cards::Deck> deck = std::make_shared<cards::Deck>();
+    //in >> *deck;
+    //other.SetDeck(deck);
 
     /*
     size_t unitSize = GetIntFromLine(in);
