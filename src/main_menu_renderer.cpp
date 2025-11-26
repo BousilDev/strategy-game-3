@@ -20,10 +20,10 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
     title_.setPosition(view_size.x*0.1, view_size.y*0.1);
 
     // TODO: fix the positioning
-    load_game_button_ =    ui::ClickableText("Load Game",          *font, sf::Vector2f(view_size.x*0.1, view_size.y*0.2),  constants::kMainMenuClickablesSize);
-    new_game_button_ =     ui::ClickableText("New Game",           *font, sf::Vector2f(view_size.x*0.1, view_size.y*0.3),  constants::kMainMenuClickablesSize);
-    start_loaded_button_ = ui::ClickableText("Load Selected Game", *font, sf::Vector2f(view_size.x*0.1, view_size.y*0.75), constants::kMainMenuClickablesSize);
-    start_new_button_ =    ui::ClickableText("Start New Game",     *font, sf::Vector2f(view_size.x*0.1, view_size.y*0.3),  constants::kMainMenuClickablesSize);
+    load_game_button_ =    ui::ClickableText("Load Game",          *font, view_size, sf::Vector2f(0.1f, 0.2f),   constants::kMainMenuClickablesSize);
+    new_game_button_ =     ui::ClickableText("New Game",           *font, view_size, sf::Vector2f(0.1f, 0.3f),   constants::kMainMenuClickablesSize);
+    start_loaded_button_ = ui::ClickableText("Load Selected Game", *font, view_size, sf::Vector2f(0.25f, 0.85f), constants::kMainMenuClickablesSize);
+    start_new_button_ =    ui::ClickableText("Start New Game",     *font, view_size, sf::Vector2f(0.1f, 0.3f),   constants::kMainMenuClickablesSize);
 
     // Initialize option selectors for the main menu
     std::vector<std::pair<std::string, int>> playerCountTexts {
@@ -39,7 +39,7 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
     selections_.emplace_back(deckTexts, font, 35, sf::Vector2f(view_size.x*0.25, view_size.y*0.65));
 
     // Initialize save file selector
-    save_file_selection_.Initialize(font);
+    save_file_selection_.Initialize(view_size, font);
 
     // reset the state of the object
     Reset();
@@ -53,14 +53,6 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
 
     //TODO: resizing support
     if (event.type == sf::Event::Resized) {
-        //window.getSize();
-        //auto textureSize = background_texture_.getSize();
-        //background_.setScale(
-        //    window.getSize().x / static_cast<float>(textureSize.x),
-        //    window.getSize().y / static_cast<float>(textureSize.y)
-        //);
-        //background_.setPosition(0.f, 0.f);
-
         background_rect_.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
     }
 
@@ -82,7 +74,7 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
             new_state_ = 0;
             save_file_selection_.Reset();
         } else {
-            save_file_selection_.Update(window, mousePos, event, IsLoadClicked(mousePos, event));
+            save_file_selection_.Update(window, mousePos, event, start_loaded_button_.IsClicked(mousePos, event));
             start_loaded_button_.Update(window, mousePos, event);
             back_to_main_menu_button_.Update(window, mousePos, event);
             

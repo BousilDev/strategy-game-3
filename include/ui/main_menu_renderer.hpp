@@ -33,9 +33,17 @@ public:
         return (current_state_ == 1 && start_new_button_.IsClicked(mouse_pos, event));
     }
 
-    // Check if load is clicked
+    // Check if load is clicked and save file is selected
     bool IsLoadClicked(const sf::Vector2f& mouse_pos, const sf::Event& event) const {
-        return (current_state_ == 2 && start_loaded_button_.IsClicked(mouse_pos, event) && save_file_selection_.IsSelected());
+        if (current_state_ == 2 && start_loaded_button_.IsClicked(mouse_pos, event) && save_file_selection_.IsSelected()) {
+            if (constants::debug) {
+                std::cout << constants::debug_prefix << "Load has been clicked and save file has been selected; ui::MainMenu::IsLoadClicked returns true" << std::endl;
+            }
+            return true;
+        } else if (constants::debug && current_state_ == 2 && start_loaded_button_.IsClicked(mouse_pos, event)) {
+            std::cout << constants::debug_prefix << "Load has been clicked but no save file has been selected" << std::endl;
+        }
+        return false;
     }
 
     // Draw the sprites and selectors

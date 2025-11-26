@@ -20,9 +20,13 @@ const int kInitWindowWidth = 800;
 const int kInitWindowHeight = 600;
 
 const int kMainMenuClickablesSize = 40;
-const int kFileSelectionFontSize = 40;
-const sf::Color kFSselectedTextColor = sf::Color(255, 0, 0, 255); // ui::FileSelection selected text color
-const sf::Color kFStextColor = sf::Color(255, 255, 255, 255);     // ui::FileSelection default text color
+const int kFileSelectionFontSize = 30;
+const sf::Color kFSselectedTextColor = sf::Color(255, 0, 0, 255);   // ui::FileSelection selected text color
+const sf::Color kFSselectedTextOutline = sf::Color(127, 0, 0, 255); // ui::FileSelection selected text outline color
+const sf::Color kFStextColor = sf::Color(255, 255, 255, 255);       // ui::FileSelection default text color
+const sf::Color kFSbgColor = sf::Color(50, 50, 50, 100);            // ui::FileSelection background color
+const sf::Color kFSoutlineColor = sf::Color(255, 255, 255, 200);    // ui::FileSelection outline color
+const float kFSmargin = 0.2f;                                       // ui::FileSelection margin size compared to window size
 
 const std::string kFontPath = "texture/times.ttf";
 const std::string kBackgroundImagePath = "texture/background.jpg";
