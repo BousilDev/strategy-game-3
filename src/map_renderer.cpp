@@ -9,7 +9,6 @@ void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, flo
     game_ = &game;
     map_ = game_->GetMap();
     tile_size_ = tile_size;
-    pan_move_dir_ = {0, 0};
 
     const size_t map_w  = map_.get_map_width();
     // const size_t map_height = map_.get_map_height();
@@ -103,11 +102,9 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
         window.draw(tiles_[i]);
     }
 
-
-
-    // Draw buildings
+    // Draw buildings units
     for (auto v : map_.get_tiles()) {
-        sf::RectangleShape building(sf::Vector2f(10,10));
+        sf::RectangleShape building(sf::Vector2f(20,20));
         centerOrigin(building);
         auto b = v->get_building();
             if (b) {
@@ -124,6 +121,18 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
                     building.setFillColor(sf::Color(255,255,255));
                     break;
             }
+            // Set outline colour for buildings and units
+            sf::Color outline;
+            auto owner_name = b->getOwner();
+            
+
+/*             if (owner_name == "Player 1") outline = constants::playerOneColor;
+            else if (owner_name == "Player 2") outline = constants::playerTwoColor;
+            else if (owner_name == "Player 3") outline = constants::playerThreeColor;
+            else outline = constants::playerFourColor;
+            
+            building.setOutlineColor(outline); */
+            building.setOutlineThickness(3);
             building.setPosition(tiles_[v->get_tile_number()].getPosition());
             window.draw(building);
         } // not nullptr
@@ -158,7 +167,7 @@ std::shared_ptr<world::Tile> ui::MapRenderer::GetLastClickedTile() {
 void ui::MapRenderer::PanMap(sf::RenderWindow& window) {
     
     sf::Vector2f dir(0.f, 0.f);
-    float speed = constants::kMapPanSpeed;
+    float speed = constants::mapPanSpeed;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         dir.y -= 1.f;

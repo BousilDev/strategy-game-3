@@ -30,8 +30,6 @@ public:
     std::vector<sf::CircleShape> tiles_;
     std::vector<sf::RectangleShape> buildings_;
     std::shared_ptr<world::Tile> selected_tile_ = nullptr;
-    sf::Vector2f pan_move_dir_;
-
     void BuildTiles();
     sf::Vector2f hex_to_pixel(unsigned int index) const;
 };

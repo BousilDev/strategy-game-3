@@ -38,10 +38,12 @@ public:
     };
 
     BuildingType GetType() const { return building_type_; }
+    std::shared_ptr<core::Player> getOwner() const {return owner_.lock(); }  // Converting to shared_ptr... Currently assuming object always alive.
     int getMaxHp() const { return max_hp_; }
     int getCurrentHp() const { return current_hp_; }
     int takeDamage(int damage);
     virtual void atTurnEnd() {}
+
 
     friend std::istream& operator>>(std::istream &in, std::shared_ptr<Building>& other) {
       other->current_hp_ = core::GetIntFromLine(in);
@@ -71,6 +73,8 @@ protected:
     std::weak_ptr<world::Tile> current_tile_;
     std::weak_ptr<core::Player> owner_;
 };
+
+
 
 // CapitalBuilding
 class CapitalBuilding : public Building {
