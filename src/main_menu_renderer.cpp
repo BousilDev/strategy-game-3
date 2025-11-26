@@ -7,7 +7,10 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
         std::cerr << "Failed to load background_texture_ in ui::MainMenuRenderer::Initialize\n";
         return EXIT_FAILURE;
     }
-    background_ = sf::Sprite(background_texture_);
+    // TODO: background_texture_.setSmooth(true);
+    //background_ = sf::Sprite(background_texture_);
+    background_rect_.setTexture(&background_texture_, true);
+    
 
     // Initialize back button
     back_to_main_menu_button_ = ui::ClickableCircleShape(15, 3, sf::Vector2f(view_size.x*0.1, view_size.y*0.2), 270);
@@ -48,8 +51,21 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
 int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event) {
     //current_state_ = new_state_;
 
+    //TODO: resizing support
+    if (event.type == sf::Event::Resized) {
+        //window.getSize();
+        //auto textureSize = background_texture_.getSize();
+        //background_.setScale(
+        //    window.getSize().x / static_cast<float>(textureSize.x),
+        //    window.getSize().y / static_cast<float>(textureSize.y)
+        //);
+        //background_.setPosition(0.f, 0.f);
+
+        background_rect_.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+    }
+
     if (current_state_ == 1) {
-    // new game
+    // new game  
         if (back_to_main_menu_button_.IsClicked(mousePos, event)) {
             new_state_ = 0;
         } else {
@@ -90,10 +106,10 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
 
 void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
     current_state_ = new_state_;
+    window.draw(background_rect_);
 
     if (current_state_ == 1) {
         // new game
-        window.draw(background_);
         start_new_button_.DrawTo(window);
         for (auto selection : selections_) {
             selection.DrawTo(window);
@@ -102,14 +118,12 @@ void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
 
     } else if (current_state_ == 2) {
         // load game
-        window.draw(background_);
         start_loaded_button_.DrawTo(window);
         back_to_main_menu_button_.DrawTo(window);
         save_file_selection_.DrawTo(window);
 
     } else {
         // main menu
-        window.draw(background_);
         window.draw(title_);
         new_game_button_.DrawTo(window);
         load_game_button_.DrawTo(window);

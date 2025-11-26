@@ -46,6 +46,8 @@ void ui::UserInterface::HandleEvent(bool start) {
     if (event_.type == sf::Event::Closed) window_.close();
     if (event_.type == sf::Event::Resized) {
         view_.setSize(sf::Vector2f(event_.size.width, event_.size.height));
+        view_.setCenter(view_.getSize() * 0.5f); //TODO: update map and info layer to work with this
+        view_size_ = view_.getSize();
         window_.setView(view_);
     }
 

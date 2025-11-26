@@ -56,7 +56,9 @@ public:
 
 private:
     sf::Texture background_texture_;
-    sf::Sprite background_;
+    //sf::Sprite background_;
+    //TODO: finish implementing
+    sf::RectangleShape background_rect_;
 
     //FIXME: handle these better, the main reason for these is the possibility to call IsPlayClicked after the internal state has been updated,
     //       which causes it to return true when it should just be in the new game menu

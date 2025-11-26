@@ -48,7 +48,7 @@ public:
                     texts_.emplace_back(textTuple);
 
                     if (constants::debug) {
-                        std::cout << constants::debug_prefix << "found: " << file.path().string() << "   created at: " << timeStr << std::endl;
+                        std::cout << constants::debug_prefix << file.path().string() << " created at: " << timeStr << std::endl;
                     }
                 }
             }
