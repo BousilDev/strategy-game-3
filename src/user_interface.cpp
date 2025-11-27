@@ -46,6 +46,8 @@ void ui::UserInterface::HandleEvent(bool start) {
     if (event_.type == sf::Event::Closed) window_.close();
     if (event_.type == sf::Event::Resized) {
         view_.setSize(sf::Vector2f(event_.size.width, event_.size.height));
+        view_.setCenter(view_.getSize() * 0.5f);
+        view_size_ = view_.getSize();
         window_.setView(view_);
     }
 
@@ -63,7 +65,10 @@ void ui::UserInterface::HandleEvent(bool start) {
                 std::cout << "Tile number: " << tile_pointer->get_tile_number() 
                         << "\nTile terrain: " << tile_pointer->get_terrain()->get_name() << std::endl;
             }
-        } 
+        }
+
+        
+
         info_layer_renderer_.Update(window_, mouse_pos_, event_, tile_pointer);
     }
 
@@ -97,4 +102,10 @@ void ui::UserInterface::DrawAndDisplay(bool start) {
     
     // Update the window
     window_.display();
+}
+
+// Outside of event loop
+void ui::UserInterface::UpdateOutsideEventLoop() {
+    map_renderer_.PanMap(window_);
+    map_renderer_.SetViewOnPlayer(window_);
 }

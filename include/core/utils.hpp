@@ -7,6 +7,8 @@
 
 #include <string>
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 
 namespace core {
     
@@ -73,6 +75,11 @@ namespace core {
      */
     inline std::string DecodeTimeFromFile(std::istream& file) {
         std::time_t timestamp = static_cast<std::time_t>(GetIntFromLine(file));
-        return asctime(std::localtime(&timestamp));
+        //return asctime(std::localtime(&timestamp));
+        std::tm tm{};
+        localtime_r(&timestamp, &tm);
+        std::ostringstream oss;
+        oss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
+        return oss.str();
     }
 }
