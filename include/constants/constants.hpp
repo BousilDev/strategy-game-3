@@ -32,6 +32,13 @@ const std::string kFontPath = "texture/times.ttf";
 const std::string kBackgroundImagePath = "texture/background.jpg";
 const std::string kGameTitle = "Strategy Game 3";
 
+// Map display constants
+const float mapPanSpeed = 3;
+const sf::Color playerOneColor = sf::Color(255,10,10);
+const sf::Color playerTwoColor = sf::Color(10,255,10);
+const sf::Color playerThreeColor = sf::Color(10,10,255);
+const sf::Color playerFourColor = sf::Color(10,255,255);
+
 // Info layer constants
 const float infoLayerHeight = 100.f;
 const int infoLayerTextSize = 20;
