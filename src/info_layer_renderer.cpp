@@ -168,7 +168,9 @@ void ui::InfoLayerRenderer::DrawCardAtLocation(sf::RenderWindow& window, std::sh
 void ui::InfoLayerRenderer::DrawCards(sf::RenderWindow& window) {
     auto cards = game_->GetCurrentPlayer().GetHand()->GetCards();
     int cardsSize = cards.size();
-    float cardInc = constants::infoLayerCardsWidth / float(cardsSize);
+    sf::Vector2f winSize = window.getView().getSize();
+    float newToOriginalX = winSize.x / constants::kInitWindowWidth;
+    float cardInc = newToOriginalX * constants::infoLayerCardsWidth / float(cardsSize);
     int i = 0;
     for (const auto& card : cards) {
         // Add more background to match the number of cards
@@ -176,7 +178,7 @@ void ui::InfoLayerRenderer::DrawCards(sf::RenderWindow& window) {
             sf::RectangleShape cardBackground = cardBackground_;
             cardBackgrounds_.push_back(cardBackground);
         }
-        DrawCardAtLocation(window, card, sf::Vector2f(constants::infoLayerCardsMargin + i * cardInc, constants::kInitWindowHeight - constants::infoLayerCardHeight), i);
+        DrawCardAtLocation(window, card, sf::Vector2f(constants::infoLayerCardsMargin + i * cardInc, winSize.y - constants::infoLayerCardHeight), i);
         i += 1;
     }
     // Free unnecessary backgrounds
