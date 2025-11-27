@@ -536,3 +536,38 @@ Game exists but controlling the game itself through UI is not implemented.
 1. Fix code (saving & loading) so that it passes tests
 2. Finish unfinished parts
 3. Add sprint 4 issues to issue board
+
+
+# Meeting 25.11.2025 16::00 - 17::00 @Teams
+Sprint 4, "daily" 1
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+Cards can be played and new buildings can be placed using cards. Load file selection implemented more. Started on map panning.
+
+## Challenges
+
+No new challenges
+
+## Actions
+
+1. Fixed some bugs
+2. Refactored some functions
+
+## Project status
+
+Cards can be played in UI and playing cards adds buildings to map but resources aren't yet accumulated each turn (as Tiles don't have resources attached). Load file selection works.
+
+### TODOs
+
+1. Make outlines for building and units of different players
+2. Add saving & loading to map
+3. Remove TODOs from code

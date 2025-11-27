@@ -12,17 +12,20 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
     // Create map with given size
     map_ = world::Map(map_size);
     // Initialize players
+    nof_players_ = players.size();
+
+    // Temp generate capital locations
+    spawn_tiles_ = map_.get_n_spawn(nof_players_);
+
+    unsigned int playerNum = 0;
     for (const auto& player : players) {
         players_.push_back(std::make_shared<Player>(Player(player.name, player.deck)));
         
         // Add a capital building to each player
         //switch from create empty to create when want to store the player and tile to building
-        players_.back()->AddBuilding(buildings::CapitalBuilding::Create(
-            map_.get_n_spawn(1).front(),
-            players_.back(),
-            100
-        ));
+        players_.back()->AddBuilding(buildings::CapitalBuilding::Create(spawn_tiles_[playerNum], players_.back(), 100));
         players_.back()->SetDeck(player.deck);
+        playerNum += 1;
     }
     nof_players_ = players_.size();
 
@@ -53,8 +56,7 @@ void core::Game::Save(std::ostream& file) const{
 
 void core::Game::Load(std::istream& file){
     // Loads timestamp
-    std::time_t timestamp = static_cast<std::time_t>(GetIntFromLine(file));
-    std::string timeStr = asctime(std::localtime(&timestamp));
+    std::string timeStr = core::DecodeTimeFromFile(file);
     timeStr.pop_back(); // Remove newline for consistent debug output
     debug_ ? core::PrintTestMsg("Loading game saved at: ", timeStr) : void();
 
