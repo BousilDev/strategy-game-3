@@ -20,6 +20,7 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
     unsigned int playerNum = 0;
     for (const auto& player : players) {
         players_.push_back(std::make_shared<Player>(Player(player.name, player.deck)));
+        
         // Add a capital building to each player
         //switch from create empty to create when want to store the player and tile to building
         players_.back()->AddBuilding(buildings::CapitalBuilding::Create(spawn_tiles_[playerNum], players_.back(), 100));
