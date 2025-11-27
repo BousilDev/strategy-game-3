@@ -21,18 +21,22 @@ public:
     FileSelection() {}
 
     void Initialize(const sf::Vector2f& viewSize, const std::shared_ptr<sf::Font>& font) {
+
+        margin_ = constants::kFSmargin;
+        
         default_text_.setFont(*font);
         default_text_.setCharacterSize(constants::kFileSelectionFontSize);
 
         // TODO: initialize all visual elements properly
-        background_ = sf::RectangleShape(sf::Vector2f(viewSize.x - viewSize.x * 2 * margin_, viewSize.y - viewSize.y * 2 * margin_));
+        //background_ = sf::RectangleShape(sf::Vector2f(viewSize.x - viewSize.x * 2 * margin_, viewSize.y - viewSize.y * 2 * margin_));
+        background_.setSize(sf::Vector2f(viewSize.x - viewSize.x * 2 * margin_, viewSize.y - viewSize.y * 2 * margin_));
         background_.setPosition(sf::Vector2f(viewSize.x * margin_, viewSize.y * margin_));
         background_.setFillColor(constants::kFSbgColor);
         background_.setOutlineColor(constants::kFSoutlineColor);
         background_.setOutlineThickness(2.f);
 
         visible_lines_ = background_.getSize().y / line_height_;
-        margin_ = constants::kFSmargin;
+        
     }
 
 

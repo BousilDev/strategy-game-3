@@ -28,15 +28,15 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
     // Initialize option selectors for the main menu
     std::vector<std::pair<std::string, int>> playerCountTexts {
         std::pair("Two players", 2), std::pair("Three players", 3), std::pair("Four players", 4) };
-    selections_.emplace_back(playerCountTexts, font, 35, sf::Vector2f(view_size.x*0.25, view_size.y*0.45));
+    selections_.emplace_back(playerCountTexts, font, 35, sf::Vector2f(0.25f, 0.45f), view_size);
 
     std::vector<std::pair<std::string, int>> mapSizeTexts {
         std::pair("Small map", 3), std::pair("Normal map", 5), std::pair("Large map", 7) };
-    selections_.emplace_back(mapSizeTexts, font, 35, sf::Vector2f(view_size.x*0.25, view_size.y*0.55));
+    selections_.emplace_back(mapSizeTexts, font, 35, sf::Vector2f(0.25f, 0.55f), view_size);
 
     std::vector<std::pair<std::string, int>> deckTexts {
         std::pair("Deck 1", 1), std::pair("Deck 2", 2), std::pair("Deck 3", 3) };
-    selections_.emplace_back(deckTexts, font, 35, sf::Vector2f(view_size.x*0.25, view_size.y*0.65));
+    selections_.emplace_back(deckTexts, font, 35, sf::Vector2f(0.25f, 0.65f), view_size);
 
     // Initialize save file selector
     save_file_selection_.Initialize(view_size, font);
