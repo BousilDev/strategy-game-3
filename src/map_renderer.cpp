@@ -7,6 +7,7 @@ void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, flo
 
     
     game_ = &game;
+    last_turn_ = game_->GetCurrentTurn();
     map_ = game_->GetMap();
     tile_size_ = tile_size;
 
@@ -186,6 +187,17 @@ void ui::MapRenderer::PanMap(sf::RenderWindow& window) {
     }
 }
 
-/* void ui::MapRenderer::SetViewOnPlayer() {
-    
-} */
+void ui::MapRenderer::SetViewOnPlayer(sf::RenderWindow& window) {
+    if (game_->GetCurrentTurn() > last_turn_) {
+        for (auto v : game_->GetCurrentPlayer().GetBuildings()) {
+            if (v->GetType() == buildings::BuildingType::kCapital) {
+                auto centered_tile = tiles_[v->getTile()->get_tile_number()];
+                sf::View view = window.getView();
+                view.setCenter(centered_tile.getPosition());
+                window.setView(view);
+
+            }
+        }
+        last_turn_ += 1;
+    }
+}

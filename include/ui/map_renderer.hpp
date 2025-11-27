@@ -20,11 +20,16 @@ public:
 
     std::shared_ptr<world::Tile> GetLastClickedTile();
 
+    void UpdateOutsideEventLoop(sf::RenderWindow& window);
+
     void PanMap(sf::RenderWindow& window);
+
+    void SetViewOnPlayer(sf::RenderWindow& window);
 
    private:
     core::Game* game_ = nullptr;
     std::vector<std::shared_ptr<world::Tile>> spawn_tiles_;
+    int last_turn_;
     world::Map map_;
     float tile_size_;
     std::vector<sf::CircleShape> tiles_;

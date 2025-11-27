@@ -40,7 +40,7 @@ int main() {
 
         // No delay map panning
         if (start) {
-            user_interface.UpdatePanning();
+            user_interface.UpdateOutsideEventLoop();
         }
 
         // Handle events
