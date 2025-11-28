@@ -35,31 +35,44 @@ namespace world {
 class Map {
 public:
     /**
+     * @enum GenerationMethod
+     * @brief Defines the different methods of map generation.
+     */
+    enum GenerationMethod {
+        PlainsOnly,
+        Stripes,
+        Droplets,
+    };
+    /**
     * @brief default constructor constructs a map object but doesnt set tiles.
     * @deprecated Dont use default constructor.
     */
     Map();
-
+    
     /**
     * @brief Construct a Map with given dimensions.
     * @param map_width The number of columns.
     * @param map_height The number of rows.
-    */
-    Map(unsigned int map_width, unsigned int map_length);
+    * @param generationmethod The generation method to use (default is PlainsOnly).
+     */
+    Map(unsigned int map_width, unsigned int map_length, GenerationMethod generationmethod = GenerationMethod::PlainsOnly);
 
     /**
     * @brief Construct a Map with the given integer as the number of rows AND columns.
     * @param map_size defines both the number of rows and the number of columns.
+    * @param generationmethod The generation method to use (default is PlainsOnly).
     */
-    Map(unsigned int map_size);
+    Map(unsigned int map_size, GenerationMethod generationmethod = GenerationMethod::PlainsOnly);
 
-     /**
-    * @brief A generator that is called when a map is constructed. Fills the tiles_ vector with tiles
-    * and the tiles with the right terrain and resources.
-    * @note This is currently very simple constructor that defines all tiles with no resources
-    * and as plain terrain. Create multiple different generators which can be chosen from.
-    */
-    void generate_map();
+    /**
+     * @brief Generates the map using the specified generation method.
+     * 
+     * Fills the tiles_ vector with tiles and sets the terrain (and resources, if implemented).
+     * @param generationmethod The generation method to use (default is PlainsOnly).
+     * @note Current implementation is simple: all tiles are initialized as plain terrain with no resources.
+     *       Additional generation methods can be added for more variety.
+     */
+    void generate_map(GenerationMethod generationmethod = GenerationMethod::PlainsOnly);
 
     /** @brief For getting tiles from the tile_ vector. Since the tiles are in a 1D vector calling
     * for a tile <1, 3> is called get_tile(3*map_width + 1) 

@@ -31,7 +31,7 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
     selections_.emplace_back(playerCountTexts, font, 35, sf::Vector2f(0.25f, 0.45f), view_size);
 
     std::vector<std::pair<std::string, int>> mapSizeTexts {
-        std::pair("Small map", 3), std::pair("Normal map", 5), std::pair("Large map", 7) };
+        std::pair("Small map", 3), std::pair("Normal map", 7), std::pair("Large map", 15) };
     selections_.emplace_back(mapSizeTexts, font, 35, sf::Vector2f(0.25f, 0.55f), view_size);
 
     std::vector<std::pair<std::string, int>> deckTexts {
