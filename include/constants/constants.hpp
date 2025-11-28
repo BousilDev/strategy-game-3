@@ -47,7 +47,8 @@ const sf::Color infoLayerCardColor = sf::Color(100, 0, 0, 255);
 const float infoLayerCardsMargin = 20.f;
 const float infoLayerCardsWidth = kInitWindowWidth - 2 * infoLayerCardsMargin;
 const float infoLayerCardHeight = kInitWindowHeight / 4.f;
-const float infoLayerCardWidth = 100.f;
+const float infoLayerCardWidth = kInitWindowWidth / 6.f;
+const float infoLayerCardTextSize = infoLayerTextSize * 2 / 3.f;
 
 const std::vector<std::string> resourceTypeNames = {
     "Gold",

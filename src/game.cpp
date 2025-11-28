@@ -22,8 +22,8 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
         players_.push_back(std::make_shared<Player>(Player(player.name, player.deck)));
         
         // Add a capital building to each player
-        //switch from create empty to create when want to store the player and tile to building
-        players_.back()->AddBuilding(buildings::CapitalBuilding::Create(spawn_tiles_[playerNum], players_.back(), 100));
+        // buildings::CapitalBuilding::Create handles adding itself to the player's building list
+        buildings::CapitalBuilding::Create(spawn_tiles_[playerNum], players_.back(), 100);
         players_.back()->SetDeck(player.deck);
         playerNum += 1;
     }
@@ -71,6 +71,28 @@ void core::Game::Load(std::istream& file){
     players_.clear();
     for (unsigned int i = 0; i < nof_players_; ++i) {
         Player player(GetStringFromLine(file), test_deck.Clone());
+
+        // Handle buildings of the player on game.cpp side to get the map reference
+        size_t build_size = GetIntFromLine(file);
+        while (build_size--) {
+            std::string building_type = GetStringFromLine(file);
+            for (size_t i = 0; i < constants::buildingTypeNames.size(); i++) {
+                if (building_type == constants::buildingTypeNames[i]) {
+                    std::shared_ptr<buildings::Building> building = buildings::Building::CreateEmpty(GetIntFromLine(file), static_cast<buildings::BuildingType>(i));
+                    building->setPlayer(std::make_shared<core::Player>(player));
+                    file >> building;
+                    // Get tile by tile number from map
+                    int tile_number = GetIntFromLine(file);
+                    if (tile_number != -1) {
+                        building->setTile(map_.get_tile(tile_number));
+                    } else {
+                        ThrowWithMessage("Error loading building: invalid tile number.", __FILE__, __LINE__);
+                    }
+                    player.AddBuilding(building);
+                    break;
+                }
+            }
+        }
         file >> player;
         players_.push_back(std::make_shared<Player>(std::move(player)));
     }
@@ -144,5 +166,6 @@ void core::Game::NextTurn() {
 
 bool core::Game::PlayCardOnTile(std::shared_ptr<cards::Card> card, std::shared_ptr<world::Tile> tile) {
     auto& player = players_[current_turn_];
-    return player->GetHand()->PlayCard(card, *tile, player);
+    debug_ ? core::PrintTestMsg(player->GetName(), " is attempting to play  \"", card->GetName(), "\" on tile ", tile->get_tile_number()) : void();
+    return player->GetHand()->PlayCard(card, tile, player);
 }

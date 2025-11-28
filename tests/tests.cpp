@@ -76,8 +76,13 @@ void core::TestGameSaveAndLoad() {
     Game game;
     std::vector<core::Game::PlayerInit> players;
     unsigned int player_count = 4;
-    std::vector<std::shared_ptr<cards::Card>> empty_cards = {};
-    cards::Deck test_deck = cards::Deck(empty_cards, 0U);
+    std::shared_ptr<cards::Card> test_card = std::make_shared<cards::BuildingCard>("Test card", "This is a test card and it has a long description if needed", buildings::FarmBuilding::CreateEmpty(10));
+    std::vector<std::shared_ptr<cards::Card>> test_cards = {};
+    int card_count = 10;
+    for (int i = 0; i < 10; i++) {
+        test_cards.push_back(test_card->Clone());
+    }
+    cards::Deck test_deck = cards::Deck(test_cards, card_count);
     for (unsigned int i = 0; i < player_count; ++i) {
         players.emplace_back(core::Game::PlayerInit{
             "Player " + std::to_string(i + 1),
@@ -86,12 +91,15 @@ void core::TestGameSaveAndLoad() {
     }
     game.Initialize(players, map_size);
     // Advance a few turns
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < player_count; i++) {
         game.NextTurn();
         // Add resources to the current player for testing
         game.GetCurrentPlayer().AddResources({core::Resource(core::ResourceType::kGold, 10 + 2 * i)});
         // Make the capital of the players take damage
         game.GetCurrentPlayer().GetBuildings().front()->takeDamage(20 * i);
+        // Use the first card from the player's hand
+        std::shared_ptr<cards::Card> card_to_play = game.GetCurrentPlayer().GetHand()->GetCards().front();
+        game.PlayCardOnTile(card_to_play, game.GetMap().get_tile(i + 1));
     }
     // Save the game state
     std::ofstream outFile("testSaveFile.txt");
