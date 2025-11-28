@@ -14,21 +14,27 @@ class Unit : public std::enable_shared_from_this<Unit> {
 public:
     virtual ~Unit() = default;
 
+    // ---- STATIC FACTORIES (polymorphic) ----
     static std::shared_ptr<Unit> Create(std::shared_ptr<world::Tile> tile,
                                         std::shared_ptr<core::Player> owner,
                                         int max_hp,
                                         UnitType unit_type);
 
     static std::shared_ptr<Unit> CreateEmpty(int max_hp, UnitType unit_type);
-    std::shared_ptr<Unit> CreateEmptyFromCopy();
-       void setPlayer(std::shared_ptr<core::Player> player){
+
+    // ---- CLONE-LIKE CREATION (pure virtual!) ----
+    virtual std::shared_ptr<Unit> CreateEmptyFromCopy() const = 0;
+
+    // ---- Common interface ----
+    void setPlayer(std::shared_ptr<core::Player> player) {
         owner_ = player;
-    };
-    void setTile(std::shared_ptr<world::Tile> tile_location){
+    }
+    void setTile(std::shared_ptr<world::Tile> tile_location) {
         current_tile_ = tile_location;
-    };
+    }
+
     UnitType GetType() const { return unit_type_; }
-    int getMaxHp() const { return max_hp_; }
+    int getMaxHp()   const { return max_hp_; }
     int getCurrentHp() const { return current_hp_; }
 
     int takeDamage(int damage);
@@ -51,13 +57,21 @@ protected:
     std::weak_ptr<core::Player> owner_;
 };
 
+
+// ==========================================================
+//                 DERIVED CLASS: Soldier
+// ==========================================================
+
 class Soldier : public Unit {
 public:
     static std::shared_ptr<Soldier> Create(std::shared_ptr<world::Tile> tile,
                                            std::shared_ptr<core::Player> owner,
                                            int max_hp);
+
     static std::shared_ptr<Soldier> CreateEmpty(int max_hp);
-    std::shared_ptr<Soldier> CreateEmptyFromCopy();
+
+    // Correct override
+    std::shared_ptr<Unit> CreateEmptyFromCopy() const override;
 
     Soldier(std::shared_ptr<world::Tile> tile,
             std::shared_ptr<core::Player> owner,
