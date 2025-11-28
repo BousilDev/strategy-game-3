@@ -45,20 +45,9 @@ public:
     int takeDamage(int damage);
     virtual void atTurnEnd() {}
 
+    friend std::istream& operator>>(std::istream &in, std::shared_ptr<Building>& other);
 
-    friend std::istream& operator>>(std::istream &in, std::shared_ptr<Building>& other) {
-      other->current_hp_ = core::GetIntFromLine(in);
-      //other->setTile(std::make_shared<world::Tile>());
-      return in;
-  };
-
-  friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Building>& other) {
-      BuildingType type = other->GetType();
-      out << constants::buildingTypeNames[static_cast<int>(type)] << "\n";
-      out << other->getMaxHp() << "\n";
-      out << other->getCurrentHp();
-      return out;
-  };
+    friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Building>& other);
 
 
 protected:
@@ -92,11 +81,6 @@ public:
                     std::shared_ptr<core::Player> owner,
                     int max_hp);
 
- friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<CapitalBuilding>& other) {
-      out << "Capital";
-      return out;
-  };
-
 };
 
 // FarmBuilding
@@ -113,11 +97,6 @@ public:
     FarmBuilding(std::shared_ptr<world::Tile> tile,
                  std::shared_ptr<core::Player> owner,
                  int max_hp);
-
-  friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<FarmBuilding>& other) {
-      out << "Farm";
-      return out;
-  };
 
 };
 

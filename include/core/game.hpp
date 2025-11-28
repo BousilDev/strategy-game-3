@@ -108,6 +108,8 @@ public:
    */
   const world::Map& GetMap() const { return map_; }
 
+  world::Map& GetMap() { return map_; }
+
   /**
    * @brief Get the player whose turn it is.
    * 

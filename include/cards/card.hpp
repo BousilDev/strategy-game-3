@@ -85,7 +85,7 @@ public:
    * @param player The player who is playing the card.
    * @return true If the card was played and false otherwise. 
    */
-  virtual bool Play(world::Tile& target, std::shared_ptr<core::Player> player) = 0;
+  virtual bool Play(std::shared_ptr<world::Tile> target, std::shared_ptr<core::Player> player) = 0;
 
 private:
   std::string name_; ///< The name of the card.
@@ -135,7 +135,7 @@ public:
    * @param player The player who is playing the card.
    * @return true If the building was successfully constructed on the target tile, false otherwise.
    */
-  bool Play(world::Tile& target, std::shared_ptr<core::Player> player) override;
+  bool Play(std::shared_ptr<world::Tile> target, std::shared_ptr<core::Player> player) override;
 
 private:
   std::shared_ptr<buildings::Building> building_; ///< The building the card constructs a copy of.
@@ -184,7 +184,7 @@ public:
    * @param player The player who is playing the card.
    * @return true If the unit was successfully deployed on the target tile, false otherwise.
    */
-  bool Play(world::Tile& target, std::shared_ptr<core::Player> player) override;
+  bool Play(std::shared_ptr<world::Tile> target, std::shared_ptr<core::Player> player) override;
 
 private:
   std::shared_ptr<units::Unit> unit_; ///< The unit the card deploys a copy of.
