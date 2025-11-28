@@ -80,7 +80,7 @@ void Map::generate_map(GenerationMethod generationmethod) {
     {
     case GenerationMethod::PlainsOnly: {
         for (auto& tile : tiles_) {
-            auto plains_ptr = std::make_shared<PlainsTerrain>(std::vector<core::Resource>());
+            auto plains_ptr = std::make_shared<PlainsTerrain>();
             tile->set_terrain(plains_ptr);
         }
         break;
@@ -97,16 +97,16 @@ void Map::generate_map(GenerationMethod generationmethod) {
         // Decide terrain type for this row
         switch (row % 4) {    // 4 types: plains, mountains, forest, water
             case 0:
-                terrain_ptr = std::make_shared<PlainsTerrain>(std::vector<core::Resource>());
+                terrain_ptr = std::make_shared<PlainsTerrain>();
                 break;
             case 1:
-                terrain_ptr = std::make_shared<MountainsTerrain>(std::vector<core::Resource>());
+                terrain_ptr = std::make_shared<MountainsTerrain>();
                 break;
             case 2:
-                terrain_ptr = std::make_shared<ForestTerrain>(std::vector<core::Resource>());
+                terrain_ptr = std::make_shared<ForestTerrain>();
                 break;
             case 3:
-                terrain_ptr = std::make_shared<WaterTerrain>(std::vector<core::Resource>());
+                terrain_ptr = std::make_shared<WaterTerrain>();
                 break;
         }
 
@@ -125,7 +125,7 @@ void Map::generate_map(GenerationMethod generationmethod) {
 
     // Fill with Plains
     for (auto& tile : tiles_) {
-        tile->set_terrain(std::make_shared<PlainsTerrain>(std::vector<core::Resource>()));
+        tile->set_terrain(std::make_shared<PlainsTerrain>());
     }
 
     // Lambda to apply droplet
@@ -152,18 +152,18 @@ void Map::generate_map(GenerationMethod generationmethod) {
     };
 
     // Water droplets
-    drop_terrain([&]() { return std::make_shared<WaterTerrain>(std::vector<core::Resource>()); });
+    drop_terrain([&]() { return std::make_shared<WaterTerrain>(); });
     // Forest droplets
-    drop_terrain([&]() { return std::make_shared<ForestTerrain>(std::vector<core::Resource>()); });
+    drop_terrain([&]() { return std::make_shared<ForestTerrain>(); });
     // Mountain droplets
-    drop_terrain([&]() { return std::make_shared<MountainsTerrain>(std::vector<core::Resource>()); });
+    drop_terrain([&]() { return std::make_shared<MountainsTerrain>(); });
 
     break;
 }
 
     default:
         for (auto& tile : tiles_) {
-            auto plains_ptr = std::make_shared<PlainsTerrain>(std::vector<core::Resource>());
+            auto plains_ptr = std::make_shared<PlainsTerrain>();
             tile->set_terrain(plains_ptr);
         }
         break;
