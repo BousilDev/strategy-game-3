@@ -35,6 +35,13 @@ namespace world {
 class Map {
 public:
     /**
+    * @brief Method for calculating the distance of 2 tiles based on their indeces on this map.
+    * @param tile1_index index of tile 1
+    * @param tile2_index index of tile 2
+    * @return The shortest distance ie. the number of tiles needed to be traverced to get from tile 1 to tile 2.
+     */
+    int distance(int tile1_index, int tile2_index) const; 
+    /**
      * @enum GenerationMethod
      * @brief Defines the different methods of map generation.
      */

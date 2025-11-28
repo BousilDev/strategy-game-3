@@ -204,6 +204,7 @@ std::string ui::InfoLayerRenderer::GetTileInfoString() {
     if (constants::debug) {
         ss << "\nDEBUG INFO:\n";
         ss << "- Tile Number: " << selected_tile_->get_tile_number() << "\n";
+        ss << "-distance from 0: " << game_->GetMap().distance(0, selected_tile_->get_tile_number()) << "\n";
     }
 
     return ss.str();

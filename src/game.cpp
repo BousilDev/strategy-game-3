@@ -10,7 +10,7 @@
 
 void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int map_size) {
     // Create map with given size
-    map_ = world::Map(map_size, world::Map::GenerationMethod::Stripes);
+    map_ = world::Map(map_size, world::Map::GenerationMethod::Droplets);
     // Initialize players
     nof_players_ = players.size();
 

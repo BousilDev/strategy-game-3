@@ -225,4 +225,26 @@ std::vector<std::shared_ptr<Tile>> Map::get_n_spawn(unsigned int nof_players) {
     std::cout << "[Map::get_n_spawn] Returning " << result.size() << " spawn tiles.\n";
     return result;
 };
+
+//uses coordinate conversion to calculate distance
+int Map::distance(int tile1, int tile2) const {
+        // 1D index → row/col
+        int col1 = tile1 % map_width_;
+        int row1 = tile1 / map_width_;
+        int col2 = tile2 % map_width_;
+        int row2 = tile2 / map_width_;
+
+        // Even-r layout conversion (second row shifted right)
+        int q1 = col1 - (row1 / 2);
+        int r1 = row1;
+        int q2 = col2 - (row2 / 2);
+        int r2 = row2;
+
+        // Axial → cube coordinates
+        int x1 = q1, z1 = r1, y1 = -x1 - z1;
+        int x2 = q2, z2 = r2, y2 = -x2 - z2;
+
+        // Cube distance
+        return std::max({abs(x1 - x2), abs(y1 - y2), abs(z1 - z2)});
+}
 } // namespace world
