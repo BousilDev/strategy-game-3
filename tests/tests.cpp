@@ -8,22 +8,33 @@
 // Sends the file and line number to the AssertWithMessageFull function
 #define AssertWithMessage(condition, message) AssertWithMessageFull(condition, message, __FILE__, __LINE__)
 
+// Constructs and returns a test game instance
+core::Game tests::CreateTestGame(unsigned int player_count, unsigned int map_size) {
+    core::Game game;
+    std::vector<core::Game::PlayerInit> players;
+    std::shared_ptr<cards::Card> test_card = std::make_shared<cards::BuildingCard>("Test card", "This is a test card and it has a long description if needed", buildings::FarmBuilding::CreateEmpty(10));
+    std::vector<std::shared_ptr<cards::Card>> test_cards = {};
+    int card_count = 10;
+    for (int i = 0; i < 10; i++) {
+        test_cards.push_back(test_card->Clone());
+    }
+    cards::Deck test_deck = cards::Deck(test_cards, card_count);
+    for (unsigned int i = 0; i < player_count; ++i) {
+        players.emplace_back(core::Game::PlayerInit{
+            "Player " + std::to_string(i + 1),
+            test_deck.Clone() // TODO: add custom starter decks
+        });
+    }
+    game.Initialize(players, map_size);
+    return game;
+}
+
 // Testing the Game class
 void tests::TestGameInitializationAndTurns() {
   std::cout << "Testing Game class..." << std::endl;
-  unsigned int map_size = 5;
-  core::Game game;
-  std::vector<std::shared_ptr<cards::Card>> empty_cards = {};
-  cards::Deck test_deck = cards::Deck(empty_cards, 0U);
-  const std::vector<core::Game::PlayerInit> players = {
-    {"Test Gamer", test_deck.Clone()},
-    {"Bob the Builder", test_deck.Clone()},
-    {"Jari the Destroyer", test_deck.Clone()},
-    {"Markku the Conqueror", test_deck.Clone()}
-  };
-  game.Initialize(players, map_size);
+  core::Game game = CreateTestGame(4, 5);
   AssertWithMessage(game.IsInitialized() && !game.IsOver(), "Game should be initialized and not over after initialization.");
-  AssertWithMessage(game.GetCurrentPlayer().GetName() == "Test Gamer", "Current player should be 'Test Gamer' after initialization.");
+  AssertWithMessage(game.GetCurrentPlayer().GetName() == "Player 1", "Current player should be 'Player 1' after initialization.");
   for (int i = 0; i < 5; i++) {
     game.NextTurn();
     AssertWithMessage(game.GetCurrentTurn() == i + 1, "Turn number should be " + std::to_string(i + 1) + " after " + std::to_string(i) + " turns.");
@@ -72,26 +83,9 @@ void TestFaultyFile(std::string filename) {
 
 void tests::TestGameSaveAndLoad() {
     std::cout << "Testing Game Save and Load..." << std::endl;
-    unsigned int map_size = 5;
-    core::Game game;
-    std::vector<core::Game::PlayerInit> players;
-    unsigned int player_count = 4;
-    std::shared_ptr<cards::Card> test_card = std::make_shared<cards::BuildingCard>("Test card", "This is a test card and it has a long description if needed", buildings::FarmBuilding::CreateEmpty(10));
-    std::vector<std::shared_ptr<cards::Card>> test_cards = {};
-    int card_count = 10;
-    for (int i = 0; i < 10; i++) {
-        test_cards.push_back(test_card->Clone());
-    }
-    cards::Deck test_deck = cards::Deck(test_cards, card_count);
-    for (unsigned int i = 0; i < player_count; ++i) {
-        players.emplace_back(core::Game::PlayerInit{
-            "Player " + std::to_string(i + 1),
-            test_deck.Clone() // TODO: add custom starter decks
-        });
-    }
-    game.Initialize(players, map_size);
+    core::Game game = CreateTestGame();
     // Advance a few turns
-    for (int i = 0; i < player_count; i++) {
+    for (int i = 0; i < 4; i++) {
         game.NextTurn();
         // Add resources to the current player for testing
         game.GetCurrentPlayer().AddResources({core::Resource(core::ResourceType::kGold, 10 + 2 * i)});

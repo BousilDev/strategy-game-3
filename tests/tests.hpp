@@ -10,6 +10,7 @@ namespace tests {
       core::ThrowWithMessage(message, file, line);
     }
   }
+  core::Game CreateTestGame(unsigned int player_count = 4, unsigned int map_size = 5);
   void TestGameInitializationAndTurns();
   void DebugGameState(const core::Game& game);
   void TestGameSaveAndLoad();
