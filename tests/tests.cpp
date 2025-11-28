@@ -6,16 +6,16 @@
 #include <filesystem>
 
 // Sends the file and line number to the AssertWithMessageFull function
-#define AssertWithMessage(condition, message) core::AssertWithMessageFull(condition, message, __FILE__, __LINE__)
+#define AssertWithMessage(condition, message) AssertWithMessageFull(condition, message, __FILE__, __LINE__)
 
 // Testing the Game class
-void core::TestGameInitializationAndTurns() {
+void tests::TestGameInitializationAndTurns() {
   std::cout << "Testing Game class..." << std::endl;
   unsigned int map_size = 5;
-  Game game;
+  core::Game game;
   std::vector<std::shared_ptr<cards::Card>> empty_cards = {};
   cards::Deck test_deck = cards::Deck(empty_cards, 0U);
-  const std::vector<Game::PlayerInit> players = {
+  const std::vector<core::Game::PlayerInit> players = {
     {"Test Gamer", test_deck.Clone()},
     {"Bob the Builder", test_deck.Clone()},
     {"Jari the Destroyer", test_deck.Clone()},
@@ -38,7 +38,7 @@ void core::TestGameInitializationAndTurns() {
   std::cout << "Game class tests completed successfully." << std::endl;
 };
 
-void core::DebugGameState(const Game& game) {
+void tests::DebugGameState(const core::Game& game) {
     std::cout << "Game State Debug" << std::endl;
     core::PrintTestMsg("Is Initialized: ", game.IsInitialized());
     core::PrintTestMsg("Number of Players: ", game.GetNofPlayers());
@@ -62,7 +62,7 @@ void TestFaultyFile(std::string filename) {
     if (faultyFile.is_open()) {
         try {
             faultyGame.Load(faultyFile);
-            AssertWithMessage(false, "Loading from a faulty file should fail: " + filename);
+            tests::AssertWithMessage(false, "Loading from a faulty file should fail: " + filename);
         } catch (std::exception& e) {
             core::PrintTestMsg("Correctly caught exception when loading faulty file '", filename, "': ", e.what());
         }
@@ -70,10 +70,10 @@ void TestFaultyFile(std::string filename) {
     }
 }
 
-void core::TestGameSaveAndLoad() {
+void tests::TestGameSaveAndLoad() {
     std::cout << "Testing Game Save and Load..." << std::endl;
     unsigned int map_size = 5;
-    Game game;
+    core::Game game;
     std::vector<core::Game::PlayerInit> players;
     unsigned int player_count = 4;
     std::shared_ptr<cards::Card> test_card = std::make_shared<cards::BuildingCard>("Test card", "This is a test card and it has a long description if needed", buildings::FarmBuilding::CreateEmpty(10));
@@ -123,7 +123,7 @@ void core::TestGameSaveAndLoad() {
     }
     
     // Load the game state into a new Game instance
-    Game loadedGame;
+    core::Game loadedGame;
     std::ifstream inFile("testSaveFile.txt");
     if (inFile.is_open()) {
         loadedGame.Load(inFile);
