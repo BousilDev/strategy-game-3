@@ -7,21 +7,21 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
         std::cerr << "Failed to load background_texture_ in ui::MainMenuRenderer::Initialize\n";
         return EXIT_FAILURE;
     }
-    // TODO: background_texture_.setSmooth(true);
-    //background_ = sf::Sprite(background_texture_);
+    background_texture_.setSmooth(true);
     background_rect_.setTexture(&background_texture_, true);
     
 
     // Initialize back button
-    back_to_main_menu_button_ = ui::ClickableCircleShape(15, 3, sf::Vector2f(view_size.x*0.1, view_size.y*0.2), 270);
+    back_to_main_menu_button_ = ui::ClickableCircleShape(15, 3, sf::Vector2f(0.1f, 0.2f), view_size, 270);
 
     // Initialize texts and set their position in the main menu
     title_ = sf::Text(constants::kGameTitle, *font, 50);
-    title_.setPosition(view_size.x*0.1, view_size.y*0.1);
+    title_pos_ = sf::Vector2f(0.1f, 0.3f);
+    title_.setPosition(view_size.x*title_pos_.x, view_size.y*title_pos_.y);
 
-    // TODO: fix the positioning
-    load_game_button_ =    ui::ClickableText("Load Game",          *font, view_size, sf::Vector2f(0.1f, 0.2f),   constants::kMainMenuClickablesSize);
-    new_game_button_ =     ui::ClickableText("New Game",           *font, view_size, sf::Vector2f(0.1f, 0.3f),   constants::kMainMenuClickablesSize);
+    // Initialize clickable texts in main menu
+    load_game_button_ =    ui::ClickableText("Load Game",          *font, view_size, sf::Vector2f(0.1f, 0.4f),   constants::kMainMenuClickablesSize);
+    new_game_button_ =     ui::ClickableText("New Game",           *font, view_size, sf::Vector2f(0.1f, 0.5f),   constants::kMainMenuClickablesSize);
     start_loaded_button_ = ui::ClickableText("Load Selected Game", *font, view_size, sf::Vector2f(0.25f, 0.85f), constants::kMainMenuClickablesSize);
     start_new_button_ =    ui::ClickableText("Start New Game",     *font, view_size, sf::Vector2f(0.1f, 0.3f),   constants::kMainMenuClickablesSize);
 
@@ -81,6 +81,8 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
         }
     } else {
     // main menu
+
+        title_.setPosition(window.getSize().x * title_pos_.x, window.getSize().y * title_pos_.y);
         new_game_button_.Update(window, mousePos, event);
         load_game_button_.Update(window, mousePos, event);
 
