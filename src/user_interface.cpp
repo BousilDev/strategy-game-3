@@ -63,7 +63,16 @@ void ui::UserInterface::HandleEvent(bool start) {
             tile_pointer = map_renderer_.GetClickedTile(window_);
             if (tile_pointer != nullptr) {
                 std::cout << "Tile number: " << tile_pointer->get_tile_number() 
-                        << "\nTile terrain: " << tile_pointer->get_terrain()->get_name() << std::endl;
+                        << "\nTile terrain: " << tile_pointer->get_terrain()->get_name() 
+                        <<"\ntiles <=2 away:" << std::endl;
+
+                        // Get all tiles within distance 2
+                        std::vector<unsigned int>& tiles_in_range = tile_pointer->get_tiles_in_n_range(2);
+
+                        for (auto idx : tiles_in_range) {
+                            std::cout << idx << " ";
+                        }
+                        std::cout << std::endl;
             }
         }
 

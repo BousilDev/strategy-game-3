@@ -41,6 +41,7 @@ public:
     * @return The shortest distance ie. the number of tiles needed to be traverced to get from tile 1 to tile 2.
      */
     int distance(int tile1_index, int tile2_index) const; 
+
     /**
      * @enum GenerationMethod
      * @brief Defines the different methods of map generation.
@@ -50,6 +51,7 @@ public:
         Stripes,
         Droplets,
     };
+    
     /**
     * @brief default constructor constructs a map object but doesnt set tiles.
     * @deprecated Dont use default constructor.
