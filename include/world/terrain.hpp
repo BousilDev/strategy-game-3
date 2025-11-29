@@ -69,9 +69,9 @@ public:
 
 protected:
     std::string terrain_name_;///< Name of the terrain type
+    terrainType terrain_type_;///<The type of thes terrain
     int movement_cost_;///< Cost to move across the terrain
     int sight_cost_;///< Cost to see through the terrain
-    terrainType terrain_type_;///<The type of thes terrain
     std::list<core::Resource> resources_;///< List of resources on the terrain
 };
 

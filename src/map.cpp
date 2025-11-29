@@ -10,40 +10,44 @@ namespace world {
 //helper function to assign neighbours
 void assign_neighbours(unsigned int map_width, unsigned int map_length, 
     std::vector<std::shared_ptr<Tile>>& tiles){
-        for(int j=0; j < static_cast<int>(map_length); j++){
-            for(int i=0; i < static_cast<int>(map_width); i++){
+
+        int width = static_cast<int>(map_width);
+        int length = static_cast<int>(map_length);
+
+        for(int j=0; j < length; j++){
+            for(int i=0; i < width; i++){
                 // relative positions for a row.
                 int right = i + 1;
                 int left = i - 1;
                 int tb_right = i + (j % 2);
                 int tb_left = i - ((j+1) % 2);
                 // check validity of position.
-                if(right < map_width) {
-                    tiles[j*map_width + i]->get_neighbours()[0]
-                    = tiles[j*map_width + right];
+                if(right < width) {
+                    tiles[j*width + i]->get_neighbours()[0]
+                    = tiles[j*width + right];
                 }
                 if(left >= 0) {
-                    tiles[j*map_width + i]->get_neighbours()[3]
-                    = tiles[j*map_width + left];
+                    tiles[j*width + i]->get_neighbours()[3]
+                    = tiles[j*width + left];
                 }
-                if(tb_right < map_width) {
+                if(tb_right < width) {
                     if(j - 1 >= 0){
-                        tiles[j*map_width + i]->get_neighbours()[1]
-                        = tiles[(j-1)*map_width + tb_right];
+                        tiles[j*width + i]->get_neighbours()[1]
+                        = tiles[(j-1)*width + tb_right];
                     }
-                    if(j + 1 < map_length){
-                        tiles[j*map_width + i]->get_neighbours()[5]
-                        = tiles[(j+1)*map_width + tb_right];
+                    if(j + 1 < length){
+                        tiles[j*width + i]->get_neighbours()[5]
+                        = tiles[(j+1)*width + tb_right];
                     }
                 }
                 if(tb_left >= 0){
                     if(j - 1 >= 0){
-                        tiles[j*map_width + i]->get_neighbours()[2]
-                        = tiles[(j-1)*map_width + tb_left];
+                        tiles[j*width + i]->get_neighbours()[2]
+                        = tiles[(j-1)*width + tb_left];
                     }
-                    if(j + 1 < map_length){
-                        tiles[j*map_width + i]->get_neighbours()[4]
-                        = tiles[(j+1)*map_width + tb_left];
+                    if(j + 1 < length){
+                        tiles[j*width + i]->get_neighbours()[4]
+                        = tiles[(j+1)*width + tb_left];
                     }
                 }
         }
