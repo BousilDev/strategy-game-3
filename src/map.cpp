@@ -51,7 +51,7 @@ void assign_neighbours(unsigned int map_width, unsigned int map_length,
 }
 
 Map::Map(unsigned int map_width, unsigned int map_length, GenerationMethod generationmethod) 
- : map_lenght_(map_length), map_width_(map_width ){
+ : map_height_(map_length), map_width_(map_width ){
     size_t n = map_width * map_length;
     for (size_t i = 0; i < n; i++) {
         std::shared_ptr<Tile> tile = std::make_shared<Tile>();
@@ -117,7 +117,7 @@ void Map::generate_map(GenerationMethod generationmethod) {
     break;
     }
     case GenerationMethod::Droplets: {
-    const int total_tiles = map_width_ * map_lenght_;
+    const int total_tiles = map_width_ * map_height_;
     const int tiles_per_droplet = 7; // main + neighbors
     const double target_fraction = 0.10;
 
@@ -170,7 +170,7 @@ void Map::generate_map(GenerationMethod generationmethod) {
     }
 }
 void Map::print_map() const {
-    for (size_t j = 0; j < map_lenght_; ++j) {
+    for (size_t j = 0; j < map_height_; ++j) {
         if(j % 2 == 1){
             std::cout << " ";
         }
@@ -190,7 +190,7 @@ unsigned int Map::get_map_width() const{
     return map_width_;
 };
 unsigned int Map::get_map_height() const{
-    return map_lenght_;
+    return map_height_;
 };
 std::vector<std::shared_ptr<Tile>> Map::get_n_spawn(unsigned int nof_players) {
     std::vector<size_t> valid_tiles;
@@ -246,5 +246,38 @@ int Map::distance(int tile1, int tile2) const {
 
         // Cube distance
         return std::max({abs(x1 - x2), abs(y1 - y2), abs(z1 - z2)});
+}
+
+
+std::ostream& operator<<(std::ostream& out, const Map& other){
+    out << other.get_map_width() << "\n";
+    out << other.get_map_height() << "\n";
+    for (const auto& tile_ptr : other.get_tiles()) {
+        out << static_cast<int>(tile_ptr->get_terrain()->get_terrain_type()) << ",";
+    }
+    out << "\n";
+    return out;
+};
+std::istream& operator>>(std::istream& in, Map& other){
+    int width = core::GetIntFromLine(in);
+    int height = core::GetIntFromLine(in);
+    std::vector<int> terrain_types_vector = core::GetIntVectorFromLine(in);
+
+    other = Map(width, height); // construct new map directly
+
+    auto& tiles = other.get_tiles(); // if this returns a non-const reference
+
+    for (size_t i = 0; i < terrain_types_vector.size() && i < tiles.size(); i++) {
+        std::shared_ptr<Terrain> terrain_ptr;
+        switch (terrain_types_vector[i] % 4) {
+            case 0: terrain_ptr = std::make_shared<PlainsTerrain>(); break;
+            case 1: terrain_ptr = std::make_shared<MountainsTerrain>(); break;
+            case 2: terrain_ptr = std::make_shared<ForestTerrain>(); break;
+            case 3: terrain_ptr = std::make_shared<WaterTerrain>(); break;
+        }
+        tiles[i]->set_terrain(terrain_ptr);
+    }
+
+    return in;
 }
 } // namespace world

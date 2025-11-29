@@ -12,6 +12,13 @@ namespace world {
  */
 class Terrain {
 public:
+    enum terrainType {
+        plains,
+        forest,
+        mountains,
+        water
+    };
+
     /**
      * @brief Constructs a Terrain from a std::list of resources.
      * @param name Name of the terrain type.
@@ -19,9 +26,9 @@ public:
      * @param sight_cost Sight cost associated with this terrain.
      * @param resources List of resources present on the terrain.
      */
-    Terrain(const std::string& name, int movement_cost, int sight_cost,
+    Terrain(const std::string& name, terrainType terrain_type, int movement_cost, int sight_cost,
             const std::list<core::Resource>& resources)
-        : terrain_name_(name), movement_cost_(movement_cost),
+        : terrain_name_(name), terrain_type_(terrain_type), movement_cost_(movement_cost),
           sight_cost_(sight_cost), resources_(resources) {}
 
     /**
@@ -48,6 +55,9 @@ public:
     /** @brief Returns the sight cost of the terrain. */
     virtual int get_sight_cost() const { return sight_cost_; }
 
+    /** @brief Returns the type of this terrain */
+    virtual int get_terrain_type() const { return terrain_type_; }
+
     /** @brief Returns a reference to the list of resources on this terrain. */
     virtual std::list<core::Resource>& get_resources() { return resources_; }
 
@@ -61,6 +71,7 @@ protected:
     std::string terrain_name_;///< Name of the terrain type
     int movement_cost_;///< Cost to move across the terrain
     int sight_cost_;///< Cost to see through the terrain
+    terrainType terrain_type_;///<The type of thes terrain
     std::list<core::Resource> resources_;///< List of resources on the terrain
 };
 
@@ -74,7 +85,7 @@ public:
         };
     }
     PlainsTerrain(const std::list<core::Resource>& resources = default_resources())
-        : Terrain("plains", 1, 1, resources) {}
+        : Terrain("plains",terrainType::plains, 1, 1, resources) {}
     PlainsTerrain(const std::vector<core::Resource>& resources)
         : Terrain("plains", 1, 1, resources) {}
 };
@@ -88,7 +99,7 @@ public:
         };
     }
     ForestTerrain(const std::list<core::Resource>& resources = default_resources())
-        : Terrain("forest", 1, 2, resources) {}
+        : Terrain("forest",terrainType::forest, 1, 2, resources) {}
     ForestTerrain(const std::vector<core::Resource>& resources)
         : Terrain("forest", 1, 2, resources) {}
 };
@@ -102,7 +113,7 @@ public:
         };
     }
     MountainsTerrain(const std::list<core::Resource>& resources = default_resources())
-        : Terrain("mountains", 2, 2, resources) {}
+        : Terrain("mountains",terrainType::mountains, 2, 2, resources) {}
     MountainsTerrain(const std::vector<core::Resource>& resources)
         : Terrain("mountains", 2, 2, resources) {}
 };
@@ -115,7 +126,7 @@ public:
         };
     }
     WaterTerrain(const std::list<core::Resource>& resources = default_resources())
-        : Terrain("water", -1, 1, resources) {}
+        : Terrain("water",terrainType::water, -1, 1, resources) {}
     WaterTerrain(const std::vector<core::Resource>& resources)
         : Terrain("water", -1, 1, resources) {}
 };
