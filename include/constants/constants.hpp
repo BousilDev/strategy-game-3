@@ -63,4 +63,9 @@ const std::vector<std::string> buildingTypeNames = {
     "Neighborhood",
     "Power",
 };
+
+const std::vector<std::string> unitTypeNames = {
+    "Soldier",
+};
+
 } // namespace constants

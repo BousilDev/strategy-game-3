@@ -36,12 +36,20 @@ void core::Player::RemoveResource(Resource resource) {
 }
 
 bool core::Player::IsAlive() const {
-    for (const auto& building : buildings_) {
-        if (building->GetType() == buildings::BuildingType::kCapital) {
-            return true;
-        }
+    std::shared_ptr<buildings::Building> capital = GetCapitalBuilding();
+    if (capital != nullptr && capital->getCurrentHp() > 0) {
+        return true;
     }
     return false;
+}
+
+std::shared_ptr<buildings::Building> core::Player::GetCapitalBuilding() const {
+    for (const auto& building : buildings_) {
+        if (building->GetType() == buildings::BuildingType::kCapital) {
+            return building;
+        }
+    }
+    return nullptr;
 }
 
 namespace core {
