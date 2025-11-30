@@ -78,6 +78,7 @@ void core::Game::Load(std::istream& file){
     players_.clear();
     for (unsigned int i = 0; i < nof_players_; ++i) {
         Player player(GetStringFromLine(file), test_deck.Clone());
+        std::shared_ptr<Player> player_ptr = std::make_shared<core::Player>(player);
 
         // Handle buildings of the player on game.cpp side to get the map reference
         size_t build_size = GetIntFromLine(file);
@@ -86,7 +87,7 @@ void core::Game::Load(std::istream& file){
             for (size_t i = 0; i < constants::buildingTypeNames.size(); i++) {
                 if (building_type == constants::buildingTypeNames[i]) {
                     std::shared_ptr<buildings::Building> building = buildings::Building::CreateEmpty(GetIntFromLine(file), static_cast<buildings::BuildingType>(i));
-                    building->setPlayer(std::make_shared<core::Player>(player));
+                    building->setPlayer(player_ptr);
                     file >> building;
                     // Get tile by tile number from map
                     int tile_number = GetIntFromLine(file);
@@ -96,13 +97,13 @@ void core::Game::Load(std::istream& file){
                     } else {
                         ThrowWithMessage("Error loading building: invalid tile number.", __FILE__, __LINE__);
                     }
-                    player.AddBuilding(building);
+                    player_ptr->AddBuilding(building);
                     break;
                 }
             }
         }
-        file >> player;
-        players_.push_back(std::make_shared<Player>(std::move(player)));
+        file >> *player_ptr;
+        players_.push_back(player_ptr);
     }
 
     size_t dead_players_size = GetIntFromLine(file);
