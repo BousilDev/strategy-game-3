@@ -82,6 +82,7 @@ int main() {
                         assert(game.GetCurrentTurn() == i + 1);
                         // Add resources to the current player for testing
                         game.GetCurrentPlayer().AddResources({core::Resource(core::ResourceType::kGold, 10 + 2 * i)});
+                        game.GetCurrentPlayer().AddUnit(units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), 10, units::UnitType::kSoldier));
                     }
                     // Save game state after initialization
                     std::ofstream outFile("saveFile.txt");

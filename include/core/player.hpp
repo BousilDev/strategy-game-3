@@ -200,6 +200,8 @@ public:
    */
   void UseUnit(std::shared_ptr<units::Unit> unit, world::Tile& target); 
 
+  std::shared_ptr<buildings::Building> GetCapitalBuilding() const;
+
   friend std::ostream& operator<<(std::ostream &out, const Player& other);
 
   friend std::istream& operator>>(std::istream &in, Player& other);

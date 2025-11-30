@@ -153,6 +153,11 @@ void ui::InfoLayerRenderer::DrawCardAtLocation(sf::RenderWindow& window, std::sh
     cardBackgrounds_[index].setPosition(GetFixedPosition(window, location));
     // Change background color according to card type
     cardBackgrounds_[index].setFillColor(constants::infoLayerCardColor + sf::Color(0, static_cast<int>(card->GetCardType()) * 100, 0, 255));
+    if (card == selected_card_) {
+        cardBackgrounds_[index].setOutlineThickness(5.f);
+    } else {
+        cardBackgrounds_[index].setOutlineThickness(1.f);
+    }
 
     sf::Text cardText = tileInfoText_;
     cardText.setCharacterSize(constants::infoLayerCardTextSize);
@@ -202,11 +207,17 @@ std::string ui::InfoLayerRenderer::GetTileInfoString() {
 
     if (selected_tile_->get_building() != nullptr) {
         ss << "- Building: " 
-           << constants::buildingTypeNames[static_cast<int>(selected_tile_->get_building()->GetType())] 
-           << "\n";
+           << constants::buildingTypeNames[static_cast<int>(selected_tile_->get_building()->GetType())] << "\n"
+           << "   * Owner: " << selected_tile_->get_building()->getOwner()->GetName() << "\n"
+           << "   * HP: " << selected_tile_->get_building()->getCurrentHp() << "/" << selected_tile_->get_building()->getMaxHp() << "\n";
     }
 
-    ss << "- Unit: TODO";
+    if (selected_tile_->get_unit() != nullptr) {
+        ss << "- Unit: " 
+           << constants::unitTypeNames[static_cast<int>(selected_tile_->get_unit()->GetType())] << "\n"
+           << "   * Owner: " << ((selected_tile_->get_unit()->getOwner() != nullptr) ? selected_tile_->get_unit()->getOwner()->GetName() : "None") << "\n"
+           << "   * HP: " << selected_tile_->get_unit()->getCurrentHp() << "/" << selected_tile_->get_unit()->getMaxHp() << "\n";
+    }
 
     if (constants::debug) {
         ss << "\nDEBUG INFO:\n";
@@ -221,6 +232,10 @@ std::string ui::InfoLayerRenderer::GetTileInfoString() {
 void ui::InfoLayerRenderer::DrawTo(sf::RenderWindow& window) {
     // This is a minor optimization to avoid updating draw items on every frame
     if (initial_draw_) {
+        std::shared_ptr<buildings::Building> capital = game_->GetCurrentPlayer().GetCapitalBuilding();
+        if (capital != nullptr) {
+            selected_tile_ = capital->getTile();
+        }
         UpdateDrawItems();
         initial_draw_ = false;
     }
@@ -285,6 +300,10 @@ void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f&
     if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
         if (isNextTurnClicked(window, mousePos)) {
             game_->NextTurn();
+            std::shared_ptr<buildings::Building> capital = game_->GetCurrentPlayer().GetCapitalBuilding();
+            if (capital != nullptr) {
+                selected_tile_ = capital->getTile();
+            }
             UpdateDrawItems();
             DrawTo(window);
             return;
@@ -313,6 +332,30 @@ void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f&
             return;
         }
     }
+    if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Right) {
+        if (selected_tile_ != nullptr && tile_pointer != nullptr && selected_tile_->get_tile_number() != tile_pointer->get_tile_number()) {
+            if (selected_tile_->get_unit() != nullptr) {
+                // Check if the unit's owner's name matches the current player's name
+                if (selected_tile_->get_unit()->getOwner() != nullptr && selected_tile_->get_unit()->getOwner()->GetName() == game_->GetCurrentPlayer().GetName()) {
+                    selected_tile_->get_unit()->moveToTile(tile_pointer);
+                    // Check for dead units and remove them from the game
+                    std::cout << "Unit moved from tile " << selected_tile_->get_tile_number() << " to tile " << tile_pointer->get_tile_number() << "\n";
+                    return;
+                }
+                /* Alternative implementation using player's unit list, TODO: Decide which to use
+                for (std::shared_ptr<units::Unit> unit : game_->GetCurrentPlayer().GetUnits()) {
+                    if (unit == selected_tile_->get_unit()) {
+                        selected_tile_->get_unit()->moveToTile(tile_pointer);
+                        std::cout << "Unit moved from tile " << selected_tile_->get_tile_number() << " to tile " << tile_pointer->get_tile_number() << "\n";
+                        return;       
+                    }
+                }
+                    */
+            }
+        }
+    }
+    UpdateDrawItems();
+    DrawTo(window);
 }
 
 // Returns true if the next turn button was clicked

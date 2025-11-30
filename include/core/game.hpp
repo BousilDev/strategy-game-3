@@ -124,6 +124,8 @@ public:
    */
   const Player& GetCurrentPlayer() const { return *players_[current_turn_]; }
 
+  std::shared_ptr<Player> GetCurrentPlayerPtr() { return players_[current_turn_]; }
+
   /**
    * @brief Get the number of players in the game.
    * 

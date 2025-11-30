@@ -66,6 +66,18 @@
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "build tests"
 
+        },
+        {
+            "name": "Debug tests",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/tests",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "debug tests",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb"
         }
     ]
 }
