@@ -95,6 +95,7 @@ public:
     * @return returns a reference to the tiles_ vector.
     */
     std::vector<std::shared_ptr<Tile>>& get_tiles();
+    const std::vector<std::shared_ptr<Tile>>& get_tiles() const { return tiles_; };
 
     /** @brief chooses n tiles and returns them in shared pointers in a new vector. 
     * A tile can be chosen as a spwan if it has plains terrain.
@@ -119,24 +120,14 @@ public:
     */
     unsigned int get_map_height() const;
 
-    /** @brief temporary test 
-    * function made by AI
-    */
-    void flood_tile_neighbours_test(std::shared_ptr<Tile> tile) {
-    if (!tile) return;
-    // Loop over all 6 neighbors
-    for (auto& weak_neighbor : tile->get_neighbours()) {
-        if (auto neighbor = weak_neighbor.lock()) { // check if neighbor exists
-            // Create a new WaterTerrain and assign it to neighbor
-            auto water = std::make_shared<WaterTerrain>(std::vector<core::Resource>());
-            neighbor->set_terrain(water);
-        }
-    }
-};
+        // Serialization
+    friend std::istream& operator>>(std::istream& in,  Map& other);
+    friend std::ostream& operator<<(std::ostream& out, const Map& other);
+
 private:
     std::vector<std::shared_ptr<Tile>> tiles_; ///< 1D vector of tiles the map has.
     unsigned int map_width_; ///< The number of columns of tiles.
-    unsigned int map_lenght_; ///< The number of rows of tiles.
+    unsigned int map_height_; ///< The number of rows of tiles.
 };
   
 } // namespace world

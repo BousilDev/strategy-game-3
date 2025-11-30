@@ -51,6 +51,30 @@ namespace core {
     }
     
     /**
+    * @brief Reads a line from the input stream and converts it into a vector of integers.
+    * 
+    * The line should contain integers separated by commas, e.g., "1,2,11,4".
+    * 
+    * @param in The input stream to read from.
+    * @return std::vector<int> A vector containing the integers from the line.
+    */
+    inline std::vector<int> GetIntVectorFromLine(std::istream& in) {
+        std::string line;
+        std::getline(in, line);  // Read the line from the stream
+        std::vector<int> result;
+        std::stringstream ss(line);
+        std::string token;
+        
+        while (std::getline(ss, token, ',')) { // Split line by commas
+            if (!token.empty()) {
+                result.push_back(std::stoi(token)); // Convert to int and add to vector
+            }
+        }
+
+        return result;
+    }
+    
+    /**
      * @brief Throws a runtime error with a message including file and line information.
      * 
      * Example usage:

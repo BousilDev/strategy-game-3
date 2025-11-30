@@ -51,10 +51,17 @@ void core::Game::Save(std::ostream& file) const{
     }
     file << current_turn_ << "\n";
     file << turn_ << "\n";
-    // file << map_
+    file << map_ << "\n";
 }
 
 void core::Game::Load(std::istream& file){
+    //for loading buildings later
+    struct BuildingLoadInfo {
+        std::shared_ptr<buildings::Building> building;
+        int tile_number;
+    };
+    std::vector<BuildingLoadInfo> building_load_list;
+
     // Loads timestamp
     std::string timeStr = core::DecodeTimeFromFile(file);
     timeStr.pop_back(); // Remove newline for consistent debug output
@@ -84,7 +91,8 @@ void core::Game::Load(std::istream& file){
                     // Get tile by tile number from map
                     int tile_number = GetIntFromLine(file);
                     if (tile_number != -1) {
-                        building->setTile(map_.get_tile(tile_number));
+                        //building->setTile(map_.get_tile(tile_number)); THIS IS DONE LATER WHEN REAL MAP ISE CREATED
+                        building_load_list.push_back({building, tile_number});
                     } else {
                         ThrowWithMessage("Error loading building: invalid tile number.", __FILE__, __LINE__);
                     }
@@ -109,6 +117,12 @@ void core::Game::Load(std::istream& file){
 
     current_turn_ = GetIntFromLine(file);
     turn_ = GetIntFromLine(file);
+
+    file >> map_;
+    //since map is loaded we can now do
+    for (auto& info : building_load_list) {
+        info.building->setTile(map_.get_tile(info.tile_number));
+    }
 
     // After map has been loaded, use players to add the building to the map
     debug_ ? core::PrintTestMsg("Loaded game with ", nof_players_, " players.") : void();

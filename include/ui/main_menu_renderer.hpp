@@ -64,8 +64,6 @@ public:
 
 private:
     sf::Texture background_texture_;
-    //sf::Sprite background_;
-    //TODO: finish implementing
     sf::RectangleShape background_rect_;
 
     //FIXME: handle these better, the main reason for these is the possibility to call IsPlayClicked after the internal state has been updated,
@@ -77,6 +75,7 @@ private:
 
     // main menu
     sf::Text title_;
+    sf::Vector2f title_pos_;
     ui::ClickableText new_game_button_;
     ui::ClickableText load_game_button_;
 
