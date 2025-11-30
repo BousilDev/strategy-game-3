@@ -338,6 +338,7 @@ void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f&
                 // Check if the unit's owner's name matches the current player's name
                 if (selected_tile_->get_unit()->getOwner() != nullptr && selected_tile_->get_unit()->getOwner()->GetName() == game_->GetCurrentPlayer().GetName()) {
                     selected_tile_->get_unit()->moveToTile(tile_pointer);
+                    // Check for dead units and remove them from the game
                     std::cout << "Unit moved from tile " << selected_tile_->get_tile_number() << " to tile " << tile_pointer->get_tile_number() << "\n";
                     return;
                 }

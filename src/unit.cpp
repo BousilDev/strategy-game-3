@@ -55,6 +55,16 @@ std::shared_ptr<Unit> Unit::CreateEmpty(int max_hp, UnitType type)
 int Unit::takeDamage(int damage)
 {
     current_hp_ = std::max(0, current_hp_ - damage);
+    if (current_hp_ == 0) {
+        // Remove unit from its tile
+        if (auto tile = current_tile_.lock()) {
+            tile->remove_current_unit();
+        }
+        // Remove unit from its owner's list
+        if (auto owner = owner_.lock()) {
+            owner->RemoveUnit(shared_from_this());
+        }
+    }
     return current_hp_;
 }
 
@@ -69,13 +79,13 @@ bool Unit::moveToTile(std::shared_ptr<world::Tile> tile)
     if (tile->get_unit() != nullptr && tile->get_unit()->getOwner() != getOwner()) {
         // Damage enemy unit TODO: implement proper damage calculation
         dealDamageToTileContents(tile, 5);
-        if (tile->get_unit()->getCurrentHp() > 0) {
+        if (tile->get_unit() != nullptr) {
             return false; // Enemy unit still alive, can't move
         }
     } else if (tile->get_building() != nullptr && tile->get_building()->getOwner() != getOwner()) {
         // Damage enemy building TODO: implement proper damage calculation
         dealDamageToTileContents(tile, 5);
-        if (tile->get_building()->getCurrentHp() > 0) {
+        if (tile->get_building() != nullptr) {
             return false; // Enemy building still alive, can't move
         }
     } else if (tile->get_unit() != nullptr && tile->get_unit()->getOwner() == getOwner()) {
