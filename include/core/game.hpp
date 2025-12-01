@@ -93,6 +93,8 @@ public:
    */
   bool IsInitialized() const { return is_initialized_; }
 
+  void SetInitialized(bool initialized) { is_initialized_ = initialized; }
+
   /**
    * @brief Advances to next turn and updates alive players.
    * Updates alive and dead players and current player. If the capital building of an alive 

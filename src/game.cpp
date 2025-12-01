@@ -9,6 +9,8 @@
 #include <ctime>
 
 void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int map_size) {
+    // TODO: Clear previous game state if any
+
     // Create map with given size
     map_ = world::Map(map_size, world::Map::GenerationMethod::Droplets);
     // Initialize players
