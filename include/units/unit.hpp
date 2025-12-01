@@ -42,6 +42,9 @@ public:
     bool moveToTile(std::shared_ptr<world::Tile> tile);
     void dealDamageToTileContents(std::shared_ptr<world::Tile> tile, int damage);
 
+    friend std::istream& operator>>(std::istream &in, std::shared_ptr<Unit>& other);
+    friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Unit>& other);
+
 protected:
     Unit(std::shared_ptr<world::Tile> tile,
          std::shared_ptr<core::Player> owner,

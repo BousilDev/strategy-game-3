@@ -85,7 +85,7 @@ void tests::TestGameSaveAndLoad() {
     std::cout << "Testing Game Save and Load..." << std::endl;
     core::Game game = CreateTestGame();
     // Advance a few turns
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < game.GetNofPlayers(); i++) {
         game.NextTurn();
         // Add resources to the current player for testing
         game.GetCurrentPlayer().AddResources({core::Resource(core::ResourceType::kGold, 10 + 2 * i)});
@@ -94,6 +94,7 @@ void tests::TestGameSaveAndLoad() {
         // Use the first card from the player's hand
         std::shared_ptr<cards::Card> card_to_play = game.GetCurrentPlayer().GetHand()->GetCards().front();
         game.PlayCardOnTile(card_to_play, game.GetMap().get_tile(i + 1));
+        units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), 10, units::UnitType::kSoldier);
     }
     // Save the game state
     std::ofstream outFile("testSaveFile.txt");
@@ -131,7 +132,7 @@ void tests::TestGameSaveAndLoad() {
     AssertWithMessage(loadedGame.GetNofPlayers() == game.GetNofPlayers(), "Loaded game number of players should match original.");
     AssertWithMessage(loadedGame.GetCurrentTurn() == game.GetCurrentTurn(), "Loaded game current turn should match original.");
     AssertWithMessage(loadedGame.GetCurrentPlayer().GetName() == game.GetCurrentPlayer().GetName(), "Loaded game current player name should match original.");
-    // Check resources of each player
+    // Check each player's state
     for (unsigned int i = 0; i < game.GetNofPlayers(); ++i) {
         const core::Player& originalPlayer = game.GetCurrentPlayer();
         const core::Player& loadedPlayer = loadedGame.GetCurrentPlayer();
@@ -153,6 +154,18 @@ void tests::TestGameSaveAndLoad() {
             AssertWithMessage(originalBuilding->GetType() == loadedBuilding->GetType(), "Building types for player " + std::to_string(i + 1) + " should match.");
             AssertWithMessage(originalBuilding->getMaxHp() == loadedBuilding->getMaxHp(), "Building max HP for player " + std::to_string(i + 1) + " should match.");
             AssertWithMessage(originalBuilding->getCurrentHp() == loadedBuilding->getCurrentHp(), "Building current HP for player " + std::to_string(i + 1) + " should match.");
+        }
+        auto& originalUnits = originalPlayer.GetUnits();
+        auto& loadedUnits = loadedPlayer.GetUnits();
+        const auto& originalUnitsVector = std::vector<std::shared_ptr<units::Unit>>(originalUnits.begin(), originalUnits.end());
+        const auto& loadedUnitsVector = std::vector<std::shared_ptr<units::Unit>>(loadedUnits.begin(), loadedUnits.end());
+        for (size_t j = 0; j < originalUnits.size(); ++j) {
+            const auto& originalUnit = originalUnitsVector[j];
+            const auto& loadedUnit = loadedUnitsVector[j];
+            AssertWithMessage(originalUnit->GetType() == loadedUnit->GetType(), "Unit types for player " + std::to_string(i + 1) + " should match.");
+            AssertWithMessage(originalUnit->getMaxHp() == loadedUnit->getMaxHp(), "Unit max HP for player " + std::to_string(i + 1) + " should match.");
+            AssertWithMessage(originalUnit->getCurrentHp() == loadedUnit->getCurrentHp(), "Unit current HP for player " + std::to_string(i + 1) + " should match.");
+            AssertWithMessage(loadedPlayer.GetCapitalBuilding()->getTile()->get_unit() != nullptr, "There should be a unit on the capital building tile.");
         }
         game.NextTurn();
         loadedGame.NextTurn();

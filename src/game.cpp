@@ -55,12 +55,19 @@ void core::Game::Save(std::ostream& file) const{
 }
 
 void core::Game::Load(std::istream& file){
-    //for loading buildings later
+    //for loading buildings & units later
     struct BuildingLoadInfo {
         std::shared_ptr<buildings::Building> building;
         int tile_number;
     };
+
+    struct UnitLoadInfo {
+        std::shared_ptr<units::Unit> unit;
+        int tile_number;
+    };
+
     std::vector<BuildingLoadInfo> building_load_list;
+    std::vector<UnitLoadInfo> unit_load_list;
 
     // Loads timestamp
     std::string timeStr = core::DecodeTimeFromFile(file);
@@ -102,6 +109,27 @@ void core::Game::Load(std::istream& file){
                 }
             }
         }
+
+        size_t unitSize = GetIntFromLine(file);
+        while (unitSize--) {
+            std::string unit_type = GetStringFromLine(file);
+            for (size_t i = 0; i < constants::unitTypeNames.size(); i++) {
+                if (unit_type == constants::unitTypeNames[i]) {
+                    std::shared_ptr<units::Unit> unit = units::Unit::CreateEmpty(GetIntFromLine(file), static_cast<units::UnitType>(i));
+                    unit->setPlayer(player_ptr);
+                    file >> unit;
+                    int tile_number = GetIntFromLine(file);
+                    if (tile_number != -1) {
+                        unit_load_list.push_back({unit, tile_number});
+                    } else {
+                        ThrowWithMessage("Error loading unit: invalid tile number.", __FILE__, __LINE__);
+                    }
+                    player_ptr->AddUnit(unit);
+                    break;
+                }
+            }
+        }
+
         file >> *player_ptr;
         players_.push_back(player_ptr);
     }
@@ -123,6 +151,11 @@ void core::Game::Load(std::istream& file){
     //since map is loaded we can now do
     for (auto& info : building_load_list) {
         info.building->setTile(map_.get_tile(info.tile_number));
+        map_.get_tile(info.tile_number)->place_building(info.building);
+    }
+    for (auto& info : unit_load_list) {
+        info.unit->setTile(map_.get_tile(info.tile_number));
+        map_.get_tile(info.tile_number)->place_unit(info.unit);
     }
 
     // After map has been loaded, use players to add the building to the map
