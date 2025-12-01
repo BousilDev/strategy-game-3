@@ -9,21 +9,6 @@
 
 // the main function
 int main() {
-    
-    /*
-    // Load game from save file
-    core::Game game;
-    std::ifstream inFile("saveFile.txt");
-    if (inFile.is_open()) {
-        game.Load(inFile);
-        inFile.close();
-        core::DebugGameState(game);
-    } else {
-        std::cout << "No save file found." << std::endl;
-    }
-    */
-
-    bool start = false;
 
     // init game
     std::vector<core::Game::PlayerInit> players;
@@ -39,22 +24,19 @@ int main() {
     while (user_interface.GetWindow().isOpen()) {
 
         // No delay map panning
-        if (start) {
+        if (game.IsInitialized()) {
             user_interface.UpdateOutsideEventLoop();
         }
 
         // Handle events
         while (user_interface.PollEvent()) {
-            user_interface.HandleEvent(start);
+            user_interface.HandleEvent(game.IsInitialized());
    
             // main menu if game is not initialized yet
             if (!game.IsInitialized()) {
 
                 // Initialize game on pressing "Start"
                 if (user_interface.IsStartClicked()) {
-
-                    // TODO: temp for ui map handling
-                    start = true;
 
                     // Get game initialization options from selectors
                     unsigned int player_count = user_interface.GetSelectedPlayerCount();
@@ -82,17 +64,20 @@ int main() {
                         assert(game.GetCurrentTurn() == i + 1);
                         // Add resources to the current player for testing
                         game.GetCurrentPlayer().AddResources({core::Resource(core::ResourceType::kGold, 10 + 2 * i)});
-                        game.GetCurrentPlayer().AddUnit(units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), 10, units::UnitType::kSoldier));
-                    }
-                    // Save game state after initialization
-                    std::ofstream outFile("saveFile.txt");
-                    if (outFile.is_open()) {
-                        game.Save(outFile);
-                        outFile.close();
+                        units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), 10, units::UnitType::kSoldier);
                     }
                 } else if (user_interface.IsLoadClicked()) {
-                    //TODO: things that are done when load is clicked
-                    std::cout << "Load clicked! Save file path: " << user_interface.GetLastClickedSavePath() << std::endl;                 
+                    // Things that are done when load is clicked
+                    std::cout << "Load clicked! Save file path: " << user_interface.GetLastClickedSavePath() << std::endl;
+                    // Load game from save file
+                    std::ifstream inFile(user_interface.GetLastClickedSavePath());
+                    if (inFile.is_open()) {
+                        game.Load(inFile);
+                        inFile.close();
+                        user_interface.InitializeMapRenderer(game);
+                    } else {
+                        std::cout << "No save file found." << std::endl;
+                    }
                 }
             } else {
                 // TODO: things that are done when the game has been initialized

@@ -62,12 +62,12 @@ std::ostream& operator<<(std::ostream &out, const core::Player& other) {
     for (const auto& building : other.GetBuildings()) {
         out << building << "\n";
     }
-    /*
+
     out << other.GetUnits().size() << "\n";
     for (const auto& unit : other.GetUnits()) {
         out << unit << "\n";
     }
-        */
+
     out << other.GetResources().size() << "\n";
     for (const auto& resource : other.GetResources()) {
         out << resource.amount << "\n";
@@ -81,15 +81,6 @@ std::istream& operator>>(std::istream &in, core::Player& other) {
     //std::shared_ptr<cards::Deck> deck = std::make_shared<cards::Deck>();
     //in >> *deck;
     //other.SetDeck(deck);
-
-    /*
-    size_t unitSize = GetIntFromLine(in);
-    while (unitSize--) {
-        std::shared_ptr<units::Unit> unit;
-        in >> unit;
-        other.AddUnit(unit);
-    }
-        */
 
     size_t resSize = GetIntFromLine(in);
     std::list<core::Resource> resources;

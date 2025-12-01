@@ -1,6 +1,9 @@
 #include "ui/info_layer_renderer.hpp"
 #include <sstream>
 #include <string>
+#include <fstream>
+#include <iostream>
+#include <filesystem>
 
 // Initializes the InfoLayerRenderer
 void ui::InfoLayerRenderer::Initialize(core::Game& game, const std::shared_ptr<sf::Font> font) {
@@ -354,6 +357,23 @@ void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f&
             }
         }
     }
+
+    // Handle ESC key to return to main menu
+    if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Escape) {
+        selected_card_ = nullptr;
+        selected_tile_ = nullptr;
+        // Save the game
+        std::ofstream outFile(constants::kSavesPath + "auto_save.txt");
+        core::PrintTestMsg("Saving game to ", std::filesystem::absolute(constants::kSavesPath + "auto_save.txt").string());
+        if (outFile.is_open()) {
+            game_->Save(outFile);
+            outFile.close();
+            core::PrintTestMsg("Game saved successfully.");
+        }
+        game_->SetInitialized(false);
+        return;
+    }
+
     UpdateDrawItems();
     DrawTo(window);
 }
