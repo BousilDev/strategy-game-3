@@ -20,7 +20,6 @@ namespace ui {
 class Selection {
 public:
     
-    // TODO: check that the shared pointer works correctly
     /**
      * @brief Construct a new Selection object
      * 
@@ -29,12 +28,12 @@ public:
      * @param font_size the size of the texts
      * @param pos sets the position
      */
-    Selection(const std::vector<std::pair<std::string, int>>& texts, const std::shared_ptr<sf::Font> font, int font_size, sf::Vector2f pos) : texts_(texts) {
-          
+    Selection(const std::vector<std::pair<std::string, int>>& texts, const std::shared_ptr<sf::Font> font, int font_size, sf::Vector2f pos, sf::Vector2f windowSize) : texts_(texts), pos_(pos) {
+
         for (auto text : texts_) {
             auto currentText = std::pair(sf::Text(text.first, *font, font_size), text.second);
             centerOrigin(currentText.first);
-            currentText.first.setPosition(pos);
+            currentText.first.setPosition(windowSize.x * pos.x, windowSize.y * pos.y);
             text_options_.push_back(currentText);
         }
 
@@ -42,13 +41,13 @@ public:
         leftArrow_.setRadius(15.f);
         centerOrigin(leftArrow_);
         leftArrow_.setRotation(270);
-        leftArrow_.setPosition(pos.x-150,pos.y);
+        leftArrow_.setPosition(pos.x * windowSize.x - 150, pos.y * windowSize.y);
 
         rightArrow_.setPointCount(3);
         rightArrow_.setRadius(15.f);
         centerOrigin(rightArrow_);
         rightArrow_.setRotation(90);
-        rightArrow_.setPosition(pos.x+150,pos.y);
+        rightArrow_.setPosition(pos.x * windowSize.x + 150, pos.y * windowSize.y);
     }
 
     /**
@@ -59,6 +58,22 @@ public:
      * @param event an sf::Event
      */
     void Update(const sf::RenderWindow& window, const sf::Vector2f& mouse_pos, const sf::Event& event) {
+
+        if (event.type == sf::Event::Resized) {
+            auto windowSize = window.getSize();
+
+            for (auto& text : text_options_) {
+                centerOrigin(text.first);
+                text.first.setPosition(sf::Vector2f(pos_.x * windowSize.x, pos_.y * windowSize.y));
+            }
+
+            centerOrigin(leftArrow_);
+            leftArrow_.setPosition(pos_.x * windowSize.x - 150, pos_.y * windowSize.y);
+
+            centerOrigin(rightArrow_);
+            rightArrow_.setPosition(pos_.x * windowSize.x + 150, pos_.y * windowSize.y);
+
+        }
         
         // if LMB is released on the selector
         if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
@@ -117,6 +132,7 @@ private:
     sf::CircleShape leftArrow_;
     sf::CircleShape rightArrow_;
     int selectedOption_ = 0;
+    sf::Vector2f pos_;
 };
 
 } // namespace ui

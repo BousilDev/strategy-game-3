@@ -224,14 +224,12 @@ void ui::MapRenderer::PanMap(sf::RenderWindow& window) {
 
 void ui::MapRenderer::SetViewOnPlayer(sf::RenderWindow& window) {
     if (game_->GetCurrentTurn() > last_turn_) {
-        for (auto v : game_->GetCurrentPlayer().GetBuildings()) {
-            if (v->GetType() == buildings::BuildingType::kCapital) {
-                auto centered_tile = tiles_[v->getTile()->get_tile_number()];
-                sf::View view = window.getView();
-                view.setCenter(centered_tile.getPosition());
-                window.setView(view);
-
-            }
+        std::shared_ptr<buildings::Building> v = game_->GetCurrentPlayer().GetCapitalBuilding();
+        if (v != nullptr) {
+            auto centered_tile = tiles_[v->getTile()->get_tile_number()];
+            sf::View view = window.getView();
+            view.setCenter(centered_tile.getPosition());
+            window.setView(view);
         }
         last_turn_ += 1;
     }

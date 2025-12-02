@@ -571,3 +571,39 @@ Cards can be played in UI and playing cards adds buildings to map but resources 
 1. Make outlines for building and units of different players
 2. Add saving & loading to map
 3. Remove TODOs from code
+
+
+# Meeting 28.11.2025 13::00 - 14::00 @On site
+Sprint 4, "daily" 2
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+1. Cards are properly positioned in the bottom of the screen. 
+2. First version of biome generation works in large map. 
+3. Main menu enhancements. 
+4. Unit & building rendering with different colors for different players.
+
+## Challenges
+
+Some problems with resources updating per turn
+
+## Actions
+
+Inspected all major changes together.
+
+## Project status
+
+The game is approaching a playable state with working biome generation and card playing.
+
+### TODOs
+
+1. Add Unit functionality to UI
+2. Save & load map and cards

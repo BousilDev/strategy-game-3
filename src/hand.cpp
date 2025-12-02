@@ -10,7 +10,7 @@ const std::shared_ptr<Card>& Hand::GetCard(int i) {
     return contents_[i];
 }
 
-bool Hand::PlayCard(std::shared_ptr<Card> card, world::Tile& target, std::shared_ptr<core::Player> player) {
+bool Hand::PlayCard(std::shared_ptr<Card> card, std::shared_ptr<world::Tile> target, std::shared_ptr<core::Player> player) {
     auto it = std::find(contents_.begin(), contents_.end(), card);
     if (it == contents_.end()) {
         throw std::out_of_range("Hand::PlayCard card not found in hand.");

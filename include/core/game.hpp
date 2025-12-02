@@ -93,6 +93,8 @@ public:
    */
   bool IsInitialized() const { return is_initialized_; }
 
+  void SetInitialized(bool initialized) { is_initialized_ = initialized; }
+
   /**
    * @brief Advances to next turn and updates alive players.
    * Updates alive and dead players and current player. If the capital building of an alive 
@@ -108,6 +110,8 @@ public:
    */
   const world::Map& GetMap() const { return map_; }
 
+  world::Map& GetMap() { return map_; }
+
   /**
    * @brief Get the player whose turn it is.
    * 
@@ -121,6 +125,8 @@ public:
    * @return A const reference to the current player.
    */
   const Player& GetCurrentPlayer() const { return *players_[current_turn_]; }
+
+  std::shared_ptr<Player> GetCurrentPlayerPtr() { return players_[current_turn_]; }
 
   /**
    * @brief Get the number of players in the game.

@@ -13,18 +13,19 @@ public:
 
     ClickableCircleShape() {}
 
-    ClickableCircleShape(float radius, std::size_t point_count, sf::Vector2f position, float angle = 0, sf::Vector2f hovered_scale = sf::Vector2f(1.3f, 1.3f))
+    ClickableCircleShape(float radius, std::size_t point_count, sf::Vector2f position, const sf::Vector2f& view_size, float angle = 0, sf::Vector2f hovered_scale = sf::Vector2f(1.3f, 1.3f))
                         : position_(position), hovered_scale_(hovered_scale) {
         circle_shape_ = sf::CircleShape(radius, point_count);
         centerOrigin(circle_shape_);
         circle_shape_.setRotation(angle);
-        circle_shape_.setPosition(position_);
+        circle_shape_.setPosition(position_.x * view_size.x, position.y * view_size.y);
     }
 
     void Update(const sf::RenderWindow& window, const sf::Vector2f& mouse_pos, const sf::Event& event) {
         // Resized
         if (event.type == sf::Event::Resized) {
             //TODO: implement resizing support
+            circle_shape_.setPosition(window.getSize().x * position_.x, window.getSize().y * position_.y);
         }
 
         // Hovered over

@@ -6,24 +6,35 @@
 #include <filesystem>
 
 // Sends the file and line number to the AssertWithMessageFull function
-#define AssertWithMessage(condition, message) core::AssertWithMessageFull(condition, message, __FILE__, __LINE__)
+#define AssertWithMessage(condition, message) AssertWithMessageFull(condition, message, __FILE__, __LINE__)
+
+// Constructs and returns a test game instance
+core::Game tests::CreateTestGame(unsigned int player_count, unsigned int map_size) {
+    core::Game game;
+    std::vector<core::Game::PlayerInit> players;
+    std::shared_ptr<cards::Card> test_card = std::make_shared<cards::BuildingCard>("Test card", "This is a test card and it has a long description if needed", buildings::FarmBuilding::CreateEmpty(10));
+    std::vector<std::shared_ptr<cards::Card>> test_cards = {};
+    int card_count = 10;
+    for (int i = 0; i < 10; i++) {
+        test_cards.push_back(test_card->Clone());
+    }
+    cards::Deck test_deck = cards::Deck(test_cards, card_count);
+    for (unsigned int i = 0; i < player_count; ++i) {
+        players.emplace_back(core::Game::PlayerInit{
+            "Player " + std::to_string(i + 1),
+            test_deck.Clone() // TODO: add custom starter decks
+        });
+    }
+    game.Initialize(players, map_size);
+    return game;
+}
 
 // Testing the Game class
-void core::TestGameInitializationAndTurns() {
+void tests::TestGameInitializationAndTurns() {
   std::cout << "Testing Game class..." << std::endl;
-  unsigned int map_size = 5;
-  Game game;
-  std::vector<std::shared_ptr<cards::Card>> empty_cards = {};
-  cards::Deck test_deck = cards::Deck(empty_cards, 0U);
-  const std::vector<Game::PlayerInit> players = {
-    {"Test Gamer", test_deck.Clone()},
-    {"Bob the Builder", test_deck.Clone()},
-    {"Jari the Destroyer", test_deck.Clone()},
-    {"Markku the Conqueror", test_deck.Clone()}
-  };
-  game.Initialize(players, map_size);
+  core::Game game = CreateTestGame(4, 5);
   AssertWithMessage(game.IsInitialized() && !game.IsOver(), "Game should be initialized and not over after initialization.");
-  AssertWithMessage(game.GetCurrentPlayer().GetName() == "Test Gamer", "Current player should be 'Test Gamer' after initialization.");
+  AssertWithMessage(game.GetCurrentPlayer().GetName() == "Player 1", "Current player should be 'Player 1' after initialization.");
   for (int i = 0; i < 5; i++) {
     game.NextTurn();
     AssertWithMessage(game.GetCurrentTurn() == i + 1, "Turn number should be " + std::to_string(i + 1) + " after " + std::to_string(i) + " turns.");
@@ -38,7 +49,7 @@ void core::TestGameInitializationAndTurns() {
   std::cout << "Game class tests completed successfully." << std::endl;
 };
 
-void core::DebugGameState(const Game& game) {
+void tests::DebugGameState(const core::Game& game) {
     std::cout << "Game State Debug" << std::endl;
     core::PrintTestMsg("Is Initialized: ", game.IsInitialized());
     core::PrintTestMsg("Number of Players: ", game.GetNofPlayers());
@@ -62,7 +73,7 @@ void TestFaultyFile(std::string filename) {
     if (faultyFile.is_open()) {
         try {
             faultyGame.Load(faultyFile);
-            AssertWithMessage(false, "Loading from a faulty file should fail: " + filename);
+            tests::AssertWithMessage(false, "Loading from a faulty file should fail: " + filename);
         } catch (std::exception& e) {
             core::PrintTestMsg("Correctly caught exception when loading faulty file '", filename, "': ", e.what());
         }
@@ -70,28 +81,20 @@ void TestFaultyFile(std::string filename) {
     }
 }
 
-void core::TestGameSaveAndLoad() {
+void tests::TestGameSaveAndLoad() {
     std::cout << "Testing Game Save and Load..." << std::endl;
-    unsigned int map_size = 5;
-    Game game;
-    std::vector<core::Game::PlayerInit> players;
-    unsigned int player_count = 4;
-    std::vector<std::shared_ptr<cards::Card>> empty_cards = {};
-    cards::Deck test_deck = cards::Deck(empty_cards, 0U);
-    for (unsigned int i = 0; i < player_count; ++i) {
-        players.emplace_back(core::Game::PlayerInit{
-            "Player " + std::to_string(i + 1),
-            test_deck.Clone() // TODO: add custom starter decks
-        });
-    }
-    game.Initialize(players, map_size);
+    core::Game game = CreateTestGame();
     // Advance a few turns
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < game.GetNofPlayers(); i++) {
         game.NextTurn();
         // Add resources to the current player for testing
         game.GetCurrentPlayer().AddResources({core::Resource(core::ResourceType::kGold, 10 + 2 * i)});
         // Make the capital of the players take damage
         game.GetCurrentPlayer().GetBuildings().front()->takeDamage(20 * i);
+        // Use the first card from the player's hand
+        std::shared_ptr<cards::Card> card_to_play = game.GetCurrentPlayer().GetHand()->GetCards().front();
+        game.PlayCardOnTile(card_to_play, game.GetMap().get_tile(i + 1));
+        units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), 10, units::UnitType::kSoldier);
     }
     // Save the game state
     std::ofstream outFile("testSaveFile.txt");
@@ -115,7 +118,7 @@ void core::TestGameSaveAndLoad() {
     }
     
     // Load the game state into a new Game instance
-    Game loadedGame;
+    core::Game loadedGame;
     std::ifstream inFile("testSaveFile.txt");
     if (inFile.is_open()) {
         loadedGame.Load(inFile);
@@ -129,7 +132,7 @@ void core::TestGameSaveAndLoad() {
     AssertWithMessage(loadedGame.GetNofPlayers() == game.GetNofPlayers(), "Loaded game number of players should match original.");
     AssertWithMessage(loadedGame.GetCurrentTurn() == game.GetCurrentTurn(), "Loaded game current turn should match original.");
     AssertWithMessage(loadedGame.GetCurrentPlayer().GetName() == game.GetCurrentPlayer().GetName(), "Loaded game current player name should match original.");
-    // Check resources of each player
+    // Check each player's state
     for (unsigned int i = 0; i < game.GetNofPlayers(); ++i) {
         const core::Player& originalPlayer = game.GetCurrentPlayer();
         const core::Player& loadedPlayer = loadedGame.GetCurrentPlayer();
@@ -151,6 +154,18 @@ void core::TestGameSaveAndLoad() {
             AssertWithMessage(originalBuilding->GetType() == loadedBuilding->GetType(), "Building types for player " + std::to_string(i + 1) + " should match.");
             AssertWithMessage(originalBuilding->getMaxHp() == loadedBuilding->getMaxHp(), "Building max HP for player " + std::to_string(i + 1) + " should match.");
             AssertWithMessage(originalBuilding->getCurrentHp() == loadedBuilding->getCurrentHp(), "Building current HP for player " + std::to_string(i + 1) + " should match.");
+        }
+        auto& originalUnits = originalPlayer.GetUnits();
+        auto& loadedUnits = loadedPlayer.GetUnits();
+        const auto& originalUnitsVector = std::vector<std::shared_ptr<units::Unit>>(originalUnits.begin(), originalUnits.end());
+        const auto& loadedUnitsVector = std::vector<std::shared_ptr<units::Unit>>(loadedUnits.begin(), loadedUnits.end());
+        for (size_t j = 0; j < originalUnits.size(); ++j) {
+            const auto& originalUnit = originalUnitsVector[j];
+            const auto& loadedUnit = loadedUnitsVector[j];
+            AssertWithMessage(originalUnit->GetType() == loadedUnit->GetType(), "Unit types for player " + std::to_string(i + 1) + " should match.");
+            AssertWithMessage(originalUnit->getMaxHp() == loadedUnit->getMaxHp(), "Unit max HP for player " + std::to_string(i + 1) + " should match.");
+            AssertWithMessage(originalUnit->getCurrentHp() == loadedUnit->getCurrentHp(), "Unit current HP for player " + std::to_string(i + 1) + " should match.");
+            AssertWithMessage(loadedPlayer.GetCapitalBuilding()->getTile()->get_unit() != nullptr, "There should be a unit on the capital building tile.");
         }
         game.NextTurn();
         loadedGame.NextTurn();

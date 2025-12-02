@@ -32,8 +32,8 @@ test_result ExecuteTest(Func test) {
 int main() {
 
     test_suite tests[] = {
-        {"Testing Game Initialization and turns", core::TestGameInitializationAndTurns},
-        {"Testing Game Save and Load", core::TestGameSaveAndLoad}
+        {"Testing Game Initialization and turns", tests::TestGameInitializationAndTurns},
+        {"Testing Game Save and Load", tests::TestGameSaveAndLoad}
     };
     unsigned int passed = 0;
     unsigned int total = 0;

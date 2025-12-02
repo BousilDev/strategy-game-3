@@ -8,6 +8,8 @@
 #include <vector>
 #include <memory>
 #include <array>
+#include <queue>
+#include <unordered_set>
 #include "terrain.hpp"
 #include <array>
 #include "buildings/building.hpp"
@@ -23,7 +25,7 @@ namespace world {
  * 
  * Tiles know their neighbours. and their index.
  */
-class Tile {
+class Tile : public std::enable_shared_from_this<Tile>{
     public:
         /**
         * @brief default constructor that constructs an empty tile. A tile's contents like terrain should be set seperately. 
@@ -50,6 +52,8 @@ class Tile {
         std::shared_ptr<buildings::Building> get_building();
 
         std::shared_ptr<units::Unit> get_unit(){return current_unit_;};
+
+        std::vector<unsigned int>& get_tiles_in_n_range(unsigned int from_this_distance);
 
 //std::list<Effect>& get_effect();
 

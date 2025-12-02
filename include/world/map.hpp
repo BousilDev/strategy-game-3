@@ -35,31 +35,53 @@ namespace world {
 class Map {
 public:
     /**
+    * @brief Method for calculating the distance of 2 tiles based on their indeces on this map.
+    * @param tile1_index index of tile 1
+    * @param tile2_index index of tile 2
+    * @return The shortest distance ie. the number of tiles needed to be traverced to get from tile 1 to tile 2.
+     */
+    int distance(int tile1_index, int tile2_index) const; 
+
+    /**
+     * @enum GenerationMethod
+     * @brief Defines the different methods of map generation.
+     */
+    enum GenerationMethod {
+        PlainsOnly,
+        Stripes,
+        Droplets,
+    };
+    
+    /**
     * @brief default constructor constructs a map object but doesnt set tiles.
     * @deprecated Dont use default constructor.
     */
     Map();
-
+    
     /**
     * @brief Construct a Map with given dimensions.
     * @param map_width The number of columns.
     * @param map_height The number of rows.
-    */
-    Map(unsigned int map_width, unsigned int map_length);
+    * @param generationmethod The generation method to use (default is PlainsOnly).
+     */
+    Map(unsigned int map_width, unsigned int map_length, GenerationMethod generationmethod = GenerationMethod::PlainsOnly);
 
     /**
     * @brief Construct a Map with the given integer as the number of rows AND columns.
     * @param map_size defines both the number of rows and the number of columns.
+    * @param generationmethod The generation method to use (default is PlainsOnly).
     */
-    Map(unsigned int map_size);
+    Map(unsigned int map_size, GenerationMethod generationmethod = GenerationMethod::PlainsOnly);
 
-     /**
-    * @brief A generator that is called when a map is constructed. Fills the tiles_ vector with tiles
-    * and the tiles with the right terrain and resources.
-    * @note This is currently very simple constructor that defines all tiles with no resources
-    * and as plain terrain. Create multiple different generators which can be chosen from.
-    */
-    void generate_map();
+    /**
+     * @brief Generates the map using the specified generation method.
+     * 
+     * Fills the tiles_ vector with tiles and sets the terrain (and resources, if implemented).
+     * @param generationmethod The generation method to use (default is PlainsOnly).
+     * @note Current implementation is simple: all tiles are initialized as plain terrain with no resources.
+     *       Additional generation methods can be added for more variety.
+     */
+    void generate_map(GenerationMethod generationmethod = GenerationMethod::PlainsOnly);
 
     /** @brief For getting tiles from the tile_ vector. Since the tiles are in a 1D vector calling
     * for a tile <1, 3> is called get_tile(3*map_width + 1) 
@@ -73,6 +95,7 @@ public:
     * @return returns a reference to the tiles_ vector.
     */
     std::vector<std::shared_ptr<Tile>>& get_tiles();
+    const std::vector<std::shared_ptr<Tile>>& get_tiles() const { return tiles_; };
 
     /** @brief chooses n tiles and returns them in shared pointers in a new vector. 
     * A tile can be chosen as a spwan if it has plains terrain.
@@ -97,24 +120,14 @@ public:
     */
     unsigned int get_map_height() const;
 
-    /** @brief temporary test 
-    * function made by AI
-    */
-    void flood_tile_neighbours_test(std::shared_ptr<Tile> tile) {
-    if (!tile) return;
-    // Loop over all 6 neighbors
-    for (auto& weak_neighbor : tile->get_neighbours()) {
-        if (auto neighbor = weak_neighbor.lock()) { // check if neighbor exists
-            // Create a new WaterTerrain and assign it to neighbor
-            auto water = std::make_shared<WaterTerrain>(std::vector<core::Resource>());
-            neighbor->set_terrain(water);
-        }
-    }
-};
+        // Serialization
+    friend std::istream& operator>>(std::istream& in,  Map& other);
+    friend std::ostream& operator<<(std::ostream& out, const Map& other);
+
 private:
     std::vector<std::shared_ptr<Tile>> tiles_; ///< 1D vector of tiles the map has.
     unsigned int map_width_; ///< The number of columns of tiles.
-    unsigned int map_lenght_; ///< The number of rows of tiles.
+    unsigned int map_height_; ///< The number of rows of tiles.
 };
   
 } // namespace world
