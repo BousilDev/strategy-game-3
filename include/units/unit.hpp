@@ -31,13 +31,9 @@ public:
     }
     void setTile(std::shared_ptr<world::Tile> tile_location) {
         current_tile_ = tile_location;
-<<<<<<< include/units/unit.hpp
     }
+    
     std::shared_ptr<core::Player> GetOwner() const {return owner_.lock(); }
-=======
-    }
-
->>>>>>> include/units/unit.hpp
     UnitType GetType() const { return unit_type_; }
     int getMaxHp()   const { return max_hp_; }
     int getCurrentHp() const { return current_hp_; }
