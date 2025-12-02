@@ -4,6 +4,13 @@
 #include <iostream>
 #include <string>
 
+/**
+ * @brief Prints a test failure message to the standard error stream.
+ * 
+ * Prints the message given as an argument to the standard error stream, prefixed with
+ * "Test failed: ".
+ * @param msg The message to print.
+ */
 void PrintTestFailure(const std::string msg) {
     std::cerr << "Test failed: " << msg << std::endl;
 }
@@ -18,6 +25,17 @@ struct test_suite {
     void (*test)();
 };
 
+/**
+ * @brief Executes a test function and returns a test_result object containing the test description and result.
+ * 
+ * The function takes a test function as an argument and executes it. If the test function throws an exception,
+ * the function prints a test failure message to the standard error stream and returns a test_result object with the
+ * exception message as the description and false as the result. If the test function executes successfully, the function
+ * returns a test_result object with an empty description and true as the result.
+ * 
+ * @param test The test function to execute
+ * @return A test_result object containing the test description and result
+ */
 template <typename Func>
 test_result ExecuteTest(Func test) {
     try {
@@ -31,6 +49,7 @@ test_result ExecuteTest(Func test) {
 
 int main() {
 
+    // Define the tests to run
     test_suite tests[] = {
         {"Testing Game Initialization and turns", tests::TestGameInitializationAndTurns},
         {"Testing Game Save and Load", tests::TestGameSaveAndLoad}
@@ -39,6 +58,7 @@ int main() {
     unsigned int total = 0;
     std::vector<test_result> results;
 
+    // Run each test and collect results
     for (auto test : tests) {
         test_result result = ExecuteTest(test.test);
         results.push_back(result);
@@ -48,6 +68,7 @@ int main() {
         total++;
     }
 
+    // Print results
     std::cout << "------------------------" << std::endl;
     std::cout << "Tests run: " << std::endl;
     unsigned int i = 0;

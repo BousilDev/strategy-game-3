@@ -55,18 +55,17 @@ void tests::DebugGameState(const core::Game& game) {
     core::PrintTestMsg("Number of Players: ", game.GetNofPlayers());
     core::PrintTestMsg("Current Turn: ", game.GetCurrentTurn());
     core::PrintTestMsg("Current Player: ", game.GetCurrentPlayer().GetName());
-    // Print each player's resources - Doesnt work since game has no GetPlayers() method
-    /*
-    for (unsigned int i = 0; i < game.GetNofPlayers(); ++i) {
-        const core::Player& player = game.GetCurrentPlayer();
-        core::PrintTestMsg("- Player ", i + 1, " (", player.GetName(), ") Resources:");
-        for (const auto& resource : player.GetResources()) {
-            core::PrintTestMsg("- - Resource Type: ", static_cast<int>(resource.type), ", Amount: ", resource.amount);
-        }
-    }
-    */
 }
 
+/**
+ * @brief Tests loading a game from a faulty file.
+ * 
+ * This function tests whether an exception is thrown when loading a game
+ * from a faulty file. It opens the file, attempts to load the game from the file,
+ * and checks whether the expected exception is thrown.
+ * 
+ * @param filename The name of the file to load from.
+ */
 void TestFaultyFile(std::string filename) {
     core::Game faultyGame;
     std::ifstream faultyFile(filename);
