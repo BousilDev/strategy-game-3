@@ -32,6 +32,9 @@ public:
     void setTile(std::shared_ptr<world::Tile> tile_location) {
         current_tile_ = tile_location;
     }
+    void setDamage(int damage) {
+        damage_ = damage;
+    }
 
     UnitType GetType() const { return unit_type_; }
     int getMaxHp()   const { return max_hp_; }
@@ -55,6 +58,7 @@ protected:
     int current_hp_{0};
     bool has_attacked_{false};
     int turn_movement_{0};
+    int damage_{5};
     UnitType unit_type_{UnitType::kSoldier};
 
     std::weak_ptr<world::Tile> current_tile_;

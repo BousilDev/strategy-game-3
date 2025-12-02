@@ -10,6 +10,7 @@
 
 void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int map_size) {
     // TODO: Clear previous game state if any
+    *this = Game(); // Reset to default state
 
     // Create map with given size
     map_ = world::Map(map_size, world::Map::GenerationMethod::Droplets);

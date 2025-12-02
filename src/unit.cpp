@@ -100,14 +100,16 @@ bool Unit::moveToTile(std::shared_ptr<world::Tile> tile)
 
     // Tile already has a unit or a building
     if (tile->get_unit() != nullptr && tile->get_unit()->getOwner() != getOwner()) {
-        // Damage enemy unit TODO: implement proper damage calculation
-        dealDamageToTileContents(tile, 5);
+        // Damage enemy unit
+        dealDamageToTileContents(tile, damage_);
+        has_attacked_ = true;
         if (tile->get_unit() != nullptr) {
             return false; // Enemy unit still alive, can't move
         }
     } else if (tile->get_building() != nullptr && tile->get_building()->getOwner() != getOwner()) {
-        // Damage enemy building TODO: implement proper damage calculation
-        dealDamageToTileContents(tile, 5);
+        // Damage enemy building
+        dealDamageToTileContents(tile, damage_);
+        has_attacked_ = true;
         if (tile->get_building() != nullptr) {
             return false; // Enemy building still alive, can't move
         }
@@ -121,6 +123,8 @@ bool Unit::moveToTile(std::shared_ptr<world::Tile> tile)
             current->remove_current_unit();
         }
 
+        // TODO: Uncomment when GetDistanceTo or similar is implemented
+        //turn_movement_ = tile->GetDistanceTo(current_tile_.lock());
         current_tile_ = tile;
         return true;
     }
