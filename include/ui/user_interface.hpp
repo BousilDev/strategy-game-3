@@ -52,6 +52,7 @@ public:
     int GetSelectedPlayerCount() const { return main_menu_renderer_.GetSelectedPlayerCount(); }
     int GetSelectedMapSize() const { return main_menu_renderer_.GetSelectedMapSize(); }
     int GetSelectedDeck() const { return main_menu_renderer_.GetSelectedDeck(); }
+    std::string GetGameName() const { return main_menu_renderer_.GetGameName(); }
 
     std::string& GetLastClickedSavePath() { return main_menu_renderer_.GetLastClickedSavePath(); }
 

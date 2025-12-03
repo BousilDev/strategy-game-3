@@ -1,7 +1,5 @@
 #include "core/game.hpp"
 #include "cards/card.hpp"
-// Tests included here to avoid circular dependency issues in .hpp files
-// (Game needs PrintTestMsg, and Tests needs Game)
 #include "core/utils.hpp"
 #include <iostream>
 #include <sstream>
@@ -9,8 +7,8 @@
 #include <ctime>
 
 void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int map_size) {
-    // TODO: Clear previous game state if any
-    *this = Game(); // Reset to default state
+    // Clear previous game state if any
+    *this = Game(); // Reset game to default state
 
     // Create map with given size
     map_ = world::Map(map_size, world::Map::GenerationMethod::Droplets);

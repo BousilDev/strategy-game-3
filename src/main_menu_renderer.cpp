@@ -38,6 +38,11 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
         std::pair("Deck 1", 1), std::pair("Deck 2", 2), std::pair("Deck 3", 3) };
     selections_.emplace_back(deckTexts, font, 35, sf::Vector2f(0.25f, 0.65f), view_size);
 
+    // Initialize game name text
+    game_name_text_ = sf::Text("Game Name: ", *font, 30);
+    // TODO: position properly
+    game_name_text_.setPosition(view_size.x * 0.1f, view_size.y * 0.75f);
+
     // Initialize save file selector
     save_file_selection_.Initialize(view_size, font);
 
@@ -57,7 +62,18 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
     }
 
     if (current_state_ == 1) {
-    // new game  
+    // new game
+        // Handle text input for game name
+        if (event.type == sf::Event::TextEntered) {
+            if (event.text.unicode == '\b') {
+                game_name_ = game_name_.substr(0, game_name_.size() - 1);
+            } else if (event.text.unicode == '\r' || event.text.unicode == '\n' || event.text.unicode == '\t') {
+                // ignore enter key
+            } 
+            else {
+                game_name_ += event.text.unicode;
+            }
+        }
         if (back_to_main_menu_button_.IsClicked(mousePos, event)) {
             new_state_ = 0;
         } else {
@@ -108,6 +124,8 @@ void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
         for (auto selection : selections_) {
             selection.DrawTo(window);
         }
+        game_name_text_.setString("Game Name: " + game_name_);
+        window.draw(game_name_text_);
         back_to_main_menu_button_.DrawTo(window);
 
     } else if (current_state_ == 2) {
