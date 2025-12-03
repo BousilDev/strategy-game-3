@@ -26,6 +26,7 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
         // buildings::CapitalBuilding::Create handles adding itself to the player's building list
         buildings::CapitalBuilding::Create(spawn_tiles_[playerNum], players_.back(), 100);
         players_.back()->SetDeck(player.deck);
+        players_.back()->DrawHand();
         playerNum += 1;
     }
     nof_players_ = players_.size();
@@ -40,6 +41,7 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
 void core::Game::Save(std::ostream& file) const{
     time_t timestamp = time(nullptr);
     file << timestamp << "\n";
+    file << name_ << "\n";
 
     file << is_initialized_  << "\n";
     file << nof_players_ << "\n";
@@ -75,6 +77,8 @@ void core::Game::Load(std::istream& file){
     timeStr.pop_back(); // Remove newline for consistent debug output
     debug_ ? core::PrintTestMsg("Loading game saved at: ", timeStr) : void();
 
+    // Load other metadata
+    name_ = GetStringFromLine(file);
     is_initialized_ = (GetStringFromLine(file) == "1");
     nof_players_ = GetIntFromLine(file);
 

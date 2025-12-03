@@ -81,6 +81,11 @@ std::istream& operator>>(std::istream &in, core::Player& other) {
     //std::shared_ptr<cards::Deck> deck = std::make_shared<cards::Deck>();
     //in >> *deck;
     //other.SetDeck(deck);
+    // TEMPORARY deck for loading TODO: Implement proper loading of deck
+    std::vector<std::shared_ptr<cards::Card>> empty_cards = {std::make_shared<cards::BuildingCard>("Test card", "This is a test card", buildings::FarmBuilding::CreateEmpty(10)), std::make_shared<cards::BuildingCard>("Test card", "This is a test card", buildings::FarmBuilding::CreateEmpty(10)), std::make_shared<cards::BuildingCard>("Test card", "This is a test card", buildings::FarmBuilding::CreateEmpty(10))};
+    cards::Deck test_deck = cards::Deck(empty_cards, 3U);
+    other.SetDeck(test_deck.Clone());
+    other.DrawHand();
 
     size_t resSize = GetIntFromLine(in);
     std::list<core::Resource> resources;
