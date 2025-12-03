@@ -211,6 +211,11 @@ void core::Game::NextTurn() {
     for (auto& building : player->GetBuildings()) {
         building->atTurnEnd();
     }
+
+    // Reset units' turn based stats
+    for (auto& unit : player->GetUnits()) {
+        unit->NextTurnReset();
+    }
 }
 
 bool core::Game::PlayCardOnTile(std::shared_ptr<cards::Card> card, std::shared_ptr<world::Tile> tile) {

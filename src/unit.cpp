@@ -93,7 +93,8 @@ int Unit::takeDamage(int damage)
 
 bool Unit::moveToTile(std::shared_ptr<world::Tile> tile)
 {
-    if (!tile)
+    // Can't move to null tile or if already attacked on this turn
+    if (!tile || has_attacked_)
         return false;
 
     auto self = shared_from_this();
@@ -103,7 +104,7 @@ bool Unit::moveToTile(std::shared_ptr<world::Tile> tile)
         // Damage enemy unit
         dealDamageToTileContents(tile, damage_);
         has_attacked_ = true;
-        if (tile->get_unit() != nullptr) {
+        if (tile->get_unit() != nullptr || (tile->get_building() != nullptr && tile->get_building()->getOwner() != GetOwner())) {
             return false; // Enemy unit still alive, can't move
         }
     } else if (tile->get_building() != nullptr && tile->get_building()->getOwner() != GetOwner()) {
@@ -134,7 +135,7 @@ bool Unit::moveToTile(std::shared_ptr<world::Tile> tile)
 
 void Unit::dealDamageToTileContents(std::shared_ptr<world::Tile> tile, int damage)
 {
-    if (!tile)
+    if (!tile || has_attacked_)
         return;
 
     // Damage building

@@ -44,6 +44,12 @@ public:
     int takeDamage(int damage);
     bool moveToTile(std::shared_ptr<world::Tile> tile);
     void dealDamageToTileContents(std::shared_ptr<world::Tile> tile, int damage);
+    void NextTurnReset() { 
+        has_attacked_ = false; 
+        turn_movement_ = 0;
+        // TODO: Fine tune a healing factor
+        current_hp_ = std::min(current_hp_ + 1, max_hp_);
+    }
 
     friend std::istream& operator>>(std::istream &in, std::shared_ptr<Unit>& other);
     friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Unit>& other);
