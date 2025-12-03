@@ -93,18 +93,40 @@ void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, flo
         tiles_.push_back(tile);
     }
 
+    UpdateVisibleTiles();
+
+
+}
+
+// Find currently visible tiles
+void ui::MapRenderer::UpdateVisibleTiles() {
+        
+    std::set<unsigned int> visible;
+
+    for (auto v : game_->GetCurrentPlayer().GetBuildings()) {
+        for (auto u : v->getTile()->get_tiles_in_n_range(3)) {
+            visible.insert(u);
+        }
+    }
+    
+    for (auto v : game_->GetCurrentPlayer().GetUnits()) {
+        for (auto u : v->getTile()->get_tiles_in_n_range(3)) {
+            visible.insert(u);
+        }
+    }
+
+    visible_tiles_ = visible;
 
 }
 
 void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
 
+    // Draw buildings units tiles
+    for (auto idx : visible_tiles_) {
+    
+        window.draw(tiles_[idx]);
 
-    for (size_t i = 0; i < tiles_.size(); i++) {
-        window.draw(tiles_[i]);
-    }
-
-    // Draw buildings units
-    for (auto v : map_.get_tiles()) {
+        auto v = map_.get_tile(idx);
 
         auto u = v-> get_unit();
             if (u) {
@@ -170,21 +192,19 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
             building.setOutlineThickness(3);
             building.setPosition(tiles_[v->get_tile_number()].getPosition()-sf::Vector2f(15.0f, 0.0f));
             window.draw(building);
-
             }
-
     }
-    
 }
 
-// Returns the tile that was clicked with Mouse 1 on the map. Returns nullptr when no tile is clicked!!
+// Returns the tile that was clicked with Mouse 1 on the map if that tile is visible. Returns nullptr when no visible tile is clicked!!
 std::shared_ptr<world::Tile> ui::MapRenderer::GetClickedTile(sf::RenderWindow& window) {
+    
     sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
-    for (size_t i = 0; i < tiles_.size(); i++) {
-        const auto& tile_shape = tiles_[i];
+    for (auto v : visible_tiles_) {
+        const auto& tile_shape = tiles_[v];
         if (tile_shape.getGlobalBounds().contains(mousePos)) {
-            auto get_tile = map_.get_tile(i);
+            auto get_tile = map_.get_tile(v);
             if (get_tile != nullptr && get_tile->get_building() != nullptr)
                 std::cout << get_tile->get_building() << std::endl;
             selected_tile_ = get_tile;
