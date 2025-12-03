@@ -105,38 +105,73 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
 
     // Draw buildings units
     for (auto v : map_.get_tiles()) {
-        sf::RectangleShape building(sf::Vector2f(20,20));
-        centerOrigin(building);
-        auto b = v->get_building();
-            if (b) {
-            switch (b->GetType()) {
-                case buildings::BuildingType::kCapital:
-                    building.setFillColor(sf::Color(233,233,133));
-                    break;
 
-                case buildings::BuildingType::kFarm:
-                    building.setFillColor(sf::Color(6,233,133));
-                    break;
+        auto u = v-> get_unit();
+            if (u) {
 
-                default:
-                    building.setFillColor(sf::Color(255,255,255));
-                    break;
-            }
-            // Set outline colour for buildings and units
+                sf::CircleShape unit(10);
+                centerOrigin(unit);
+
+                switch (u->GetType()) {
+                    case units::UnitType::kSoldier:
+                        unit.setFillColor(sf::Color(50,50,100));
+                        break;
+                    default:
+                        unit.setFillColor(sf::Color(200,200,200));
+                }
+
             sf::Color outline;
-            auto owner_name = b->getOwner();
+            auto owner_name = u->GetOwner()->GetName();
             
 
-/*             if (owner_name == "Player 1") outline = constants::playerOneColor;
+            if (owner_name == "Player 1") outline = constants::playerOneColor;
             else if (owner_name == "Player 2") outline = constants::playerTwoColor;
             else if (owner_name == "Player 3") outline = constants::playerThreeColor;
             else outline = constants::playerFourColor;
             
-            building.setOutlineColor(outline); */
+            unit.setOutlineColor(outline);
+            unit.setOutlineThickness(3);
+            unit.setPosition(tiles_[v->get_tile_number()].getPosition()+sf::Vector2f(15.0f, 0.0f));
+            window.draw(unit);
+
+            }
+
+        auto b = v->get_building();
+            if (b) {
+
+                sf::RectangleShape building(sf::Vector2f(20,20));
+                centerOrigin(building);
+                
+                switch (b->GetType()) {
+                    case buildings::BuildingType::kCapital:
+                        building.setFillColor(sf::Color(233,233,133));
+                        break;
+
+                    case buildings::BuildingType::kFarm:
+                        building.setFillColor(sf::Color(6,233,133));
+                        break;
+
+                    default:
+                        building.setFillColor(sf::Color(255,255,255));
+                        break;
+                }
+
+            // Set outline colour for buildings and units
+            sf::Color outline;
+            auto owner_name = b->getOwner()->GetName();
+            
+
+            if (owner_name == "Player 1") outline = constants::playerOneColor;
+            else if (owner_name == "Player 2") outline = constants::playerTwoColor;
+            else if (owner_name == "Player 3") outline = constants::playerThreeColor;
+            else outline = constants::playerFourColor;
+            
+            building.setOutlineColor(outline);
             building.setOutlineThickness(3);
-            building.setPosition(tiles_[v->get_tile_number()].getPosition());
+            building.setPosition(tiles_[v->get_tile_number()].getPosition()-sf::Vector2f(15.0f, 0.0f));
             window.draw(building);
-        } // not nullptr
+
+            }
 
     }
     

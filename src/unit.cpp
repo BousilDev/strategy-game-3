@@ -99,21 +99,21 @@ bool Unit::moveToTile(std::shared_ptr<world::Tile> tile)
     auto self = shared_from_this();
 
     // Tile already has a unit or a building
-    if (tile->get_unit() != nullptr && tile->get_unit()->getOwner() != getOwner()) {
+    if (tile->get_unit() != nullptr && tile->get_unit()->GetOwner() != GetOwner()) {
         // Damage enemy unit
         dealDamageToTileContents(tile, damage_);
         has_attacked_ = true;
         if (tile->get_unit() != nullptr) {
             return false; // Enemy unit still alive, can't move
         }
-    } else if (tile->get_building() != nullptr && tile->get_building()->getOwner() != getOwner()) {
+    } else if (tile->get_building() != nullptr && tile->get_building()->getOwner() != GetOwner()) {
         // Damage enemy building
         dealDamageToTileContents(tile, damage_);
         has_attacked_ = true;
         if (tile->get_building() != nullptr) {
             return false; // Enemy building still alive, can't move
         }
-    } else if (tile->get_unit() != nullptr && tile->get_unit()->getOwner() == getOwner()) {
+    } else if (tile->get_unit() != nullptr && tile->get_unit()->GetOwner() == GetOwner()) {
         // Can't move onto tile with friendly unit
         return false;
     }
@@ -139,13 +139,13 @@ void Unit::dealDamageToTileContents(std::shared_ptr<world::Tile> tile, int damag
 
     // Damage building
     auto targetBuilding = tile->get_building();
-    if (targetBuilding != nullptr && targetBuilding->getOwner() != getOwner()) {
+    if (targetBuilding != nullptr && targetBuilding->getOwner() != GetOwner()) {
         targetBuilding->takeDamage(damage);
     }
 
     // Damage unit
     auto targetUnit = tile->get_unit();
-    if (targetUnit != nullptr && targetUnit->getOwner() != getOwner()) {
+    if (targetUnit != nullptr && targetUnit->GetOwner() != GetOwner()) {
         targetUnit->takeDamage(damage);
     }
 }

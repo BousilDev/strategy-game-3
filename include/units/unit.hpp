@@ -36,10 +36,10 @@ public:
         damage_ = damage;
     }
 
+    std::shared_ptr<core::Player> GetOwner() const {return owner_.lock(); }
     UnitType GetType() const { return unit_type_; }
     int getMaxHp()   const { return max_hp_; }
     int getCurrentHp() const { return current_hp_; }
-    std::shared_ptr<core::Player> getOwner() const { return owner_.lock(); }
 
     int takeDamage(int damage);
     bool moveToTile(std::shared_ptr<world::Tile> tile);
