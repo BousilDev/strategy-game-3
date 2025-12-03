@@ -42,6 +42,7 @@ int main() {
                     unsigned int player_count = user_interface.GetSelectedPlayerCount();
                     unsigned int map_size = user_interface.GetSelectedMapSize();
                     unsigned int deck = user_interface.GetSelectedDeck();
+                    std::string game_name = user_interface.GetGameName();
 
                     std::vector<std::shared_ptr<cards::Card>> empty_cards = {std::make_shared<cards::BuildingCard>("Test card", "This is a test card", buildings::FarmBuilding::CreateEmpty(10)), std::make_shared<cards::BuildingCard>("Test card", "This is a test card", buildings::FarmBuilding::CreateEmpty(10)), std::make_shared<cards::BuildingCard>("Test card", "This is a test card", buildings::FarmBuilding::CreateEmpty(10))};
                     cards::Deck test_deck = cards::Deck(empty_cards, 3U);
@@ -56,6 +57,9 @@ int main() {
                     // Initializing through main menu testing
                     game.Initialize(players, map_size);
                     user_interface.InitializeMapRenderer(game);
+
+                    game.SetName(game_name);
+                    players.clear();
 
                     assert(game.IsInitialized() && !game.IsOver());
                     assert(game.GetCurrentPlayer().GetName() == "Player 1");

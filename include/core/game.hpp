@@ -152,6 +152,9 @@ public:
    */
   bool PlayCardOnTile(std::shared_ptr<cards::Card> card, std::shared_ptr<world::Tile> tile);
 
+  void SetName(const std::string& name) { name_ = name; }
+  const std::string& GetName() const { return name_; }
+
 private:
   std::vector<std::shared_ptr<Player>> players_; ///< All players in the game.
   std::vector<std::shared_ptr<Player>> dead_players_; ///< All players that have lost the game.
@@ -162,6 +165,7 @@ private:
   unsigned int turn_; ///< Global turn count.
   bool is_initialized_; ///< Indicator for whether the game has been initialized.
   bool debug_ = constants::debug; ///< If true, debug information is printed to the console.
+  std::string name_ = "Default_Game"; ///< The name of the game (used for saving).
 };
 
 } // namespace core
