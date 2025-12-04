@@ -57,7 +57,7 @@ public:
     std::string& GetLastClickedSavePath() { return main_menu_renderer_.GetLastClickedSavePath(); }
 
     // Outside of event loop
-    void UpdateOutsideEventLoop();
+    void UpdateOutsideEventLoop(bool start);
 
 private:
     sf::RenderWindow window_;

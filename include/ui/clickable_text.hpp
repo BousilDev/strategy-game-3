@@ -12,27 +12,22 @@ public:
 
     ClickableText() {}
 
-    ClickableText(const sf::String& string, const sf::Font& font, sf::Vector2f windowSize, sf::Vector2f position, unsigned int characterSize = 30U,
-                  sf::Vector2f hovered_scale = sf::Vector2f(1.1f, 1.1f))
-                  : position_(position), hovered_scale_(hovered_scale) {
+    ClickableText(sf::Vector2f viewSize, const sf::String& string, const sf::Font& font, sf::Vector2f position, unsigned int characterSize = 30U,
+                  sf::Vector2f offset = sf::Vector2f(0, 0), sf::Vector2f hovered_scale = sf::Vector2f(1.1f, 1.1f))
+                  : position_(position), offset_(offset), hovered_scale_(hovered_scale) {
         text_ = sf::Text(string, font, characterSize);
-        text_.setPosition(windowSize.x * position_.x, windowSize.y * position_.y);
+        text_.setPosition(position_.x*viewSize.x + offset_.x, position_.y*viewSize.y + offset_.y);
     }
 
-    void Update(const sf::RenderWindow& window, const sf::Vector2f& mouse_pos, const sf::Event& event) {
-        auto windowSize = window.getSize();
-        
-        // Resized
-        if (event.type == sf::Event::Resized) {
-            //TODO: implement resizing support
-            text_.setPosition(windowSize.x * position_.x, windowSize.y * position_.y);
+    void UpdateOutsideEventLoop(const sf::Vector2f& viewSize, const sf::Vector2f& mouse_pos, const bool& resized) {
+        if (resized) {
+            text_.setPosition(position_.x*viewSize.x + offset_.x, position_.y*viewSize.y + offset_.y);
         }
 
-        // Hovered over
         if (text_.getGlobalBounds().contains(mouse_pos)) {
             text_.setScale(hovered_scale_);
         } else {
-            text_.setScale(1,1);
+            text_.setScale(1, 1);
         }
     }
 
@@ -50,6 +45,7 @@ private:
     sf::Text text_;
     sf::Vector2f position_;
     sf::Vector2f hovered_scale_;
+    sf::Vector2f offset_;
 };
 
 } // namespace ui

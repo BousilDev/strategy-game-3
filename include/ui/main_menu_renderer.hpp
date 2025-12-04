@@ -63,9 +63,18 @@ public:
         new_state_ = 0;
     }
 
+    void UpdateOutsideEventLoop(const sf::Vector2f& window_size, const sf::Vector2f& mouse_pos);
+
 private:
     sf::Texture background_texture_;
     sf::RectangleShape background_rect_;
+
+    // keep track of the current window size for different screens
+    // used for resize check
+    sf::Vector2f current_window_size_global_;
+    sf::Vector2f current_window_size_main_;
+    sf::Vector2f current_window_size_new_;
+    sf::Vector2f current_window_size_load_;
 
     //FIXME: handle these better, the main reason for these is the possibility to call IsPlayClicked after the internal state has been updated,
     //       which causes it to return true when it should just be in the new game menu

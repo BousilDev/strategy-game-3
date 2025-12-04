@@ -9,10 +9,11 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
     }
     background_texture_.setSmooth(true);
     background_rect_.setTexture(&background_texture_, true);
+    background_rect_.setSize(view_size);
     
 
     // Initialize back button
-    back_to_main_menu_button_ = ui::ClickableCircleShape(15, 3, sf::Vector2f(0.1f, 0.2f), view_size, 270);
+    back_to_main_menu_button_ = ui::ClickableCircleShape(view_size, 15, 3, sf::Vector2f(0.1f, 0.2f), 270, sf::Vector2f(0,0));
 
     // Initialize texts and set their position in the main menu
     title_ = sf::Text(constants::kGameTitle, *font, 50);
@@ -20,23 +21,23 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
     title_.setPosition(view_size.x*title_pos_.x, view_size.y*title_pos_.y);
 
     // Initialize clickable texts in main menu
-    load_game_button_ =    ui::ClickableText("Load Game",          *font, view_size, sf::Vector2f(0.1f, 0.4f),   constants::kMainMenuClickablesSize);
-    new_game_button_ =     ui::ClickableText("New Game",           *font, view_size, sf::Vector2f(0.1f, 0.5f),   constants::kMainMenuClickablesSize);
-    start_loaded_button_ = ui::ClickableText("Load Selected Game", *font, view_size, sf::Vector2f(0.25f, 0.85f), constants::kMainMenuClickablesSize);
-    start_new_button_ =    ui::ClickableText("Start New Game",     *font, view_size, sf::Vector2f(0.1f, 0.3f),   constants::kMainMenuClickablesSize);
+    load_game_button_ =    ui::ClickableText(view_size, "Load Game",          *font, sf::Vector2f(0.1f, 0.3f),   constants::kMainMenuClickablesSize, sf::Vector2f(0, 1.375f*constants::kMainMenuClickablesSize));
+    new_game_button_ =     ui::ClickableText(view_size, "New Game",           *font, sf::Vector2f(0.1f, 0.3f),   constants::kMainMenuClickablesSize, sf::Vector2f(0, 2.5f*constants::kMainMenuClickablesSize));
+    start_loaded_button_ = ui::ClickableText(view_size, "Load Selected Game", *font, sf::Vector2f(0.25f, 0.85f), constants::kMainMenuClickablesSize, sf::Vector2f(0, 0));
+    start_new_button_ =    ui::ClickableText(view_size, "Start New Game",     *font, sf::Vector2f(0.1f, 0.3f),   constants::kMainMenuClickablesSize, sf::Vector2f(0, 0));
 
     // Initialize option selectors for the main menu
     std::vector<std::pair<std::string, int>> playerCountTexts {
         std::pair("Two players", 2), std::pair("Three players", 3), std::pair("Four players", 4) };
-    selections_.emplace_back(playerCountTexts, font, 35, sf::Vector2f(0.25f, 0.45f), view_size);
+    selections_.emplace_back(playerCountTexts, font, 35, sf::Vector2f(0.1f, 0.3f), sf::Vector2f(150.f, 100.f), view_size);
 
     std::vector<std::pair<std::string, int>> mapSizeTexts {
         std::pair("Small map", 3), std::pair("Normal map", 7), std::pair("Large map", 15) };
-    selections_.emplace_back(mapSizeTexts, font, 35, sf::Vector2f(0.25f, 0.55f), view_size);
+    selections_.emplace_back(mapSizeTexts, font, 35, sf::Vector2f(0.1f, 0.3f), sf::Vector2f(150.f, 150.f), view_size);
 
     std::vector<std::pair<std::string, int>> deckTexts {
         std::pair("Deck 1", 1), std::pair("Deck 2", 2), std::pair("Deck 3", 3) };
-    selections_.emplace_back(deckTexts, font, 35, sf::Vector2f(0.25f, 0.65f), view_size);
+    selections_.emplace_back(deckTexts, font, 35, sf::Vector2f(0.1f, 0.3f), sf::Vector2f(150.f, 200.f), view_size);
 
     // Initialize game name text
     game_name_text_ = sf::Text("Game Name: ", *font, 30);
@@ -48,6 +49,11 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
 
     // reset the state of the object
     Reset();
+
+    current_window_size_global_ = view_size;
+    current_window_size_main_ = view_size;
+    current_window_size_new_ = view_size;
+    current_window_size_load_ = view_size;
     
     return 0;
 }   
@@ -56,13 +62,8 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
 int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event) {
     //current_state_ = new_state_;
 
-    //TODO: resizing support
-    if (event.type == sf::Event::Resized) {
-        background_rect_.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
-    }
-
     if (current_state_ == 1) {
-    // new game
+        // new game
         // Handle text input for game name
         if (event.type == sf::Event::TextEntered) {
             if (event.text.unicode == '\b') {
@@ -77,31 +78,21 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
         if (back_to_main_menu_button_.IsClicked(mousePos, event)) {
             new_state_ = 0;
         } else {
-            start_new_button_.Update(window, mousePos, event);
-            back_to_main_menu_button_.Update(window, mousePos, event);
             // Update selector states
             for (auto& e : selections_) {
-                e.Update(window, mousePos, event);
+                e.Update(mousePos, event);
             }
         }
     } else if (current_state_ == 2) {
-    // load game
+        // load game
         if (back_to_main_menu_button_.IsClicked(mousePos, event)) {
             new_state_ = 0;
             save_file_selection_.Reset();
         } else {
             save_file_selection_.Update(window, mousePos, event, start_loaded_button_.IsClicked(mousePos, event));
-            start_loaded_button_.Update(window, mousePos, event);
-            back_to_main_menu_button_.Update(window, mousePos, event);
-            
         }
     } else {
-    // main menu
-
-        title_.setPosition(window.getSize().x * title_pos_.x, window.getSize().y * title_pos_.y);
-        new_game_button_.Update(window, mousePos, event);
-        load_game_button_.Update(window, mousePos, event);
-
+        // main menu
         if (new_game_button_.IsClicked(mousePos, event)) {
             new_state_ = 1;
         } else if (load_game_button_.IsClicked(mousePos, event)) {
@@ -113,6 +104,58 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
 
     return 0;
 }
+
+
+
+
+void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_size, const sf::Vector2f& mouse_pos) {
+
+    if (current_window_size_global_ != window_size) {
+        background_rect_.setSize(window_size);
+        current_window_size_global_ = window_size;
+    }
+
+    if (new_state_ == 1) {
+        // new game
+
+        // true if window has been resized, false if not
+        bool resized = current_window_size_new_ != window_size;
+        if (resized) current_window_size_new_ = window_size;
+
+        start_new_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
+        back_to_main_menu_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
+
+        for (auto& selector : selections_) {
+            selector.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
+        }
+    } else if (new_state_ == 2) {
+        // load game
+
+        // true if window has been resized, false if not
+        bool resized = current_window_size_load_ != window_size;
+        if (resized) current_window_size_load_ = window_size;
+
+        start_loaded_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
+        back_to_main_menu_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
+        save_file_selection_.UpdateOutsideEventLoop(window_size, resized);
+    } else {
+        // main menu
+
+        // true if window has been resized, false if not
+        bool resized = current_window_size_main_ != window_size;
+        if (resized) {
+            current_window_size_main_ = window_size;
+            title_.setPosition(window_size.x * title_pos_.x, window_size.y * title_pos_.y);
+        }
+        
+        new_game_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
+        load_game_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
+    }
+
+}
+
+
+
 
 void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
     current_state_ = new_state_;
