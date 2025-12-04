@@ -28,12 +28,14 @@ public:
      * @param font_size the size of the texts
      * @param pos sets the position
      */
-    Selection(const std::vector<std::pair<std::string, int>>& texts, const std::shared_ptr<sf::Font> font, int font_size, sf::Vector2f pos, sf::Vector2f windowSize) : texts_(texts), pos_(pos) {
+    Selection(const std::vector<std::pair<std::string, int>>& texts, const std::shared_ptr<sf::Font> font, const int font_size,
+              const sf::Vector2f& pos, const sf::Vector2f& offset, const sf::Vector2f& windowSize)
+              : texts_(texts), pos_(pos), offset_(offset) {
 
-        for (auto text : texts_) {
+        for (const auto& text : texts_) {
             auto currentText = std::pair(sf::Text(text.first, *font, font_size), text.second);
             centerOrigin(currentText.first);
-            currentText.first.setPosition(windowSize.x * pos.x, windowSize.y * pos.y);
+            currentText.first.setPosition(pos.x*windowSize.x + offset_.x, pos.y*windowSize.y + offset_.y);
             text_options_.push_back(currentText);
         }
 
@@ -41,13 +43,13 @@ public:
         leftArrow_.setRadius(15.f);
         centerOrigin(leftArrow_);
         leftArrow_.setRotation(270);
-        leftArrow_.setPosition(pos.x * windowSize.x - 150, pos.y * windowSize.y);
+        leftArrow_.setPosition(pos.x * windowSize.x - 150 + offset.x, pos.y * windowSize.y + offset.y);
 
         rightArrow_.setPointCount(3);
         rightArrow_.setRadius(15.f);
         centerOrigin(rightArrow_);
         rightArrow_.setRotation(90);
-        rightArrow_.setPosition(pos.x * windowSize.x + 150, pos.y * windowSize.y);
+        rightArrow_.setPosition(pos.x * windowSize.x + 150 + offset.x, pos.y * windowSize.y + offset.y);
     }
 
     /**
@@ -57,24 +59,7 @@ public:
      * @param mouse_pos an sf::Vector2f containing the mouse coordinates
      * @param event an sf::Event
      */
-    void Update(const sf::RenderWindow& window, const sf::Vector2f& mouse_pos, const sf::Event& event) {
-
-        if (event.type == sf::Event::Resized) {
-            auto windowSize = window.getSize();
-
-            for (auto& text : text_options_) {
-                centerOrigin(text.first);
-                text.first.setPosition(sf::Vector2f(pos_.x * windowSize.x, pos_.y * windowSize.y));
-            }
-
-            centerOrigin(leftArrow_);
-            leftArrow_.setPosition(pos_.x * windowSize.x - 150, pos_.y * windowSize.y);
-
-            centerOrigin(rightArrow_);
-            rightArrow_.setPosition(pos_.x * windowSize.x + 150, pos_.y * windowSize.y);
-
-        }
-        
+    void Update(const sf::Vector2f& mouse_pos, const sf::Event& event) {
         // if LMB is released on the selector
         if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
             if (leftArrow_.getGlobalBounds().contains(mouse_pos)) {
@@ -83,6 +68,19 @@ public:
             if (rightArrow_.getGlobalBounds().contains(mouse_pos)) {
                 selectedOption_ = (selectedOption_ + 1) % text_options_.size();
             }
+        }
+    }
+
+    void UpdateOutsideEventLoop(const sf::Vector2f& window_size, const sf::Vector2f& mouse_pos, const bool resized) {
+        if (resized) {
+            for (auto& text : text_options_) {
+                centerOrigin(text.first);
+                text.first.setPosition(sf::Vector2f(pos_.x*window_size.x + offset_.x, pos_.y*window_size.y + offset_.y));
+            }
+            centerOrigin(leftArrow_);
+            leftArrow_.setPosition(pos_.x*window_size.x - 150 + offset_.x, pos_.y*window_size.y + offset_.y);
+            centerOrigin(rightArrow_);
+            rightArrow_.setPosition(pos_.x*window_size.x + 150 + offset_.x, pos_.y*window_size.y + offset_.y);
         }
 
         // if mouse hovers over
@@ -97,7 +95,6 @@ public:
         } else {
             rightArrow_.setScale(1.0, 1.0);
         }
-
     }
 
     /**
@@ -118,7 +115,7 @@ public:
     //}
 
     /**
-     * @brief Return the index of the selected option
+     * @brief Return the number of the selected option
      * 
      * @return selectedOption_
      */
@@ -133,6 +130,7 @@ private:
     sf::CircleShape rightArrow_;
     int selectedOption_ = 0;
     sf::Vector2f pos_;
+    sf::Vector2f offset_;
 };
 
 } // namespace ui

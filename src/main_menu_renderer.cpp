@@ -29,15 +29,15 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
     // Initialize option selectors for the main menu
     std::vector<std::pair<std::string, int>> playerCountTexts {
         std::pair("Two players", 2), std::pair("Three players", 3), std::pair("Four players", 4) };
-    selections_.emplace_back(playerCountTexts, font, 35, sf::Vector2f(0.25f, 0.45f), view_size);
+    selections_.emplace_back(playerCountTexts, font, 35, sf::Vector2f(0.1f, 0.3f), sf::Vector2f(150.f, 100.f), view_size);
 
     std::vector<std::pair<std::string, int>> mapSizeTexts {
         std::pair("Small map", 3), std::pair("Normal map", 7), std::pair("Large map", 15) };
-    selections_.emplace_back(mapSizeTexts, font, 35, sf::Vector2f(0.25f, 0.55f), view_size);
+    selections_.emplace_back(mapSizeTexts, font, 35, sf::Vector2f(0.1f, 0.3f), sf::Vector2f(150.f, 150.f), view_size);
 
     std::vector<std::pair<std::string, int>> deckTexts {
         std::pair("Deck 1", 1), std::pair("Deck 2", 2), std::pair("Deck 3", 3) };
-    selections_.emplace_back(deckTexts, font, 35, sf::Vector2f(0.25f, 0.65f), view_size);
+    selections_.emplace_back(deckTexts, font, 35, sf::Vector2f(0.1f, 0.3f), sf::Vector2f(150.f, 200.f), view_size);
 
     // Initialize game name text
     game_name_text_ = sf::Text("Game Name: ", *font, 30);
@@ -85,7 +85,7 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
         } else {
             // Update selector states
             for (auto& e : selections_) {
-                e.Update(window, mousePos, event);
+                e.Update(mousePos, event);
             }
         }
     } else if (current_state_ == 2) {
@@ -129,6 +129,10 @@ void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_siz
 
         start_new_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
         back_to_main_menu_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
+
+        for (auto& selector : selections_) {
+            selector.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
+        }
     } else if (current_state_ == 2) {
         // load game
 
@@ -148,7 +152,7 @@ void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_siz
             current_window_size_main_ = window_size;
             title_.setPosition(window_size.x * title_pos_.x, window_size.y * title_pos_.y);
         }
-
+        
         new_game_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
         load_game_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
     }
