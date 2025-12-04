@@ -92,8 +92,6 @@ void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, flo
         tile.setOutlineThickness(outline);
         tiles_.push_back(tile);
     }
-    UpdateVisibleTiles();
-    SetViewOnPlayer(window);
 }
 
 void ui::MapRenderer::Update(sf::RenderWindow& window, const sf::Event& event) {

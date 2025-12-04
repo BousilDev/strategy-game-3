@@ -33,17 +33,19 @@ public:
 
    private:
 
+    // SFML shapes 
+    float tile_size_;
+    std::vector<sf::CircleShape> tiles_;
+    std::vector<sf::RectangleShape> buildings_;
+
+    // Game info
+    std::shared_ptr<world::Tile> selected_tile_ = nullptr;
+    std::set<unsigned int> visible_tiles_;
     core::Game* game_ = nullptr;
     std::vector<std::shared_ptr<world::Tile>> spawn_tiles_;
     int last_turn_;
     world::Map map_;
-    float tile_size_;
-    std::vector<sf::CircleShape> tiles_;
-    std::vector<sf::RectangleShape> buildings_;
-    std::shared_ptr<world::Tile> selected_tile_ = nullptr;
-    std::set<unsigned int> visible_tiles_;
-    void BuildTiles();
-    sf::Vector2f hex_to_pixel(unsigned int index) const;
+    
 };
 
 } // namespace ui
