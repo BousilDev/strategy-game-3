@@ -35,7 +35,8 @@ public:
     void setDamage(int damage) {
         damage_ = damage;
     }
-
+    
+    std::shared_ptr<world::Tile>  GetTile()  const { return current_tile_.lock(); }
     std::shared_ptr<core::Player> GetOwner() const {return owner_.lock(); }
     UnitType GetType() const { return unit_type_; }
     int getMaxHp()   const { return max_hp_; }

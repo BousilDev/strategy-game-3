@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "buildings/building.hpp"
+#include "core/resource.hpp"
 #include "effects/effect.hpp"
 #include "world/tile.hpp"
 #include "units/unit.hpp"
@@ -38,7 +39,7 @@ public:
    * @param name The name of the card.
    * @param description The description of what the card does.
    */
-  Card(std::string name, std::string description) : name_(name), description_(description) {}
+  Card(std::string name, std::string description, core::Resource cost) : name_(name), description_(description), cost_(cost) {}
 
   /**
    * @brief Destroy the Card object.
@@ -69,6 +70,15 @@ public:
   const std::string& GetDescription() const noexcept { return description_; }
 
   /**
+   * @brief Get the cost of the card.
+   * 
+   * The cost of the card is the resources required to play the card.
+   * 
+   * @return The cost of the card.
+   */
+  const core::Resource& GetCost() const noexcept { return cost_; }
+
+  /**
    * @brief Get the type of the card.
    * 
    * @return The type of the card.
@@ -90,6 +100,7 @@ public:
 private:
   std::string name_; ///< The name of the card.
   std::string description_; ///< The description of the card.
+  core::Resource cost_; ///< The cost to play the card.
 };
 
 class BuildingCard : public Card {
@@ -101,8 +112,8 @@ public:
    * @param description The description of the card.
    * @param building The building the card constructs when played.
    */
-  BuildingCard(std::string name, std::string description, const std::shared_ptr<buildings::Building> building)
-    : Card(name, description), building_(building->CreateEmptyFromCopy()) {}
+  BuildingCard(std::string name, std::string description, core::Resource cost, const std::shared_ptr<buildings::Building> building)
+    : Card(name, description, cost), building_(building->CreateEmptyFromCopy()) {}
 
   /**
    * @brief Copy constructor for the BuildingCard.
@@ -150,8 +161,8 @@ public:
    * @param description The description of the card.
    * @param unit The unit the card deploys when played.
    */
-  UnitCard(std::string name, std::string description, const std::shared_ptr<units::Unit> unit)
-    : Card(name, description), unit_(unit->CreateEmptyFromCopy()) {}
+  UnitCard(std::string name, std::string description, core::Resource cost, const std::shared_ptr<units::Unit> unit)
+    : Card(name, description, cost), unit_(unit->CreateEmptyFromCopy()) {}
 
   /**
    * @brief Copy constructor for the UnitCard.
