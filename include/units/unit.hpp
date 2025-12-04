@@ -32,17 +32,25 @@ public:
     void setTile(std::shared_ptr<world::Tile> tile_location) {
         current_tile_ = tile_location;
     }
+    void setDamage(int damage) {
+        damage_ = damage;
+    }
     
+    std::shared_ptr<world::Tile>  GetTile()  const { return current_tile_.lock(); }
     std::shared_ptr<core::Player> GetOwner() const {return owner_.lock(); }
-    std::shared_ptr<world::Tile>  getTile()  const { return current_tile_.lock(); }
     UnitType GetType() const { return unit_type_; }
     int getMaxHp()   const { return max_hp_; }
     int getCurrentHp() const { return current_hp_; }
-    std::shared_ptr<core::Player> getOwner() const { return owner_.lock(); }
 
     int takeDamage(int damage);
     bool moveToTile(std::shared_ptr<world::Tile> tile);
     void dealDamageToTileContents(std::shared_ptr<world::Tile> tile, int damage);
+    void NextTurnReset() { 
+        has_attacked_ = false; 
+        turn_movement_ = 0;
+        // TODO: Fine tune a healing factor
+        current_hp_ = std::min(current_hp_ + 1, max_hp_);
+    }
 
     friend std::istream& operator>>(std::istream &in, std::shared_ptr<Unit>& other);
     friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Unit>& other);
@@ -57,6 +65,7 @@ protected:
     int current_hp_{0};
     bool has_attacked_{false};
     int turn_movement_{0};
+    int damage_{5};
     UnitType unit_type_{UnitType::kSoldier};
 
     std::weak_ptr<world::Tile> current_tile_;

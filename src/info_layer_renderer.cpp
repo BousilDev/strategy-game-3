@@ -218,7 +218,7 @@ std::string ui::InfoLayerRenderer::GetTileInfoString() {
     if (selected_tile_->get_unit() != nullptr) {
         ss << "- Unit: " 
            << constants::unitTypeNames[static_cast<int>(selected_tile_->get_unit()->GetType())] << "\n"
-           << "   * Owner: " << ((selected_tile_->get_unit()->getOwner() != nullptr) ? selected_tile_->get_unit()->getOwner()->GetName() : "None") << "\n"
+           << "   * Owner: " << ((selected_tile_->get_unit()->GetOwner() != nullptr) ? selected_tile_->get_unit()->GetOwner()->GetName() : "None") << "\n"
            << "   * HP: " << selected_tile_->get_unit()->getCurrentHp() << "/" << selected_tile_->get_unit()->getMaxHp() << "\n";
     }
 
@@ -339,9 +339,8 @@ void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f&
         if (selected_tile_ != nullptr && tile_pointer != nullptr && selected_tile_->get_tile_number() != tile_pointer->get_tile_number()) {
             if (selected_tile_->get_unit() != nullptr) {
                 // Check if the unit's owner's name matches the current player's name
-                if (selected_tile_->get_unit()->getOwner() != nullptr && selected_tile_->get_unit()->getOwner()->GetName() == game_->GetCurrentPlayer().GetName()) {
+                if (selected_tile_->get_unit()->GetOwner() != nullptr && selected_tile_->get_unit()->GetOwner()->GetName() == game_->GetCurrentPlayer().GetName()) {
                     selected_tile_->get_unit()->moveToTile(tile_pointer);
-                    // Check for dead units and remove them from the game
                     std::cout << "Unit moved from tile " << selected_tile_->get_tile_number() << " to tile " << tile_pointer->get_tile_number() << "\n";
                     return;
                 }
@@ -363,7 +362,7 @@ void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f&
         selected_card_ = nullptr;
         selected_tile_ = nullptr;
         // Save the game
-        std::ofstream outFile(constants::kSavesPath + "auto_save.txt");
+        std::ofstream outFile(constants::kSavesPath + game_->GetName() + "_auto_save.txt");
         core::PrintTestMsg("Saving game to ", std::filesystem::absolute(constants::kSavesPath + "auto_save.txt").string());
         if (outFile.is_open()) {
             game_->Save(outFile);

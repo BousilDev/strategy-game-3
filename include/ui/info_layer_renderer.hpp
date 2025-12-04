@@ -65,6 +65,7 @@ public:
      */
     void Update(sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event, std::shared_ptr<world::Tile> tile_pointer);
 
+    // Sets the currently selected tile
     void SetSelectedTile(std::shared_ptr<world::Tile> tile) { selected_tile_ = tile; }
 
 private: 

@@ -117,7 +117,7 @@ void ui::MapRenderer::UpdateVisibleTiles() {
     }
     
     for (auto v : game_->GetCurrentPlayer().GetUnits()) {
-        for (auto u : v->getTile()->get_tiles_in_n_range(constants::viewDistance)) {
+        for (auto u : v->GetTile()->get_tiles_in_n_range(constants::viewDistance)) {
             visible.insert(u);
         }
     }
@@ -152,20 +152,20 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
                             unit.setFillColor(sf::Color(200,200,200));
                     }
 
-                // Set outline colour for units
-                sf::Color outline;
-                auto owner_name = u->GetOwner()->GetName();
-                
+                    // Set outline colour for units
+                    sf::Color outline;
+                    auto owner_name = u->GetOwner()->GetName();
+                    
 
-                if (owner_name == "Player 1") outline = constants::playerOneColor;
-                else if (owner_name == "Player 2") outline = constants::playerTwoColor;
-                else if (owner_name == "Player 3") outline = constants::playerThreeColor;
-                else outline = constants::playerFourColor;
-                
-                unit.setOutlineColor(outline);
-                unit.setOutlineThickness(3);
-                unit.setPosition(tiles_[v->get_tile_number()].getPosition()+sf::Vector2f(15.0f, 0.0f));
-                window.draw(unit);
+                    if (owner_name == "Player 1") outline = constants::playerOneColor;
+                    else if (owner_name == "Player 2") outline = constants::playerTwoColor;
+                    else if (owner_name == "Player 3") outline = constants::playerThreeColor;
+                    else outline = constants::playerFourColor;
+                    
+                    unit.setOutlineColor(outline);
+                    unit.setOutlineThickness(3);
+                    unit.setPosition(tiles_[v->get_tile_number()].getPosition()+sf::Vector2f(15.0f, 0.0f));
+                    window.draw(unit);
 
                 }
 
@@ -189,20 +189,20 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
                             break;
                     }
 
-                // Set outline colour for buildings
-                sf::Color outline;
-                auto owner_name = b->getOwner()->GetName();
-                
+                    // Set outline colour for buildings
+                    sf::Color outline;
+                    auto owner_name = b->getOwner()->GetName();
+                    
 
-                if (owner_name == "Player 1") outline = constants::playerOneColor;
-                else if (owner_name == "Player 2") outline = constants::playerTwoColor;
-                else if (owner_name == "Player 3") outline = constants::playerThreeColor;
-                else outline = constants::playerFourColor;
-                
-                building.setOutlineColor(outline);
-                building.setOutlineThickness(3);
-                building.setPosition(tiles_[v->get_tile_number()].getPosition()-sf::Vector2f(15.0f, 0.0f));
-                window.draw(building);
+                    if (owner_name == "Player 1") outline = constants::playerOneColor;
+                    else if (owner_name == "Player 2") outline = constants::playerTwoColor;
+                    else if (owner_name == "Player 3") outline = constants::playerThreeColor;
+                    else outline = constants::playerFourColor;
+                    
+                    building.setOutlineColor(outline);
+                    building.setOutlineThickness(3);
+                    building.setPosition(tiles_[v->get_tile_number()].getPosition()-sf::Vector2f(15.0f, 0.0f));
+                    window.draw(building);
                 }
         } else {
         // If tile is not visible, can draw a tile to denote that

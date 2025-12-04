@@ -52,6 +52,7 @@ public:
     int GetSelectedPlayerCount() const { return selections_[0].GetSelectedOption(); }
     int GetSelectedMapSize() const { return selections_[1].GetSelectedOption(); }
     int GetSelectedDeck() const { return selections_[2].GetSelectedOption(); }
+    std::string GetGameName() const { return game_name_; }
 
     std::string& GetLastClickedSavePath() { return save_file_selection_.GetLastClickedPath(); }
 
@@ -82,6 +83,8 @@ private:
     // new game
     ui::ClickableText start_new_button_;
     std::vector<ui::Selection> selections_;
+    std::string game_name_;
+    sf::Text game_name_text_;
 
     // load game
     ui::ClickableText start_loaded_button_;

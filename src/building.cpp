@@ -25,6 +25,15 @@ Building::Building(std::shared_ptr<world::Tile> tile,
 int Building::takeDamage(int damage)
 {
     current_hp_ = std::max(0, current_hp_ - damage);
+    // Remove the building if it has no HP left
+    if (current_hp_ == 0) {
+        if (auto tile = current_tile_.lock()) {
+            tile->destroy_current_building();
+        }
+        if (auto owner = owner_.lock()) {
+            owner->RemoveBuilding(shared_from_this());
+        }
+    }
     return current_hp_;
 }
 
