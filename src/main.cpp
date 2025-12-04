@@ -44,7 +44,8 @@ int main() {
                     unsigned int deck = user_interface.GetSelectedDeck();
                     std::string game_name = user_interface.GetGameName();
 
-                    std::vector<std::shared_ptr<cards::Card>> empty_cards = {std::make_shared<cards::BuildingCard>("Test card", "This is a test card", buildings::FarmBuilding::CreateEmpty(10)), std::make_shared<cards::BuildingCard>("Test card", "This is a test card", buildings::FarmBuilding::CreateEmpty(10)), std::make_shared<cards::BuildingCard>("Test card", "This is a test card", buildings::FarmBuilding::CreateEmpty(10))};
+                    std::shared_ptr<cards::Card> test_card = std::make_shared<cards::BuildingCard>("Test card", "This is a test card", core::Resource(core::ResourceType::kGold, 1), buildings::FarmBuilding::CreateEmpty(10));
+                    std::vector<std::shared_ptr<cards::Card>> empty_cards = {test_card->Clone(), test_card->Clone(), test_card->Clone(), test_card->Clone(), test_card->Clone()};
                     cards::Deck test_deck = cards::Deck(empty_cards, 3U);
                     // Create players
                     for (unsigned int i = 0; i < player_count; ++i) {

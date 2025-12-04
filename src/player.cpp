@@ -35,6 +35,11 @@ void core::Player::RemoveResource(Resource resource) {
     }
 }
 
+bool core::Player::HasResource(Resource resource) const {
+    const Resource& res = resources_[static_cast<unsigned int>(resource.type)];
+    return res.amount >= resource.amount;
+}
+
 bool core::Player::IsAlive() const {
     std::shared_ptr<buildings::Building> capital = GetCapitalBuilding();
     if (capital != nullptr && capital->getCurrentHp() > 0) {
