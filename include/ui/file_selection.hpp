@@ -55,7 +55,8 @@ public:
                 if (file.is_regular_file()) {
                     std::ifstream inFile(file.path().string());
                     std::string timeStr = core::DecodeTimeFromFile(inFile);
-                    std::time_t timestamp = static_cast<std::time_t>(core::GetIntFromLine(inFile));
+                    //std::time_t timestamp = static_cast<std::time_t>(core::GetIntFromLine(inFile));
+                    std::time_t timestamp = std::time_t(); // Is timestamp needed separately? Now it just reads the next line
 
                     std::tuple<fs::path, sf::Text, time_t> textTuple = std::make_tuple(file.path(), default_text_, timestamp);
                     std::get<1>(textTuple).setString(timeStr + "   " + file.path().stem().string());

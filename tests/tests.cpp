@@ -12,7 +12,7 @@
 core::Game tests::CreateTestGame(unsigned int player_count, unsigned int map_size) {
     core::Game game;
     std::vector<core::Game::PlayerInit> players;
-    std::shared_ptr<cards::Card> test_card = std::make_shared<cards::BuildingCard>("Test card", "This is a test card and it has a long description if needed", buildings::FarmBuilding::CreateEmpty(10));
+    std::shared_ptr<cards::Card> test_card = std::make_shared<cards::BuildingCard>("Test card", "This is a test card", core::Resource(core::ResourceType::kGold, 1), buildings::FarmBuilding::CreateEmpty(10));
     std::vector<std::shared_ptr<cards::Card>> test_cards = {};
     int card_count = 10;
     for (int i = 0; i < 10; i++) {
