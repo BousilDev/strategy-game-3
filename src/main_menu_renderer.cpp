@@ -117,6 +117,7 @@ void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_siz
 
     if (current_window_size_global_ != window_size) {
         background_rect_.setSize(window_size);
+        current_window_size_global_ = window_size;
     }
 
     if (current_state_ == 1) {
@@ -124,6 +125,7 @@ void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_siz
 
         // true if window has been resized, false if not
         bool resized = current_window_size_new_ != window_size;
+        if (resized) current_window_size_new_ = window_size;
 
         start_new_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
         back_to_main_menu_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
@@ -132,16 +134,21 @@ void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_siz
 
         // true if window has been resized, false if not
         bool resized = current_window_size_load_ != window_size;
+        if (resized) current_window_size_load_ = window_size;
 
         start_loaded_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
         back_to_main_menu_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
+        save_file_selection_.UpdateOutsideEventLoop(window_size, resized);
     } else {
         // main menu
 
         // true if window has been resized, false if not
         bool resized = current_window_size_main_ != window_size;
+        if (resized) {
+            current_window_size_main_ = window_size;
+            title_.setPosition(window_size.x * title_pos_.x, window_size.y * title_pos_.y);
+        }
 
-        title_.setPosition(window_size.x * title_pos_.x, window_size.y * title_pos_.y);
         new_game_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
         load_game_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
     }

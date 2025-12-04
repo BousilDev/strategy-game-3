@@ -72,6 +72,7 @@ public:
             return EXIT_FAILURE;
         }
         
+        // FIXME: doesnt work
         // sort texts_ to reverse chronological order
         std::sort(texts_.begin(), texts_.end(), [](auto const& x, auto const& y) { return std::get<2>(x) > std::get<2>(y); });
 
@@ -83,14 +84,14 @@ public:
         auto windowSize = window.getSize();
 
         // TODO: add resizing support
-        if (event.type == sf::Event::Resized) {
-            // update background
-            background_.setSize(sf::Vector2f(windowSize.x - windowSize.x * 2 * margin_, windowSize.y - windowSize.y * 2 * margin_));
-            background_.setPosition(sf::Vector2f(windowSize.x * margin_, windowSize.y * margin_));
-
-            //TODO: update other variables like max visible lines etc
-            visible_lines_ = background_.getSize().y / line_height_;
-        }
+        //if (event.type == sf::Event::Resized) {
+        //    // update background
+        //    background_.setSize(sf::Vector2f(windowSize.x - windowSize.x * 2 * margin_, windowSize.y - windowSize.y * 2 * margin_));
+        //    background_.setPosition(sf::Vector2f(windowSize.x * margin_, windowSize.y * margin_));
+        //
+        //    //TODO: update other variables like max visible lines etc
+        //    visible_lines_ = background_.getSize().y / line_height_;
+        //}
 
         if (event.type == sf::Event::MouseWheelScrolled) {
             if (event.mouseWheelScroll.delta < 0) {
@@ -125,6 +126,17 @@ public:
         if (!textSelected && clicked) {
             last_clicked_path_.erase();
             last_clicked_index_ = -1;
+        }
+    }
+
+    void UpdateOutsideEventLoop(const sf::Vector2f& window_size, const bool& resized) {
+        // update background
+        if (resized) {
+            background_.setSize(sf::Vector2f(window_size.x - window_size.x * 2 * margin_, window_size.y - window_size.y * 2 * margin_));
+            background_.setPosition(sf::Vector2f(window_size.x * margin_, window_size.y * margin_));
+
+            //TODO: update other variables like max visible lines etc
+            visible_lines_ = background_.getSize().y / line_height_;
         }
     }
 
