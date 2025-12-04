@@ -61,8 +61,6 @@ void ui::UserInterface::HandleEvent(bool start) {
             event_.mouseButton.button == sf::Mouse::Left || event_.mouseButton.button == sf::Mouse::Right) {
             // update map elements that do something when LMB or RMB is released
 
-            map_renderer_.UpdateVisibleTiles();
-
             tile_pointer = map_renderer_.GetClickedTile(window_);
             if (tile_pointer != nullptr) {
                 std::cout << "Tile number: " << tile_pointer->get_tile_number() 
@@ -79,9 +77,8 @@ void ui::UserInterface::HandleEvent(bool start) {
             }
         }
 
-        
-
         info_layer_renderer_.Update(window_, mouse_pos_, event_, tile_pointer);
+        map_renderer_.Update(window_, event_);
     }
 
 }

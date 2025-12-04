@@ -92,10 +92,14 @@ void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, flo
         tile.setOutlineThickness(outline);
         tiles_.push_back(tile);
     }
-
     UpdateVisibleTiles();
+    SetViewOnPlayer(window);
+}
 
-
+void ui::MapRenderer::Update(sf::RenderWindow& window, const sf::Event& event) {
+    if (event.type == sf::Event::MouseButtonReleased) {
+        UpdateVisibleTiles();
+    }
 }
 
 // Find currently visible tiles
@@ -104,13 +108,13 @@ void ui::MapRenderer::UpdateVisibleTiles() {
     std::set<unsigned int> visible;
 
     for (auto v : game_->GetCurrentPlayer().GetBuildings()) {
-        for (auto u : v->getTile()->get_tiles_in_n_range(3)) {
+        for (auto u : v->getTile()->get_tiles_in_n_range(constants::viewDistance)) {
             visible.insert(u);
         }
     }
     
     for (auto v : game_->GetCurrentPlayer().GetUnits()) {
-        for (auto u : v->getTile()->get_tiles_in_n_range(3)) {
+        for (auto u : v->getTile()->get_tiles_in_n_range(constants::viewDistance)) {
             visible.insert(u);
         }
     }

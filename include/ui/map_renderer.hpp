@@ -29,6 +29,8 @@ public:
 
     void UpdateVisibleTiles();
 
+    void Update(sf::RenderWindow& window, const sf::Event& event);
+
    private:
 
     core::Game* game_ = nullptr;
