@@ -87,7 +87,8 @@ std::istream& operator>>(std::istream &in, core::Player& other) {
     //in >> *deck;
     //other.SetDeck(deck);
     // TEMPORARY deck for loading TODO: Implement proper loading of deck
-    std::vector<std::shared_ptr<cards::Card>> empty_cards = {std::make_shared<cards::BuildingCard>("Test card", "This is a test card", buildings::FarmBuilding::CreateEmpty(10)), std::make_shared<cards::BuildingCard>("Test card", "This is a test card", buildings::FarmBuilding::CreateEmpty(10)), std::make_shared<cards::BuildingCard>("Test card", "This is a test card", buildings::FarmBuilding::CreateEmpty(10))};
+    std::shared_ptr<cards::Card> test_card = std::make_shared<cards::BuildingCard>("Test card", "This is a test card", core::Resource(core::ResourceType::kGold, 1), buildings::FarmBuilding::CreateEmpty(10));
+    std::vector<std::shared_ptr<cards::Card>> empty_cards = {test_card->Clone(), test_card->Clone(), test_card->Clone(), test_card->Clone(), test_card->Clone()};
     cards::Deck test_deck = cards::Deck(empty_cards, 3U);
     other.SetDeck(test_deck.Clone());
     other.DrawHand();
