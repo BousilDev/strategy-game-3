@@ -22,11 +22,9 @@ public:
         circle_shape_.setPosition(position_.x*view_size.x + offset_.x, position.y*view_size.y + offset_.y);
     }
 
-    void Update(const sf::RenderWindow& window, const sf::Vector2f& mouse_pos, const sf::Event& event) {
+    void UpdateOutsideEventLoop(const sf::Vector2f& window_size, const sf::Vector2f& mouse_pos, const bool& resized) {
         // Resized
-        if (event.type == sf::Event::Resized) {
-            sf::Vector2f window_size = sf::Vector2f(window.getSize().x, window.getSize().y);
-            //TODO: implement resizing support
+        if (resized) {
             circle_shape_.setPosition(position_.x*window_size.x + offset_.x, position_.y*window_size.y + offset_.y);
         }
 
@@ -34,7 +32,7 @@ public:
         if (circle_shape_.getGlobalBounds().contains(mouse_pos)) {
             circle_shape_.setScale(hovered_scale_);
         } else {
-            circle_shape_.setScale(1,1);
+            circle_shape_.setScale(1, 1);
         }
     }
 

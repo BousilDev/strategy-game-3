@@ -23,10 +23,8 @@ int main() {
     // Main graphics loop
     while (user_interface.GetWindow().isOpen()) {
 
-        // No delay map panning
-        if (game.IsInitialized()) {
-            user_interface.UpdateOutsideEventLoop();
-        }
+        // Update window size etc. outside the event handling loop
+        user_interface.UpdateOutsideEventLoop(game.IsInitialized());
 
         // Handle events
         while (user_interface.PollEvent()) {

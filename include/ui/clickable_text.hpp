@@ -16,23 +16,18 @@ public:
                   sf::Vector2f offset = sf::Vector2f(0, 0), sf::Vector2f hovered_scale = sf::Vector2f(1.1f, 1.1f))
                   : position_(position), offset_(offset), hovered_scale_(hovered_scale) {
         text_ = sf::Text(string, font, characterSize);
-        text_.setPosition(position_.x*viewSize.x + offset_.x*viewSize.x, position_.y*viewSize.y + offset_.y*viewSize.y);
+        text_.setPosition(position_.x*viewSize.x + offset_.x, position_.y*viewSize.y + offset_.y);
     }
 
-    void Update(const sf::RenderWindow& window, const sf::Vector2f& mouse_pos, const sf::Event& event) {
-        auto windowSize = window.getSize();
-        
-        // Resized
-        if (event.type == sf::Event::Resized) {
-            //TODO: implement resizing support
-            text_.setPosition(position_.x*windowSize.x + offset_.x, position_.y*windowSize.y + offset_.y);
+    void UpdateOutsideEventLoop(const sf::Vector2f& viewSize, const sf::Vector2f& mouse_pos, const bool& resized) {
+        if (resized) {
+            text_.setPosition(position_.x*viewSize.x + offset_.x, position_.y*viewSize.y + offset_.y);
         }
 
-        // Hovered over
         if (text_.getGlobalBounds().contains(mouse_pos)) {
             text_.setScale(hovered_scale_);
         } else {
-            text_.setScale(1,1);
+            text_.setScale(1, 1);
         }
     }
 

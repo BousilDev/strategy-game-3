@@ -114,7 +114,17 @@ void ui::UserInterface::DrawAndDisplay(bool start) {
 }
 
 // Outside of event loop
-void ui::UserInterface::UpdateOutsideEventLoop() {
-    map_renderer_.PanMap(window_);
-    map_renderer_.SetViewOnPlayer(window_);
+void ui::UserInterface::UpdateOutsideEventLoop(bool start) {
+    // Initialize variables
+    mouse_pos_ = window_.mapPixelToCoords(sf::Mouse::getPosition(window_));
+    sf::Vector2f window_size = sf::Vector2f(window_.getSize());
+    
+    if (!start) {
+        // main menu
+        main_menu_renderer_.UpdateOutsideEventLoop(window_size, mouse_pos_);
+    } else {
+        // map view
+        map_renderer_.PanMap(window_);
+        map_renderer_.SetViewOnPlayer(window_);
+    }
 }
