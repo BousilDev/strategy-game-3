@@ -84,7 +84,6 @@ int main() {
         }
         // Update window size etc. outside the event handling loop
         user_interface.UpdateOutsideEventLoop(game.IsInitialized());
-        
         user_interface.DrawAndDisplay(game.IsInitialized());
     }
     return 0;

@@ -62,11 +62,6 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
 int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event) {
     //current_state_ = new_state_;
 
-    //TODO: resizing support
-    //if (event.type == sf::Event::Resized) {
-    //    background_rect_.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
-    //}
-
     if (current_state_ == 1) {
         // new game
         // Handle text input for game name
@@ -120,7 +115,7 @@ void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_siz
         current_window_size_global_ = window_size;
     }
 
-    if (current_state_ == 1) {
+    if (new_state_ == 1) {
         // new game
 
         // true if window has been resized, false if not
@@ -133,7 +128,7 @@ void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_siz
         for (auto& selector : selections_) {
             selector.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
         }
-    } else if (current_state_ == 2) {
+    } else if (new_state_ == 2) {
         // load game
 
         // true if window has been resized, false if not
