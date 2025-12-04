@@ -70,6 +70,10 @@ int main() {
                         game.GetCurrentPlayer().AddResources({core::Resource(core::ResourceType::kGold, 10 + 2 * i)});
                         units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), 10, units::UnitType::kSoldier);
                     }
+                    
+                    // Handling an event to ready-up map renderer
+                    user_interface.HandleEvent(true);
+
                 } else if (user_interface.IsLoadClicked()) {
                     // Things that are done when load is clicked
                     std::cout << "Load clicked! Save file path: " << user_interface.GetLastClickedSavePath() << std::endl;

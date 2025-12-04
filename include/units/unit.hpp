@@ -37,6 +37,7 @@ public:
     }
 
     std::shared_ptr<core::Player> GetOwner() const {return owner_.lock(); }
+    std::shared_ptr<world::Tile>  getTile()  const { return current_tile_.lock(); }
     UnitType GetType() const { return unit_type_; }
     int getMaxHp()   const { return max_hp_; }
     int getCurrentHp() const { return current_hp_; }
