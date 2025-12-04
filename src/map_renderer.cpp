@@ -152,6 +152,7 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
                             unit.setFillColor(sf::Color(200,200,200));
                     }
 
+                // Set outline colour for units
                 sf::Color outline;
                 auto owner_name = u->GetOwner()->GetName();
                 
@@ -188,7 +189,7 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
                             break;
                     }
 
-                // Set outline colour for buildings and units
+                // Set outline colour for buildings
                 sf::Color outline;
                 auto owner_name = b->getOwner()->GetName();
                 
