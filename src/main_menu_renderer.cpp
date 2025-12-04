@@ -12,7 +12,7 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
     
 
     // Initialize back button
-    back_to_main_menu_button_ = ui::ClickableCircleShape(15, 3, sf::Vector2f(0.1f, 0.2f), view_size, 270);
+    back_to_main_menu_button_ = ui::ClickableCircleShape(view_size, 15, 3, sf::Vector2f(0.1f, 0.2f), 270, sf::Vector2f(0,0));
 
     // Initialize texts and set their position in the main menu
     title_ = sf::Text(constants::kGameTitle, *font, 50);
@@ -20,10 +20,10 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
     title_.setPosition(view_size.x*title_pos_.x, view_size.y*title_pos_.y);
 
     // Initialize clickable texts in main menu
-    load_game_button_ =    ui::ClickableText("Load Game",          *font, view_size, sf::Vector2f(0.1f, 0.4f),   constants::kMainMenuClickablesSize);
-    new_game_button_ =     ui::ClickableText("New Game",           *font, view_size, sf::Vector2f(0.1f, 0.5f),   constants::kMainMenuClickablesSize);
-    start_loaded_button_ = ui::ClickableText("Load Selected Game", *font, view_size, sf::Vector2f(0.25f, 0.85f), constants::kMainMenuClickablesSize);
-    start_new_button_ =    ui::ClickableText("Start New Game",     *font, view_size, sf::Vector2f(0.1f, 0.3f),   constants::kMainMenuClickablesSize);
+    load_game_button_ =    ui::ClickableText(view_size, "Load Game",          *font, sf::Vector2f(0.1f, 0.3f),   constants::kMainMenuClickablesSize, sf::Vector2f(0, 55.f));
+    new_game_button_ =     ui::ClickableText(view_size, "New Game",           *font, sf::Vector2f(0.1f, 0.3f),   constants::kMainMenuClickablesSize, sf::Vector2f(0, 100.f));
+    start_loaded_button_ = ui::ClickableText(view_size, "Load Selected Game", *font, sf::Vector2f(0.25f, 0.85f), constants::kMainMenuClickablesSize, sf::Vector2f(0, 0));
+    start_new_button_ =    ui::ClickableText(view_size, "Start New Game",     *font, sf::Vector2f(0.1f, 0.3f),   constants::kMainMenuClickablesSize, sf::Vector2f(0, 0));
 
     // Initialize option selectors for the main menu
     std::vector<std::pair<std::string, int>> playerCountTexts {

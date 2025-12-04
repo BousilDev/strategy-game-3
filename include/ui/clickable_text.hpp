@@ -12,11 +12,11 @@ public:
 
     ClickableText() {}
 
-    ClickableText(const sf::String& string, const sf::Font& font, sf::Vector2f windowSize, sf::Vector2f position, unsigned int characterSize = 30U,
-                  sf::Vector2f hovered_scale = sf::Vector2f(1.1f, 1.1f))
-                  : position_(position), hovered_scale_(hovered_scale) {
+    ClickableText(sf::Vector2f viewSize, const sf::String& string, const sf::Font& font, sf::Vector2f position, unsigned int characterSize = 30U,
+                  sf::Vector2f offset = sf::Vector2f(0, 0), sf::Vector2f hovered_scale = sf::Vector2f(1.1f, 1.1f))
+                  : position_(position), offset_(offset), hovered_scale_(hovered_scale) {
         text_ = sf::Text(string, font, characterSize);
-        text_.setPosition(windowSize.x * position_.x, windowSize.y * position_.y);
+        text_.setPosition(position_.x*viewSize.x + offset_.x*viewSize.x, position_.y*viewSize.y + offset_.y*viewSize.y);
     }
 
     void Update(const sf::RenderWindow& window, const sf::Vector2f& mouse_pos, const sf::Event& event) {
@@ -25,7 +25,7 @@ public:
         // Resized
         if (event.type == sf::Event::Resized) {
             //TODO: implement resizing support
-            text_.setPosition(windowSize.x * position_.x, windowSize.y * position_.y);
+            text_.setPosition(position_.x*windowSize.x + offset_.x, position_.y*windowSize.y + offset_.y);
         }
 
         // Hovered over
@@ -50,6 +50,7 @@ private:
     sf::Text text_;
     sf::Vector2f position_;
     sf::Vector2f hovered_scale_;
+    sf::Vector2f offset_;
 };
 
 } // namespace ui
