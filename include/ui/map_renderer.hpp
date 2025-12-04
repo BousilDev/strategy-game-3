@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "world/map.hpp"
 #include "core/game.hpp"
-#include <set>
+#include <unordered_set>
 #define TILE_SIZE 64.f
 
 namespace ui {
@@ -37,10 +37,11 @@ public:
     float tile_size_;
     std::vector<sf::CircleShape> tiles_;
     std::vector<sf::RectangleShape> buildings_;
+    sf::CircleShape hidden_;
 
     // Game info
     std::shared_ptr<world::Tile> selected_tile_ = nullptr;
-    std::set<unsigned int> visible_tiles_;
+    std::unordered_set<unsigned int> visible_tiles_;
     core::Game* game_ = nullptr;
     std::vector<std::shared_ptr<world::Tile>> spawn_tiles_;
     int last_turn_;

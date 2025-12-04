@@ -92,6 +92,11 @@ void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, flo
         tile.setOutlineThickness(outline);
         tiles_.push_back(tile);
     }
+
+    // Currently out of vision tiles 
+    hidden_ = sf::CircleShape(tile_size_, 6);
+    centerOrigin(hidden_);
+    hidden_.setFillColor(sf::Color(0,113,157));
 }
 
 void ui::MapRenderer::Update(sf::RenderWindow& window, const sf::Event& event) {
@@ -103,7 +108,7 @@ void ui::MapRenderer::Update(sf::RenderWindow& window, const sf::Event& event) {
 // Find currently visible tiles
 void ui::MapRenderer::UpdateVisibleTiles() {
         
-    std::set<unsigned int> visible;
+    std::unordered_set<unsigned int> visible;
 
     for (auto v : game_->GetCurrentPlayer().GetBuildings()) {
         for (auto u : v->getTile()->get_tiles_in_n_range(constants::viewDistance)) {
@@ -124,77 +129,85 @@ void ui::MapRenderer::UpdateVisibleTiles() {
 void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
 
     // Draw buildings units tiles
-    for (auto idx : visible_tiles_) {
-    
-        window.draw(tiles_[idx]);
+    for (unsigned int idx = 0; idx < tiles_.size(); idx++) {
+        
+        // If tile visible
+        if (visible_tiles_.find(idx) != visible_tiles_.end()) {
 
-        auto v = map_.get_tile(idx);
+            window.draw(tiles_[idx]);
 
-        auto u = v-> get_unit();
-            if (u) {
+            auto v = map_.get_tile(idx);
 
-                sf::CircleShape unit(10);
-                centerOrigin(unit);
+            auto u = v-> get_unit();
+                if (u) {
 
-                switch (u->GetType()) {
-                    case units::UnitType::kSoldier:
-                        unit.setFillColor(sf::Color(50,50,100));
-                        break;
-                    default:
-                        unit.setFillColor(sf::Color(200,200,200));
-                }
+                    sf::CircleShape unit(10);
+                    centerOrigin(unit);
 
-            sf::Color outline;
-            auto owner_name = u->GetOwner()->GetName();
-            
+                    switch (u->GetType()) {
+                        case units::UnitType::kSoldier:
+                            unit.setFillColor(sf::Color(50,50,100));
+                            break;
+                        default:
+                            unit.setFillColor(sf::Color(200,200,200));
+                    }
 
-            if (owner_name == "Player 1") outline = constants::playerOneColor;
-            else if (owner_name == "Player 2") outline = constants::playerTwoColor;
-            else if (owner_name == "Player 3") outline = constants::playerThreeColor;
-            else outline = constants::playerFourColor;
-            
-            unit.setOutlineColor(outline);
-            unit.setOutlineThickness(3);
-            unit.setPosition(tiles_[v->get_tile_number()].getPosition()+sf::Vector2f(15.0f, 0.0f));
-            window.draw(unit);
-
-            }
-
-        auto b = v->get_building();
-            if (b) {
-
-                sf::RectangleShape building(sf::Vector2f(20,20));
-                centerOrigin(building);
+                sf::Color outline;
+                auto owner_name = u->GetOwner()->GetName();
                 
-                switch (b->GetType()) {
-                    case buildings::BuildingType::kCapital:
-                        building.setFillColor(sf::Color(233,233,133));
-                        break;
 
-                    case buildings::BuildingType::kFarm:
-                        building.setFillColor(sf::Color(6,233,133));
-                        break;
+                if (owner_name == "Player 1") outline = constants::playerOneColor;
+                else if (owner_name == "Player 2") outline = constants::playerTwoColor;
+                else if (owner_name == "Player 3") outline = constants::playerThreeColor;
+                else outline = constants::playerFourColor;
+                
+                unit.setOutlineColor(outline);
+                unit.setOutlineThickness(3);
+                unit.setPosition(tiles_[v->get_tile_number()].getPosition()+sf::Vector2f(15.0f, 0.0f));
+                window.draw(unit);
 
-                    default:
-                        building.setFillColor(sf::Color(255,255,255));
-                        break;
                 }
 
-            // Set outline colour for buildings and units
-            sf::Color outline;
-            auto owner_name = b->getOwner()->GetName();
-            
+            auto b = v->get_building();
+                if (b) {
 
-            if (owner_name == "Player 1") outline = constants::playerOneColor;
-            else if (owner_name == "Player 2") outline = constants::playerTwoColor;
-            else if (owner_name == "Player 3") outline = constants::playerThreeColor;
-            else outline = constants::playerFourColor;
-            
-            building.setOutlineColor(outline);
-            building.setOutlineThickness(3);
-            building.setPosition(tiles_[v->get_tile_number()].getPosition()-sf::Vector2f(15.0f, 0.0f));
-            window.draw(building);
-            }
+                    sf::RectangleShape building(sf::Vector2f(20,20));
+                    centerOrigin(building);
+                    
+                    switch (b->GetType()) {
+                        case buildings::BuildingType::kCapital:
+                            building.setFillColor(sf::Color(233,233,133));
+                            break;
+
+                        case buildings::BuildingType::kFarm:
+                            building.setFillColor(sf::Color(6,233,133));
+                            break;
+
+                        default:
+                            building.setFillColor(sf::Color(255,255,255));
+                            break;
+                    }
+
+                // Set outline colour for buildings and units
+                sf::Color outline;
+                auto owner_name = b->getOwner()->GetName();
+                
+
+                if (owner_name == "Player 1") outline = constants::playerOneColor;
+                else if (owner_name == "Player 2") outline = constants::playerTwoColor;
+                else if (owner_name == "Player 3") outline = constants::playerThreeColor;
+                else outline = constants::playerFourColor;
+                
+                building.setOutlineColor(outline);
+                building.setOutlineThickness(3);
+                building.setPosition(tiles_[v->get_tile_number()].getPosition()-sf::Vector2f(15.0f, 0.0f));
+                window.draw(building);
+                }
+        } else {
+        // If tile is not visible, can draw a tile to denote that
+            hidden_.setPosition(tiles_[idx].getPosition());
+            window.draw(hidden_);
+        }
     }
 }
 
