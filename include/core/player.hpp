@@ -156,6 +156,15 @@ public:
    */
   void RemoveResource(Resource resource);
 
+
+  /**
+   * @brief Checks if the player has at least the given amount of the resource.
+   * 
+   * @param resource The resource to be checked.
+   * @return true if the player has at least the given amount of the resource, false otherwise.
+   */
+  bool HasResource(Resource resource) const;
+
   /**
    * @brief Checks if the player is alive or not i.e. if the capital building of the player
    * is still standing.
