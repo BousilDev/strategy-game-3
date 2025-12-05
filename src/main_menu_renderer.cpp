@@ -40,16 +40,15 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
     selections_.emplace_back(deckTexts, font, 35, sf::Vector2f(0.1f, 0.3f), sf::Vector2f(150.f, 200.f), view_size);
 
     // Initialize game name text
-    game_name_text_ = sf::Text("Game Name: ", *font, 30);
-    // TODO: position properly
-    game_name_text_.setPosition(view_size.x * 0.1f, view_size.y * 0.75f);
-
+    game_name_input_ = ui::TextInput(view_size, "Game Name: ", *font, sf::Vector2f(0.1f, 0.75f), sf::Vector2f(0, 0), 30);
+    
     // Initialize save file selector
     save_file_selection_.Initialize(view_size, font);
 
     // reset the state of the object
     Reset();
 
+    // Save each screens window size. Used for updating elements when screen is resized but when certain screen is not active.
     current_window_size_global_ = view_size;
     current_window_size_main_ = view_size;
     current_window_size_new_ = view_size;
@@ -64,17 +63,7 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
 
     if (current_state_ == 1) {
         // new game
-        // Handle text input for game name
-        if (event.type == sf::Event::TextEntered) {
-            if (event.text.unicode == '\b') {
-                game_name_ = game_name_.substr(0, game_name_.size() - 1);
-            } else if (event.text.unicode == '\r' || event.text.unicode == '\n' || event.text.unicode == '\t') {
-                // ignore enter key
-            } 
-            else {
-                game_name_ += event.text.unicode;
-            }
-        }
+        game_name_input_.UpdateEvent(event);
         if (back_to_main_menu_button_.IsClicked(mousePos, event)) {
             new_state_ = 0;
         } else {
@@ -105,9 +94,6 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
     return 0;
 }
 
-
-
-
 void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_size, const sf::Vector2f& mouse_pos) {
 
     if (current_window_size_global_ != window_size) {
@@ -120,7 +106,10 @@ void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_siz
 
         // true if window has been resized, false if not
         bool resized = current_window_size_new_ != window_size;
-        if (resized) current_window_size_new_ = window_size;
+        if (resized) {
+            current_window_size_new_ = window_size;
+            game_name_input_.UpdatePosition(window_size);
+        }
 
         start_new_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
         back_to_main_menu_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
@@ -154,9 +143,6 @@ void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_siz
 
 }
 
-
-
-
 void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
     current_state_ = new_state_;
     window.draw(background_rect_);
@@ -167,8 +153,7 @@ void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
         for (auto selection : selections_) {
             selection.DrawTo(window);
         }
-        game_name_text_.setString("Game Name: " + game_name_);
-        window.draw(game_name_text_);
+        game_name_input_.DrawTo(window);
         back_to_main_menu_button_.DrawTo(window);
 
     } else if (current_state_ == 2) {
