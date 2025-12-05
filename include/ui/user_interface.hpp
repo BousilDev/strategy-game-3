@@ -15,6 +15,8 @@ namespace ui {
 class UserInterface {
 public:
 
+    UserInterface() {};
+
     int Initialize(core::Game& game);
 
     //FIXME: using this in the event handling loop in main causes a weird bug

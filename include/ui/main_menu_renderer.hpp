@@ -13,6 +13,7 @@
 #include "ui/clickable_circle_shape.hpp"
 #include "constants/constants.hpp"
 #include "ui/file_selection.hpp"
+#include "ui/text_input.hpp"
 
 namespace fs = std::filesystem;
 
@@ -21,6 +22,9 @@ namespace ui {
 
 class MainMenuRenderer {
 public:
+
+    MainMenuRenderer() {}
+
     // Initialize a MainMenuRenderer object. Returns 0 if succesful and 1 if there are errors.
     // Errors are also printed to error stream
     int Initialize(const std::shared_ptr<sf::Font>& font, const sf::Vector2f& view_size);
@@ -52,7 +56,7 @@ public:
     int GetSelectedPlayerCount() const { return selections_[0].GetSelectedOption(); }
     int GetSelectedMapSize() const { return selections_[1].GetSelectedOption(); }
     int GetSelectedDeck() const { return selections_[2].GetSelectedOption(); }
-    std::string GetGameName() const { return game_name_; }
+    std::string GetGameName() const { return game_name_input_.GetInputString(); }
 
     std::string& GetLastClickedSavePath() { return save_file_selection_.GetLastClickedPath(); }
 
@@ -92,8 +96,7 @@ private:
     // new game
     ui::ClickableText start_new_button_;
     std::vector<ui::Selection> selections_;
-    std::string game_name_;
-    sf::Text game_name_text_;
+    ui::TextInput game_name_input_;
 
     // load game
     ui::ClickableText start_loaded_button_;
