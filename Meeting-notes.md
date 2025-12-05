@@ -607,3 +607,43 @@ The game is approaching a playable state with working biome generation and card 
 
 1. Add Unit functionality to UI
 2. Save & load map and cards
+
+
+# Meeting 5.12.2025 13::00 - 14::30 @On site
+Sprint 4, "daily" 3
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+1. Map visibility implemented
+2. Map saving from UI works with certain limitations
+3. Units can now attack other units and buildings
+4. Playing cards now comes with a resource cost
+
+## Challenges
+
+No notable challenges
+
+## Actions
+
+1. Scheduled the next meeting time and voted for demo times
+2. Discussed and refined final sprint backlog items
+
+## Project status
+
+Game is playable but improvements to both game logic and UI can be done.
+
+### TODOs
+
+1. Implement card, hand and deck saving & loading
+2. Make the UI more easily interpretable by adding health bars and selection indicator
+3. Fix some issues in main menu
+4. Add distance function to map and restrict unit movement
+5. Start writing the Project document
