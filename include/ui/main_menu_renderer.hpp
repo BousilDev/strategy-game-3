@@ -65,6 +65,7 @@ public:
     void Reset() {
         current_state_ = 0;
         new_state_ = 0;
+        game_name_input_.Reset();
     }
 
     void UpdateOutsideEventLoop(const sf::Vector2f& window_size, const sf::Vector2f& mouse_pos);

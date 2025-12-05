@@ -153,8 +153,6 @@ void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
         for (auto selection : selections_) {
             selection.DrawTo(window);
         }
-        //game_name_text_.setString("Game Name: " + game_name_);
-        //window.draw(game_name_text_);
         game_name_input_.DrawTo(window);
         back_to_main_menu_button_.DrawTo(window);
 

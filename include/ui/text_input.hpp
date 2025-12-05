@@ -41,6 +41,10 @@ public:
 
     std::string GetInputString() const { return input_string_; }
 
+    void Reset() {
+        input_string_.erase();
+    }
+
 private:
     sf::Text text_;
     std::string input_string_;
