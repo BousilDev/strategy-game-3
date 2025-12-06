@@ -2,6 +2,7 @@
 #include "ui/center_origin.hpp"
 #include <cmath>
 #include "ui/map_renderer.hpp"
+#include "ui/health_bar.hpp"
 
 void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, float tile_size) {
 
@@ -167,6 +168,8 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
                     unit.setPosition(tiles_[v->get_tile_number()].getPosition()+sf::Vector2f(15.0f, 0.0f));
                     window.draw(unit);
 
+                    // Draw unit health bar
+                    HealthBar(unit.getPosition(), u->getMaxHp(), u->getCurrentHp(), true).DrawTo(window);
                 }
 
             auto b = v->get_building();
@@ -203,6 +206,9 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
                     building.setOutlineThickness(3);
                     building.setPosition(tiles_[v->get_tile_number()].getPosition()-sf::Vector2f(15.0f, 0.0f));
                     window.draw(building);
+
+                    // Draw building health bar
+                    HealthBar(building.getPosition(), b->getMaxHp(), b->getCurrentHp(), false).DrawTo(window);
                 }
         } else {
         // If tile is not visible, can draw a tile to denote that
