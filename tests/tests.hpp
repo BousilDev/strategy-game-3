@@ -59,4 +59,14 @@ namespace tests {
  * player) and the state of each player (resources, buildings, and units).
  */
   void TestGameSaveAndLoad();
+
+  void TestPlayer();
+
+  void TestMap();
+
+  void TestBuildings();
+
+  void TestUnits();
+
+  void TestCards();
 }
