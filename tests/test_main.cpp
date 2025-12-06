@@ -52,7 +52,12 @@ int main() {
     // Define the tests to run
     test_suite tests[] = {
         {"Testing Game Initialization and turns", tests::TestGameInitializationAndTurns},
-        {"Testing Game Save and Load", tests::TestGameSaveAndLoad}
+        {"Testing Game Save and Load", tests::TestGameSaveAndLoad},
+        {"Testing Player class", tests::TestPlayer},
+        {"Testing Map class", tests::TestMap},
+        {"Testing Buildings", tests::TestBuildings},
+        {"Testing Units", tests::TestUnits},
+        {"Testing Cards", tests::TestCards},
     };
     unsigned int passed = 0;
     unsigned int total = 0;
