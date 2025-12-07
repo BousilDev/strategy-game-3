@@ -37,7 +37,7 @@ const float kMinThumbHeight = 24.f;     // ui::FileSelection scrollbar minimum t
 const float kFScontentPadding = 8.f;    // ui::Fileselection text padding inside the element
 
 // ui::TextInput
-const size_t TextInputMaxLength = 100; // Max length for the text input buffer
+const size_t TextInputMaxLength = 64; // Max length for the text input buffer
 const float TextInputCaretTime = 0.f;
 const float TextInputCaretBlinkPeriod = 0.5f; // seconds
 

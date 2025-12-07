@@ -36,10 +36,7 @@ public:
                 return;
             }
 
-            // Ignore control characters (except backspace handled above)
-            if (u < 32 || u == 127) {
-                return;
-            }
+            if (!(std::isalnum(u) || u==' ' || u=='_' || u=='-')) return;
 
             // Enforce max length
             if (buffer_.getSize() >= max_length_) {
@@ -105,20 +102,12 @@ public:
         dirty_ = true;
     }
 
-    // Configuration helpers
-    void SetPrefix(const std::string& prefix) { prefix_ = prefix; dirty_ = true; }
-    void SetCharacterSize(unsigned int size) {
-        text_.setCharacterSize(size);
-        caret_.setSize({1.f, static_cast<float>(size)});
-        dirty_ = true;
-    }
-
 private:
     void UpdateCaretPosition() {
         const auto bounds = text_.getLocalBounds();
         const float x = text_.getPosition().x + bounds.left + bounds.width;
         const float y = text_.getPosition().y;
-        caret_.setPosition({x + 2.f, y}); // slight offset
+        caret_.setPosition({x + 2.f, y + 5.f});
     }
 
     sf::Text text_;
@@ -131,7 +120,7 @@ private:
     sf::Vector2f offset_{0.f, 0.f};
 
     std::size_t max_length_ = constants::TextInputMaxLength;
-    std::function<bool(sf::Uint32)> char_filter_;
+    //std::function<bool(sf::Uint32)> char_filter_;
 
     bool dirty_ = true;
 
