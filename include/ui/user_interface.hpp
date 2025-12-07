@@ -59,7 +59,7 @@ public:
     std::string& GetLastClickedSavePath() { return main_menu_renderer_.GetLastClickedSavePath(); }
 
     // Outside of event loop
-    void UpdateOutsideEventLoop(bool start);
+    void UpdateOutsideEventLoop(const bool start, const float delta_seconds);
 
     // Reset main menu. Used when returning to main menu.
     void ResetMainMenu() { main_menu_renderer_.Reset(); }

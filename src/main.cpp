@@ -21,8 +21,14 @@ int main() {
         return EXIT_FAILURE;
     }
 
+    sf::Clock clock;
+    
     // Main graphics loop
     while (user_interface.GetWindow().isOpen()) {
+
+        // Time since last frame
+        sf::Time dt = clock.restart();
+        float delta_seconds = dt.asSeconds();
 
         // Handle events
         while (user_interface.PollEvent()) {
@@ -97,7 +103,7 @@ int main() {
             }
         }
         // Update window size etc. outside the event handling loop
-        user_interface.UpdateOutsideEventLoop(game.IsInitialized());
+        user_interface.UpdateOutsideEventLoop(game.IsInitialized(), delta_seconds);
         user_interface.DrawAndDisplay(game.IsInitialized());
     }
     return 0;

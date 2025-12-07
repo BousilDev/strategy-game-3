@@ -94,7 +94,7 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
     return 0;
 }
 
-void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_size, const sf::Vector2f& mouse_pos) {
+void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_size, const sf::Vector2f& mouse_pos, const float delta_seconds) {
 
     if (current_window_size_global_ != window_size) {
         background_rect_.setSize(window_size);
@@ -110,6 +110,8 @@ void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_siz
             current_window_size_new_ = window_size;
             game_name_input_.UpdatePosition(window_size);
         }
+
+        game_name_input_.UpdateOutsideEventLoop(delta_seconds);
 
         start_new_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
         back_to_main_menu_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
