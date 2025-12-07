@@ -160,6 +160,7 @@ std::shared_ptr<Building> CapitalBuilding::CreateEmptyFromCopy() const
 void CapitalBuilding::atTurnEnd()
 {
     std::cout << "at capital turn end\n";
+    owner_.lock()->AddResources({core::Resource(core::ResourceType::kGold, 1)});
 }
 
 // ============================================================

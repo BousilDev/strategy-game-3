@@ -89,9 +89,9 @@ class CapitalBuilding : public Building {
 public:
     static std::shared_ptr<CapitalBuilding> Create(std::shared_ptr<world::Tile> tile,
                                                    std::shared_ptr<core::Player> owner,
-                                                   int max_hp = 100);
+                                                   int max_hp = 250);
 
-    static std::shared_ptr<CapitalBuilding> CreateEmpty(int max_hp);
+    static std::shared_ptr<CapitalBuilding> CreateEmpty(int max_hp = 250);
 
     std::shared_ptr<Building> CreateEmptyFromCopy() const override;
 
@@ -99,7 +99,7 @@ public:
 
     CapitalBuilding(std::shared_ptr<world::Tile> tile,
                     std::shared_ptr<core::Player> owner,
-                    int max_hp = 100);
+                    int max_hp = 250);
 };
 
 
