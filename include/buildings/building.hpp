@@ -13,9 +13,8 @@ namespace buildings {
 enum class BuildingType {
     kCapital,
     kFarm,
-    kMine,
-    kNeighbourhood,
-    kPower
+    kLumberMill,
+    kMine
 };
 
 // ============================================================
@@ -29,11 +28,15 @@ public:
     // Central factory that returns correct derived class
     static std::shared_ptr<Building> Create(std::shared_ptr<world::Tile> tile,
                                             std::shared_ptr<core::Player> owner,
-                                            int max_hp,
-                                            BuildingType type);
+                                            BuildingType type,
+                                            int max_hp = 100,
+                                            int resource_multiplier = 1,
+                                            int gold_multiplier = 1);
 
     // Empty creation (mainly for loading/saving)
-    static std::shared_ptr<Building> CreateEmpty(int max_hp, BuildingType type);
+    static std::shared_ptr<Building> CreateEmpty(BuildingType type, int max_hp = 100,
+                                                 int resource_multiplier = 1,
+                                                 int gold_multiplier = 1);
 
     // Proper polymorphic clone
     virtual std::shared_ptr<Building> CreateEmptyFromCopy() const = 0;
@@ -48,6 +51,8 @@ public:
     std::shared_ptr<world::Tile>  getTile()  const { return current_tile_.lock(); }
     int getMaxHp()     const { return max_hp_; }
     int getCurrentHp() const { return current_hp_; }
+    int getGoldMultiplier() const { return gold_multiplier_; }
+    int getResourceMultiplier() const { return resource_multiplier_; }
 
     int takeDamage(int damage);
     virtual void atTurnEnd() {}
@@ -59,12 +64,16 @@ public:
 protected:
     Building(std::shared_ptr<world::Tile> tile,
              std::shared_ptr<core::Player> owner,
-             int max_hp,
-             BuildingType type);
+             BuildingType type,
+             int max_hp = 100,
+             int resource_multiplier = 1,
+             int gold_multiplier = 1);
 
 protected:
     int max_hp_{0};
     int current_hp_{0};
+    int gold_multiplier_{1};
+    int resource_multiplier_{1};
     BuildingType building_type_{BuildingType::kFarm};
 
     std::weak_ptr<world::Tile>  current_tile_;
@@ -80,7 +89,7 @@ class CapitalBuilding : public Building {
 public:
     static std::shared_ptr<CapitalBuilding> Create(std::shared_ptr<world::Tile> tile,
                                                    std::shared_ptr<core::Player> owner,
-                                                   int max_hp);
+                                                   int max_hp = 100);
 
     static std::shared_ptr<CapitalBuilding> CreateEmpty(int max_hp);
 
@@ -90,7 +99,7 @@ public:
 
     CapitalBuilding(std::shared_ptr<world::Tile> tile,
                     std::shared_ptr<core::Player> owner,
-                    int max_hp);
+                    int max_hp = 100);
 };
 
 
@@ -113,9 +122,6 @@ public:
     FarmBuilding(std::shared_ptr<world::Tile> tile,
                  std::shared_ptr<core::Player> owner,
                  int max_hp, int food_multiplier = 1, int gold_multiplier = 1);
-private:
-    int food_multiplier_{1};
-    int gold_multiplier_{1};
 };
 
 class LumberMillBuilding : public Building {
@@ -133,9 +139,6 @@ public:
     LumberMillBuilding(std::shared_ptr<world::Tile> tile,
                  std::shared_ptr<core::Player> owner,
                  int max_hp = 100, int wood_multiplier = 1, int gold_multiplier = 1);
-private:
-    int wood_multiplier_{1};
-    int gold_multiplier_{1};
 };
 
 class MineBuilding : public Building {
@@ -153,9 +156,6 @@ public:
     MineBuilding(std::shared_ptr<world::Tile> tile,
                  std::shared_ptr<core::Player> owner,
                  int max_hp = 100, int metal_multiplier = 1, int gold_multiplier = 1);
-private:
-    int metal_multiplier_{1};
-    int gold_multiplier_{1};
 };
 
 } // namespace buildings

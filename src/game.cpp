@@ -98,7 +98,7 @@ void core::Game::Load(std::istream& file){
             std::string building_type = GetStringFromLine(file);
             for (size_t i = 0; i < constants::buildingTypeNames.size(); i++) {
                 if (building_type == constants::buildingTypeNames[i]) {
-                    std::shared_ptr<buildings::Building> building = buildings::Building::CreateEmpty(GetIntFromLine(file), static_cast<buildings::BuildingType>(i));
+                    std::shared_ptr<buildings::Building> building = buildings::Building::CreateEmpty(static_cast<buildings::BuildingType>(i), GetIntFromLine(file));
                     building->setPlayer(player_ptr);
                     file >> building;
                     // Get tile by tile number from map

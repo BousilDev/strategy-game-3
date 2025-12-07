@@ -12,10 +12,14 @@ namespace buildings {
 
 Building::Building(std::shared_ptr<world::Tile> tile,
                    std::shared_ptr<core::Player> owner,
+                   BuildingType type,
                    int max_hp,
-                   BuildingType type)
+                   int resource_multiplier,
+                   int gold_multiplier)
     : max_hp_(max_hp),
       current_hp_(max_hp),
+      gold_multiplier_(gold_multiplier),
+      resource_multiplier_(resource_multiplier),
       building_type_(type),
       current_tile_(tile),
       owner_(owner)
@@ -43,8 +47,10 @@ int Building::takeDamage(int damage)
 
 std::shared_ptr<Building> Building::Create(std::shared_ptr<world::Tile> tile,
                                            std::shared_ptr<core::Player> owner,
+                                           BuildingType type,
                                            int max_hp,
-                                           BuildingType type)
+                                           int resource_multiplier,
+                                           int gold_multiplier)
 {
     if (!tile || !owner) return nullptr;
 
@@ -55,7 +61,13 @@ std::shared_ptr<Building> Building::Create(std::shared_ptr<world::Tile> tile,
             building = CapitalBuilding::Create(tile, owner, max_hp);
             break;
         case BuildingType::kFarm:
-            building = FarmBuilding::Create(tile, owner, max_hp);
+            building = FarmBuilding::Create(tile, owner, max_hp, resource_multiplier, gold_multiplier);
+            break;
+        case BuildingType::kLumberMill:
+            building = LumberMillBuilding::Create(tile, owner, max_hp, resource_multiplier, gold_multiplier);
+            break;
+        case BuildingType::kMine:
+            building = MineBuilding::Create(tile, owner, max_hp, resource_multiplier, gold_multiplier);
             break;
         default:
             std::cerr << "ERROR: Unsupported BuildingType in Building::Create.\n";
@@ -65,11 +77,15 @@ std::shared_ptr<Building> Building::Create(std::shared_ptr<world::Tile> tile,
     return building;
 }
 
-std::shared_ptr<Building> Building::CreateEmpty(int max_hp, BuildingType type)
+std::shared_ptr<Building> Building::CreateEmpty(BuildingType type, int max_hp,
+                                                int resource_multiplier,
+                                                int gold_multiplier)
 {
     switch (type) {
-        case BuildingType::kCapital: return CapitalBuilding::CreateEmpty(max_hp);
-        case BuildingType::kFarm:    return FarmBuilding::CreateEmpty(max_hp);
+        case BuildingType::kCapital:    return CapitalBuilding::CreateEmpty(max_hp);
+        case BuildingType::kFarm:       return FarmBuilding::CreateEmpty(max_hp, resource_multiplier, gold_multiplier);
+        case BuildingType::kLumberMill: return LumberMillBuilding::CreateEmpty(max_hp, resource_multiplier, gold_multiplier);
+        case BuildingType::kMine:       return MineBuilding::CreateEmpty(max_hp, resource_multiplier, gold_multiplier);
         default:
             std::cerr << "ERROR: Unsupported BuildingType in CreateEmpty.\n";
             return nullptr;
@@ -107,7 +123,7 @@ std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Building>& b)
 CapitalBuilding::CapitalBuilding(std::shared_ptr<world::Tile> tile,
                                  std::shared_ptr<core::Player> owner,
                                  int max_hp)
-    : Building(tile, owner, max_hp, BuildingType::kCapital)
+    : Building(tile, owner, BuildingType::kCapital, max_hp)
 {
 }
 
@@ -149,7 +165,7 @@ void CapitalBuilding::atTurnEnd()
 FarmBuilding::FarmBuilding(std::shared_ptr<world::Tile> tile,
                            std::shared_ptr<core::Player> owner,
                            int max_hp, int food_multiplier, int gold_multiplier)
-    : food_multiplier_(food_multiplier), gold_multiplier_(gold_multiplier), Building(tile, owner, max_hp, BuildingType::kFarm)
+    : Building(tile, owner, BuildingType::kFarm, max_hp, food_multiplier, gold_multiplier)
 {
 }
 
@@ -176,7 +192,7 @@ std::shared_ptr<FarmBuilding> FarmBuilding::CreateEmpty(int max_hp, int food_mul
 
 std::shared_ptr<Building> FarmBuilding::CreateEmptyFromCopy() const
 {
-    return std::make_shared<FarmBuilding>(nullptr, nullptr, max_hp_, food_multiplier_, gold_multiplier_);
+    return std::make_shared<FarmBuilding>(nullptr, nullptr, max_hp_, resource_multiplier_, gold_multiplier_);
 }
 
 void FarmBuilding::atTurnEnd()
@@ -200,7 +216,7 @@ void FarmBuilding::atTurnEnd()
     std::list<core::Resource> farm_resources;
     for (auto& resource : all_resources) {
         if (resource.type == core::ResourceType::kFood) {
-            farm_resources.push_back(resource * food_multiplier_);
+            farm_resources.push_back(resource * resource_multiplier_);
         }
         if (resource.type == core::ResourceType::kGold) {
             farm_resources.push_back(resource * gold_multiplier_);
@@ -217,7 +233,7 @@ void FarmBuilding::atTurnEnd()
 LumberMillBuilding::LumberMillBuilding(std::shared_ptr<world::Tile> tile,
                            std::shared_ptr<core::Player> owner,
                            int max_hp, int wood_multiplier, int gold_multiplier)
-    : wood_multiplier_(wood_multiplier), gold_multiplier_(gold_multiplier), Building(tile, owner, max_hp, BuildingType::kFarm)
+    : Building(tile, owner, BuildingType::kFarm, max_hp, wood_multiplier, gold_multiplier)
 {
 }
 
@@ -244,7 +260,7 @@ std::shared_ptr<LumberMillBuilding> LumberMillBuilding::CreateEmpty(int max_hp, 
 
 std::shared_ptr<Building> LumberMillBuilding::CreateEmptyFromCopy() const
 {
-    return std::make_shared<LumberMillBuilding>(nullptr, nullptr, max_hp_, wood_multiplier_, gold_multiplier_);
+    return std::make_shared<LumberMillBuilding>(nullptr, nullptr, max_hp_, resource_multiplier_, gold_multiplier_);
 }
 
 void LumberMillBuilding::atTurnEnd()
@@ -268,7 +284,7 @@ void LumberMillBuilding::atTurnEnd()
     std::list<core::Resource> lumbermill_resources;
     for (auto& resource : all_resources) {
         if (resource.type == core::ResourceType::kWood) {
-            lumbermill_resources.push_back(resource * wood_multiplier_);
+            lumbermill_resources.push_back(resource * resource_multiplier_);
         }
         if (resource.type == core::ResourceType::kGold) {
             lumbermill_resources.push_back(resource * gold_multiplier_);
@@ -285,7 +301,7 @@ void LumberMillBuilding::atTurnEnd()
 MineBuilding::MineBuilding(std::shared_ptr<world::Tile> tile,
                            std::shared_ptr<core::Player> owner,
                            int max_hp, int metal_multiplier, int gold_multiplier)
-    : metal_multiplier_(metal_multiplier), gold_multiplier_(gold_multiplier), Building(tile, owner, max_hp, BuildingType::kFarm)
+    : Building(tile, owner, BuildingType::kFarm, max_hp, metal_multiplier, gold_multiplier)
 {
 }
 
@@ -312,7 +328,7 @@ std::shared_ptr<MineBuilding> MineBuilding::CreateEmpty(int max_hp, int metal_mu
 
 std::shared_ptr<Building> MineBuilding::CreateEmptyFromCopy() const
 {
-    return std::make_shared<MineBuilding>(nullptr, nullptr, max_hp_, metal_multiplier_, gold_multiplier_);
+    return std::make_shared<MineBuilding>(nullptr, nullptr, max_hp_, resource_multiplier_, gold_multiplier_);
 }
 
 void MineBuilding::atTurnEnd()
@@ -335,7 +351,7 @@ void MineBuilding::atTurnEnd()
     std::list<core::Resource> mine_resources;
     for (auto& resource : all_resources) {
         if (resource.type == core::ResourceType::kMetal) {
-            mine_resources.push_back(resource * metal_multiplier_);
+            mine_resources.push_back(resource * resource_multiplier_);
         }
         if (resource.type == core::ResourceType::kGold) {
             mine_resources.push_back(resource * gold_multiplier_);
