@@ -102,9 +102,9 @@ class FarmBuilding : public Building {
 public:
     static std::shared_ptr<FarmBuilding> Create(std::shared_ptr<world::Tile> tile,
                                                 std::shared_ptr<core::Player> owner,
-                                                int max_hp, int food_multiplier = 1, int gold_multiplier = 1);
+                                                int max_hp = 100, int food_multiplier = 1, int gold_multiplier = 1);
 
-    static std::shared_ptr<FarmBuilding> CreateEmpty(int max_hp);
+    static std::shared_ptr<FarmBuilding> CreateEmpty(int max_hp = 100, int food_multiplier = 1, int gold_multiplier = 1);
 
     std::shared_ptr<Building> CreateEmptyFromCopy() const override;
 
@@ -115,6 +115,26 @@ public:
                  int max_hp, int food_multiplier = 1, int gold_multiplier = 1);
 private:
     int food_multiplier_{1};
+    int gold_multiplier_{1};
+};
+
+class LumberMillBuilding : public Building {
+public:
+    static std::shared_ptr<LumberMillBuilding> Create(std::shared_ptr<world::Tile> tile,
+                                                std::shared_ptr<core::Player> owner,
+                                                int max_hp = 100, int wood_multiplier = 1, int gold_multiplier = 1);
+
+    static std::shared_ptr<LumberMillBuilding> CreateEmpty(int max_hp = 100, int wood_multiplier = 1, int gold_multiplier = 1);
+
+    std::shared_ptr<Building> CreateEmptyFromCopy() const override;
+
+    void atTurnEnd() override;
+
+    LumberMillBuilding(std::shared_ptr<world::Tile> tile,
+                 std::shared_ptr<core::Player> owner,
+                 int max_hp = 100, int wood_multiplier = 1, int gold_multiplier = 1);
+private:
+    int wood_multiplier_{1};
     int gold_multiplier_{1};
 };
 
