@@ -207,19 +207,39 @@ public:
     void DrawTo(sf::RenderWindow& window) {
         window.draw(background_);
 
+        // Compute content rect
+        sf::Vector2f pos = background_.getPosition() + sf::Vector2f(content_padding_, content_padding_);
+        sf::Vector2f size = background_.getSize() - sf::Vector2f(2.f * content_padding_, 2.f * content_padding_);
+
+        // Save current view
+        sf::View prev = window.getView();
+
+        // Build a view that maps content coords (0..size) to the on-screen rectangle (viewport)
+        sf::View listView;
+        listView.setCenter(size.x * 0.5f, size.y * 0.5f);
+        listView.setSize(size);
+
+        // Viewport is normalized [0..1] of the window
+        sf::Vector2u ws = window.getSize();
+        sf::FloatRect vp(pos.x / ws.x, pos.y / ws.y, size.x / ws.x, size.y / ws.y);
+        listView.setViewport(vp);
+
+        window.setView(listView);
+
+        // Draw texts with local positions (0..size)
         const int end = std::min((int)texts_.size(), scroll_ + visible_lines_);
         for (int i = scroll_; i < end; ++i) {
-            auto& text = std::get<1>(texts_[i]);
-            text.setFillColor(i == last_clicked_index_ ? constants::kFSselectedTextColor : constants::kFStextColor);
-            text.setOutlineThickness(i == last_clicked_index_ ? constants::kFileSelectionFontSize * 0.05f : 0.f);
-            window.draw(std::get<1>(texts_[i]));
+            sf::Text t = std::get<1>(texts_[i]);
+            t.setPosition(0.f, (i - scroll_) * line_height_); // local to content area
+            t.setFillColor(i == last_clicked_index_ ? constants::kFSselectedTextColor : constants::kFStextColor);
+            t.setOutlineThickness(i == last_clicked_index_ ? constants::kFileSelectionFontSize * 0.05f : 0.f);
+            window.draw(t);
         }
-        
+
+        // Restore view
+        window.setView(prev);
+
         if (IsOverflow()) {
-            if (scrollbar_dirty_) {
-                UpdateScrollbarGeometry();
-                scrollbar_dirty_ = false;
-            }
             window.draw(scrollbar_track_);
             window.draw(scrollbar_thumb_);
         }
