@@ -113,7 +113,7 @@ void ui::UserInterface::DrawAndDisplay(bool start) {
 }
 
 // Outside of event loop
-void ui::UserInterface::UpdateOutsideEventLoop(bool start) {
+void ui::UserInterface::UpdateOutsideEventLoop(const bool start, const float delta_seconds) {
     // Initialize variables
     mouse_pos_ = window_.mapPixelToCoords(sf::Mouse::getPosition(window_));
     sf::Vector2f window_size = sf::Vector2f(window_.getSize());
@@ -121,7 +121,7 @@ void ui::UserInterface::UpdateOutsideEventLoop(bool start) {
     if (!start) {
         // main menu
         if (IsViewNotCentered()) { CenterView(); }
-        main_menu_renderer_.UpdateOutsideEventLoop(window_size, mouse_pos_);
+        main_menu_renderer_.UpdateOutsideEventLoop(window_size, mouse_pos_, delta_seconds);
     } else {
         // map view
         map_renderer_.PanMap(window_);

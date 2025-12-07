@@ -68,7 +68,7 @@ public:
         game_name_input_.Reset();
     }
 
-    void UpdateOutsideEventLoop(const sf::Vector2f& window_size, const sf::Vector2f& mouse_pos);
+    void UpdateOutsideEventLoop(const sf::Vector2f& window_size, const sf::Vector2f& mouse_pos, const float delta_seconds);
 
 private:
     sf::Texture background_texture_;

@@ -15,7 +15,7 @@ const std::string debug_prefix = "###: ";
 const std::string faultySavesPath = "tests/faultySaves/";
 const std::string kSavesPath = "saves/";
 
-// UI constants
+// -----UI constants-----
 const int kInitWindowWidth = 800;
 const int kInitWindowHeight = 600;
 
@@ -35,6 +35,11 @@ const float kScrollbarPadding = 4.f;    // ui::FileSelection scrollbar gap from 
 const float kScrollbarWidth = 8.f;      // ui::FileSelection scrollbar track width
 const float kMinThumbHeight = 24.f;     // ui::FileSelection scrollbar minimum thumb height
 const float kFScontentPadding = 8.f;    // ui::Fileselection text padding inside the element
+
+// ui::TextInput
+const size_t TextInputMaxLength = 100; // Max length for the text input buffer
+const float TextInputCaretTime = 0.f;
+const float TextInputCaretBlinkPeriod = 0.5f; // seconds
 
 const std::string kFontPath = "texture/times.ttf";
 const std::string kBackgroundImagePath = "texture/background.jpg";
