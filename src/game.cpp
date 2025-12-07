@@ -120,7 +120,7 @@ void core::Game::Load(std::istream& file){
             std::string unit_type = GetStringFromLine(file);
             for (size_t i = 0; i < constants::unitTypeNames.size(); i++) {
                 if (unit_type == constants::unitTypeNames[i]) {
-                    std::shared_ptr<units::Unit> unit = units::Unit::CreateEmpty(GetIntFromLine(file), static_cast<units::UnitType>(i));
+                    std::shared_ptr<units::Unit> unit = units::Unit::CreateEmpty(static_cast<units::UnitType>(i), GetIntFromLine(file));
                     unit->setPlayer(player_ptr);
                     file >> unit;
                     int tile_number = GetIntFromLine(file);

@@ -68,7 +68,7 @@ int main() {
                         assert(game.GetCurrentTurn() == i + 1);
                         // Add resources to the current player for testing
                         game.GetCurrentPlayer().AddResources({core::Resource(core::ResourceType::kGold, 10 + 2 * i)});
-                        units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), 10, units::UnitType::kSoldier);
+                        units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), units::UnitType::kSoldier, 10, 5);
                     }
 
                     // Handling an event to ready-up map renderer

@@ -93,7 +93,7 @@ void tests::TestGameSaveAndLoad() {
         // Use the first card from the player's hand
         std::shared_ptr<cards::Card> card_to_play = game.GetCurrentPlayer().GetHand()->GetCards().front();
         game.PlayCardOnTile(card_to_play, game.GetMap().get_tile(i + 1));
-        units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), 10, units::UnitType::kSoldier);
+        units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), units::UnitType::kSoldier, 10);
     }
     // Save the game state
     std::ofstream outFile("testSaveFile.txt");
@@ -265,7 +265,7 @@ void tests::TestUnits() {
     std::shared_ptr<world::Tile> tile = game.GetMap().get_tile(0);
 
     // Test Unit creation
-    std::shared_ptr<units::Unit> soldier = units::Unit::Create(tile, game.GetCurrentPlayerPtr(), 15, units::UnitType::kSoldier);
+    std::shared_ptr<units::Unit> soldier = units::Unit::Create(tile, game.GetCurrentPlayerPtr(), units::UnitType::kSoldier, 15);
     AssertWithMessage(soldier->GetType() == units::UnitType::kSoldier, "Unit type should be kSoldier.");
     AssertWithMessage(soldier->getMaxHp() == 15, "Unit max HP should be 15.");
     AssertWithMessage(soldier->getCurrentHp() == 15, "Unit current HP should be 15.");
@@ -278,12 +278,12 @@ void tests::TestUnits() {
     AssertWithMessage(soldier->getCurrentHp() == 0, "Unit current HP should be 0 after taking lethal damage.");
     AssertWithMessage(tile->get_unit() == nullptr, "Tile should have no unit after soldier is destroyed.");
 
-    soldier = units::Unit::Create(tile, game.GetCurrentPlayerPtr(), 15, units::UnitType::kSoldier);
+    soldier = units::Unit::Create(tile, game.GetCurrentPlayerPtr(), units::UnitType::kSoldier, 15);
     game.NextTurn();
 
     core::Player& player2 = game.GetCurrentPlayer();
     std::shared_ptr<world::Tile> tile2 = game.GetMap().get_tile(1);
-    std::shared_ptr<units::Unit> enemy_soldier = units::Unit::Create(tile2, game.GetCurrentPlayerPtr(), 15, units::UnitType::kSoldier);
+    std::shared_ptr<units::Unit> enemy_soldier = units::Unit::Create(tile2, game.GetCurrentPlayerPtr(), units::UnitType::kSoldier, 15);
 
     // Test attacking
     soldier->moveToTile(tile2);
