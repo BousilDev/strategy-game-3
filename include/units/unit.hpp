@@ -1,5 +1,11 @@
 #pragma once
 #include <memory>
+#include <vector>
+#include <array>
+#include <queue>
+#include <unordered_set>
+#include <unordered_map>
+#include <stack>
 
 namespace world { class Tile; }  // forward declaration
 namespace core { class Player; } // forward declaration
@@ -9,6 +15,7 @@ namespace units {
 enum class UnitType {
     kSoldier,
 };
+
 
 class Unit : public std::enable_shared_from_this<Unit> {
 public:
@@ -51,6 +58,9 @@ public:
         // TODO: Fine tune a healing factor
         current_hp_ = std::min(current_hp_ + 1, max_hp_);
     }
+    std::vector<unsigned int> get_movable_tiles();
+    unsigned int get_terrain_distance_to(unsigned int target_tile_number); 
+    std::vector<unsigned int> get_attackable_tiles();
 
     friend std::istream& operator>>(std::istream &in, std::shared_ptr<Unit>& other);
     friend std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Unit>& other);
@@ -65,7 +75,9 @@ protected:
     int current_hp_{0};
     bool has_attacked_{false};
     int turn_movement_{0};
+    int can_move_in_a_turn{5};
     int damage_{5};
+    int attack_range_{1};
     UnitType unit_type_{UnitType::kSoldier};
 
     std::weak_ptr<world::Tile> current_tile_;
