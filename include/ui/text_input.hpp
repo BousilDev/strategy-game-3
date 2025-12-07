@@ -120,7 +120,6 @@ private:
     sf::Vector2f offset_{0.f, 0.f};
 
     std::size_t max_length_ = constants::TextInputMaxLength;
-    //std::function<bool(sf::Uint32)> char_filter_;
 
     bool dirty_ = true;
 
