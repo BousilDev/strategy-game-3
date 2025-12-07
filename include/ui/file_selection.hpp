@@ -43,7 +43,7 @@ public:
     // Scan for files in the folder constants::kSavesPath.
     int ScanFiles() {
         if (constants::debug) {
-            std::cout << constants::debug_prefix << "Scanning files in " << saves_folder_ << std::endl;
+            core::PrintTestMsg("Scanning files in ", saves_folder_);
         }
 
         try {
@@ -54,17 +54,18 @@ public:
             for (const auto& file : fs::directory_iterator(saves_folder_)) {
                 if (file.is_regular_file()) {
                     std::ifstream inFile(file.path().string());
-                    std::string timeStr = core::DecodeTimeFromFile(inFile);
-                    //std::time_t timestamp = static_cast<std::time_t>(core::GetIntFromLine(inFile));
-                    std::time_t timestamp = std::time_t(); // Is timestamp needed separately? Now it just reads the next line
+                    std::time_t timestamp = static_cast<std::time_t>(core::GetIntFromLine(inFile));
+                    std::istringstream tmp(std::to_string(static_cast<long long>(timestamp)));
+                    std::string time_str = core::DecodeTimeFromFile(tmp);
 
-                    std::tuple<fs::path, sf::Text, time_t> textTuple = std::make_tuple(file.path(), default_text_, timestamp);
-                    std::get<1>(textTuple).setString(timeStr + "   " + file.path().stem().string());
-                    std::get<1>(textTuple).setOutlineColor(constants::kFSselectedTextOutline);
-                    texts_.emplace_back(textTuple);
+                    std::string label = time_str + "   " + file.path().stem().string();
+                    sf::Text text = default_text_;
+                    text.setString(label);
+                    text.setOutlineColor(constants::kFSselectedTextOutline);
+                    texts_.emplace_back(file.path(), std::move(text), timestamp);
 
                     if (constants::debug) {
-                        std::cout << constants::debug_prefix << file.path().string() << " created at: " << timeStr << std::endl;
+                        core::PrintTestMsg(file.path().string(), " created at: ", time_str, "   ", timestamp);
                     }
                 }
             }
@@ -73,9 +74,8 @@ public:
             return EXIT_FAILURE;
         }
         
-        // FIXME: doesnt work
         // sort texts_ to reverse chronological order
-        std::sort(texts_.begin(), texts_.end(), [](auto const& x, auto const& y) { return std::get<2>(x) > std::get<2>(y); });
+        std::stable_sort(texts_.begin(), texts_.end(), [](auto const& x, auto const& y) { return std::get<2>(x) > std::get<2>(y); });
 
         return 0;
     };
@@ -83,16 +83,6 @@ public:
     void Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event, const bool isLoadClicked) {
 
         auto windowSize = window.getSize();
-
-        // TODO: add resizing support
-        //if (event.type == sf::Event::Resized) {
-        //    // update background
-        //    background_.setSize(sf::Vector2f(windowSize.x - windowSize.x * 2 * margin_, windowSize.y - windowSize.y * 2 * margin_));
-        //    background_.setPosition(sf::Vector2f(windowSize.x * margin_, windowSize.y * margin_));
-        //
-        //    //TODO: update other variables like max visible lines etc
-        //    visible_lines_ = background_.getSize().y / line_height_;
-        //}
 
         if (event.type == sf::Event::MouseWheelScrolled) {
             if (event.mouseWheelScroll.delta < 0) {
@@ -177,7 +167,6 @@ private:
     sf::RectangleShape background_;
 
     sf::Text default_text_;
-    //const std::string no_file_selected_ = "No file has been selected!";
     std::string last_clicked_path_; // path to last clicked file in the load game screen
     int last_clicked_index_ = -1;
 
