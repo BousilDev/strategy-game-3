@@ -239,7 +239,12 @@ void tests::TestBuildings() {
     std::cout << "Testing Buildings..." << std::endl;
     core::Game game = CreateTestGame(2, 5);
     core::Player& player = game.GetCurrentPlayer();
-    std::shared_ptr<world::Tile> tile = game.GetMap().get_tile(0);
+    std::shared_ptr<world::Tile> tile;
+    int i = 0;
+    while ((tile == nullptr || tile == player.GetCapitalBuilding()->getTile()) && i < game.GetMap().get_tiles().size()) {
+        tile = game.GetMap().get_tile(i);
+        i++;
+    }
 
     // Test FarmBuilding creation
     std::shared_ptr<buildings::Building> farm = buildings::FarmBuilding::Create(tile, game.GetCurrentPlayerPtr(), 10);
@@ -263,6 +268,7 @@ void tests::TestUnits() {
     core::Game game = CreateTestGame(2, 5);
     core::Player& player = game.GetCurrentPlayer();
     std::shared_ptr<world::Tile> tile = game.GetMap().get_tile(0);
+    tile->remove_current_unit(); // Ensure tile is empty
 
     // Test Unit creation
     std::shared_ptr<units::Unit> soldier = units::Unit::Create(tile, game.GetCurrentPlayerPtr(), 15, units::UnitType::kSoldier);
@@ -283,6 +289,7 @@ void tests::TestUnits() {
 
     core::Player& player2 = game.GetCurrentPlayer();
     std::shared_ptr<world::Tile> tile2 = game.GetMap().get_tile(1);
+    tile2->remove_current_unit(); // Ensure tile is empty
     std::shared_ptr<units::Unit> enemy_soldier = units::Unit::Create(tile2, game.GetCurrentPlayerPtr(), 15, units::UnitType::kSoldier);
 
     // Test attacking
