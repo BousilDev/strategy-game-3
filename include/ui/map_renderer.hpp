@@ -15,13 +15,11 @@ public:
 
     void DrawTo(sf::RenderWindow& window);
 
-    void ClickTile(sf::RenderWindow& window);
-
     std::shared_ptr<world::Tile> GetClickedTile(sf::RenderWindow& window);
 
     std::shared_ptr<world::Tile> GetLastClickedTile();
 
-    void UpdateOutsideEventLoop(sf::RenderWindow& window);
+    //void UpdateOutsideEventLoop(sf::RenderWindow& window);
 
     void PanMap(sf::RenderWindow& window);
 
@@ -29,7 +27,11 @@ public:
 
     void UpdateVisibleTiles();
 
-    void Update(sf::RenderWindow& window, const sf::Event& event);
+    void UpdateNewTurn(sf::RenderWindow& window);
+
+    void ResetSelectedTile();
+
+    void Update(const sf::Event& event);
 
    private:
 

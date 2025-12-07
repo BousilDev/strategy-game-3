@@ -1,4 +1,3 @@
-#include "ui/map_renderer.hpp"
 #include "ui/center_origin.hpp"
 #include <cmath>
 #include "ui/map_renderer.hpp"
@@ -73,7 +72,7 @@ void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, flo
         topLeft.y - minY + (hex_h * 0.5f) + outline
     );
 
-    // Create shapes at final positions, TEMP: add capitol buildings
+    // Create shapes at final positions
     for (size_t i = 0; i < tile_data.size(); ++i) {
         const sf::Vector2f pos = centers[i] + shift;
 
@@ -100,7 +99,7 @@ void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, flo
     hidden_.setFillColor(sf::Color(0,113,157));
 }
 
-void ui::MapRenderer::Update(sf::RenderWindow& window, const sf::Event& event) {
+void ui::MapRenderer::Update(const sf::Event& event) {
     if (event.type == sf::Event::MouseButtonReleased) {
         UpdateVisibleTiles();
     }
@@ -135,7 +134,18 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
         // If tile visible
         if (visible_tiles_.find(idx) != visible_tiles_.end()) {
 
-            window.draw(tiles_[idx]);
+            auto cur_tile = tiles_[idx];
+
+            cur_tile.setOutlineThickness(2);
+
+            if (selected_tile_) {
+                if (idx == selected_tile_->get_tile_number()) {
+                    cur_tile.setOutlineThickness(-3);
+                }
+            }
+
+            
+            window.draw(cur_tile);
 
             auto v = map_.get_tile(idx);
 
@@ -264,15 +274,22 @@ void ui::MapRenderer::PanMap(sf::RenderWindow& window) {
     }
 }
 
-void ui::MapRenderer::SetViewOnPlayer(sf::RenderWindow& window) {
+void ui::MapRenderer::UpdateNewTurn(sf::RenderWindow& window) {
     if (game_->GetCurrentTurn() > last_turn_) {
+        SetViewOnPlayer(window);   // set view on new player
+        selected_tile_ = nullptr; // reset selected tile
+        last_turn_ += 1;
+    }
+}
+
+
+void ui::MapRenderer::SetViewOnPlayer(sf::RenderWindow& window) {
         std::shared_ptr<buildings::Building> v = game_->GetCurrentPlayer().GetCapitalBuilding();
         if (v != nullptr) {
             auto centered_tile = tiles_[v->getTile()->get_tile_number()];
+            selected_tile_ = nullptr; 
             sf::View view = window.getView();
             view.setCenter(centered_tile.getPosition());
             window.setView(view);
         }
-        last_turn_ += 1;
-    }
 }

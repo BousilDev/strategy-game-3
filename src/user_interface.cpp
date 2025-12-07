@@ -78,7 +78,7 @@ void ui::UserInterface::HandleEvent(bool start) {
         }
 
         info_layer_renderer_.Update(window_, mouse_pos_, event_, tile_pointer);
-        map_renderer_.Update(window_, event_);
+        map_renderer_.Update(event_);
     }
 
 }
@@ -125,6 +125,6 @@ void ui::UserInterface::UpdateOutsideEventLoop(bool start) {
     } else {
         // map view
         map_renderer_.PanMap(window_);
-        map_renderer_.SetViewOnPlayer(window_);
+        map_renderer_.UpdateNewTurn(window_);
     }
 }
