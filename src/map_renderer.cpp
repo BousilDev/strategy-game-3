@@ -96,7 +96,7 @@ void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, flo
     // Currently out of vision tiles 
     hidden_ = sf::CircleShape(tile_size_, 6);
     centerOrigin(hidden_);
-    hidden_.setFillColor(sf::Color(0,113,157));
+    hidden_.setFillColor(sf::Color(230,230,210));
 }
 
 void ui::MapRenderer::Update(const sf::Event& event) {
