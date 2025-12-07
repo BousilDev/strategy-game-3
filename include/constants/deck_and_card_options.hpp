@@ -151,5 +151,64 @@ const std::shared_ptr<cards::Card> kBruteCard =
         )
     );
 
+// ---------------------------------------------
+// Decks
+// ---------------------------------------------
+
+const cards::Deck kStarterDeck(
+    {
+        kSmallFarmCard->Clone(),
+        kSmallFarmCard->Clone(),
+        kEstateFarmCard->Clone(),
+        kForestryCampCard->Clone(),
+        kForestryCampCard->Clone(),
+        kLoggingStationCard->Clone(),
+        kStoneMineCard->Clone(),
+        kScoutCard->Clone(),
+        kScoutCard->Clone(),
+        kInfantryCard->Clone(),
+        kInfantryCard->Clone(),
+        kInfantryCard->Clone(),
+        kGuardianCard->Clone()
+    },
+    6U // hand size
+);
+
+const cards::Deck kBalancedDeck(
+    {
+        kSmallFarmCard->Clone(),
+        kEstateFarmCard->Clone(),
+        kEstateFarmCard->Clone(),
+        kForestryCampCard->Clone(),
+        kForestryCampCard->Clone(),
+        kLoggingStationCard->Clone(),
+        kStoneMineCard->Clone(),
+        kStoneMineCard->Clone(),
+        kProspectorsMineCard->Clone(),
+        kScoutCard->Clone(),
+        kScoutCard->Clone(),
+        kInfantryCard->Clone(),
+        kInfantryCard->Clone(),
+        kGuardianCard->Clone(),
+        kBruteCard->Clone()
+    },
+    5U // hand size
+);
+
+const cards::Deck kAggroDeck(
+    {
+        kEstateFarmCard->Clone(),
+        kForestryCampCard->Clone(),
+        kLoggingStationCard->Clone(),
+        kProspectorsMineCard->Clone(),
+        kScoutCard->Clone(),
+        kInfantryCard->Clone(),
+        kInfantryCard->Clone(),
+        kBruteCard->Clone(),
+        kBruteCard->Clone()
+    },
+    4U // hand size
+);
+
 } // namespace card_constants
 
