@@ -4,6 +4,7 @@
 #include <fstream>
 #include <filesystem>
 
+#include "constants/deck_and_card_options.hpp"
 #include "core/game.hpp"
 #include "ui/user_interface.hpp"
 
@@ -38,23 +39,23 @@ int main() {
                     unsigned int map_size = user_interface.GetSelectedMapSize();
                     unsigned int deck = user_interface.GetSelectedDeck();
                     std::string game_name = user_interface.GetGameName();
-
-                    std::shared_ptr<cards::Card> farm_test_card = std::make_shared<cards::BuildingCard>(
-                        "Farm card", "This is a test card", core::Resource(core::ResourceType::kGold, 1), buildings::FarmBuilding::CreateEmpty(10));
-                    std::shared_ptr<cards::Card> lumbermill_test_card = std::make_shared<cards::BuildingCard>(
-                        "Lumbermill card", "This is a test card", core::Resource(core::ResourceType::kGold, 1), buildings::LumberMillBuilding::CreateEmpty(10));
-                    std::shared_ptr<cards::Card> mine_test_card = std::make_shared<cards::BuildingCard>(
-                        "Mine card", "This is a test card", core::Resource(core::ResourceType::kGold, 1), buildings::MineBuilding::CreateEmpty(10));
-                    std::shared_ptr<cards::Card> soldier_test_card = std::make_shared<cards::UnitCard>(
-                        "Soldier card", "This is a test card", core::Resource(core::ResourceType::kGold, 1), units::Soldier::CreateEmpty(10));
-                    std::vector<std::shared_ptr<cards::Card>> test_cards = {farm_test_card->Clone(), farm_test_card->Clone(), lumbermill_test_card->Clone(), lumbermill_test_card->Clone(), 
-                        mine_test_card->Clone(), mine_test_card->Clone(), soldier_test_card->Clone(), soldier_test_card->Clone()};
-                    cards::Deck test_deck = cards::Deck(test_cards, 5U);
+                    std::shared_ptr<cards::Deck> selected_deck;
+                    switch (deck) {
+                        case 1:
+                            selected_deck = card_constants::kStarterDeck.Clone();
+                            break;
+                        case 2:
+                            selected_deck = card_constants::kBalancedDeck.Clone();
+                            break;
+                        default:
+                            selected_deck = card_constants::kAggroDeck.Clone();
+                            break;
+                    }
                     // Create players
                     for (unsigned int i = 0; i < player_count; ++i) {
                         players.emplace_back(core::Game::PlayerInit{
                             "Player " + std::to_string(i + 1),
-                            test_deck.Clone() // TODO: add custom starter decks
+                             selected_deck->Clone()
                         });
                     }
 

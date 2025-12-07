@@ -36,7 +36,7 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
     selections_.emplace_back(mapSizeTexts, font, 35, sf::Vector2f(0.1f, 0.3f), sf::Vector2f(150.f, 150.f), view_size);
 
     std::vector<std::pair<std::string, int>> deckTexts {
-        std::pair("Deck 1", 1), std::pair("Deck 2", 2), std::pair("Deck 3", 3) };
+        std::pair("Beginner Deck", 1), std::pair("Balanced Deck", 2), std::pair("Aggressive Deck", 3) };
     selections_.emplace_back(deckTexts, font, 35, sf::Vector2f(0.1f, 0.3f), sf::Vector2f(150.f, 200.f), view_size);
 
     // Initialize game name text

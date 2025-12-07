@@ -22,7 +22,7 @@ using core::ResourceType;
 
 // A cheap farm with weak output but low HP
 const std::shared_ptr<cards::Card> kSmallFarmCard =
-    std::make_shared<BuildingCard>(
+    std::make_shared<cards::BuildingCard>(
         "Small Farm",
         "Produces a small amount of food each turn.",
         Resource(ResourceType::kGold, 5),
@@ -35,7 +35,7 @@ const std::shared_ptr<cards::Card> kSmallFarmCard =
 
 // A stronger, gold-boosting farm
 const std::shared_ptr<cards::Card> kEstateFarmCard =
-    std::make_shared<BuildingCard>(
+    std::make_shared<cards::BuildingCard>(
         "Estate Farm",
         "A well-kept estate that yields food and a little gold.",
         Resource(ResourceType::kWood, 20),
@@ -48,7 +48,7 @@ const std::shared_ptr<cards::Card> kEstateFarmCard =
 
 // Balanced lumbermill
 const std::shared_ptr<cards::Card> kForestryCampCard =
-    std::make_shared<BuildingCard>(
+    std::make_shared<cards::BuildingCard>(
         "Forestry Camp",
         "Produces steady wood income.",
         Resource(ResourceType::kGold, 5),
@@ -61,7 +61,7 @@ const std::shared_ptr<cards::Card> kForestryCampCard =
 
 // High-output lumbermill but fragile
 const std::shared_ptr<cards::Card> kLoggingStationCard =
-    std::make_shared<BuildingCard>(
+    std::make_shared<cards::BuildingCard>(
         "Logging Station",
         "Generates large amounts of wood but is lightly built.",
         Resource(ResourceType::kMetal, 15),
@@ -74,7 +74,7 @@ const std::shared_ptr<cards::Card> kLoggingStationCard =
 
 // A durable but low-yield mine
 const std::shared_ptr<cards::Card> kStoneMineCard =
-    std::make_shared<BuildingCard>(
+    std::make_shared<cards::BuildingCard>(
         "Stone Mine",
         "A sturdy mine extracting metal at a slow but reliable pace.",
         Resource(ResourceType::kWood, 15),
@@ -87,7 +87,7 @@ const std::shared_ptr<cards::Card> kStoneMineCard =
 
 // High-yield gold-focused mine
 const std::shared_ptr<cards::Card> kProspectorsMineCard =
-    std::make_shared<BuildingCard>(
+    std::make_shared<cards::BuildingCard>(
         "Prospector's Mine",
         "A risky investment with high metal and gold output.",
         Resource(ResourceType::kMetal, 30),
@@ -105,7 +105,7 @@ const std::shared_ptr<cards::Card> kProspectorsMineCard =
 
 // A basic infantry soldier
 const std::shared_ptr<cards::Card> kInfantryCard =
-    std::make_shared<UnitCard>(
+    std::make_shared<cards::UnitCard>(
         "Infantry",
         "A standard combat unit with balanced stats.",
         Resource(ResourceType::kFood, 10),
@@ -117,7 +117,7 @@ const std::shared_ptr<cards::Card> kInfantryCard =
 
 // A high-damage but fragile scout
 const std::shared_ptr<cards::Card> kScoutCard =
-    std::make_shared<UnitCard>(
+    std::make_shared<cards::UnitCard>(
         "Scout",
         "Cheap, lightly armored skirmisher dealing little damage.",
         Resource(ResourceType::kFood, 5),
@@ -129,7 +129,7 @@ const std::shared_ptr<cards::Card> kScoutCard =
 
 // A tankier defensive unit
 const std::shared_ptr<cards::Card> kGuardianCard =
-    std::make_shared<UnitCard>(
+    std::make_shared<cards::UnitCard>(
         "Guardian",
         "Heavily armored defender meant to hold the line.",
         Resource(ResourceType::kGold, 30),
@@ -141,7 +141,7 @@ const std::shared_ptr<cards::Card> kGuardianCard =
 
 // A high-damage brute unit
 const std::shared_ptr<cards::Card> kBruteCard =
-    std::make_shared<UnitCard>(
+    std::make_shared<cards::UnitCard>(
         "Brute",
         "High damage unit with moderate health.",
         Resource(ResourceType::kMetal, 25),
