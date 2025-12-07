@@ -61,6 +61,20 @@ public:
     // Outside of event loop
     void UpdateOutsideEventLoop(bool start);
 
+    // Reset main menu. Used when returning to main menu.
+    void ResetMainMenu() { main_menu_renderer_.Reset(); }
+
+    // Return true if view is not centered.
+    bool IsViewNotCentered() const {
+        return (view_.getCenter().x != window_.getSize().x || view_.getCenter().y != window_.getSize().y);
+    }
+
+    // Center the view
+    void CenterView() {
+        view_.setCenter(window_.getSize().x * 0.5f, window_.getSize().y * 0.5f);
+        window_.setView(view_);
+    }
+
 private:
     sf::RenderWindow window_;
     sf::View view_;

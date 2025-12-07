@@ -47,8 +47,8 @@ void ui::UserInterface::HandleEvent(bool start) {
     if (event_.type == sf::Event::Closed) window_.close();
     if (event_.type == sf::Event::Resized) {
         view_.setSize(sf::Vector2f(event_.size.width, event_.size.height));
-        view_.setCenter(view_.getSize() * 0.5f);
         view_size_ = view_.getSize();
+        view_.setCenter(view_size_ * 0.5f);
         window_.setView(view_);
     }
 
@@ -96,7 +96,6 @@ bool ui::UserInterface::IsLoadClicked() {
     return main_menu_renderer_.IsLoadClicked(mouse_pos_, event_);
 }
 
-// TODO: temporarily use start variable
 void ui::UserInterface::DrawAndDisplay(bool start) {
     // clear the screen
     window_.clear(sf::Color(0,123,167));
@@ -121,6 +120,7 @@ void ui::UserInterface::UpdateOutsideEventLoop(bool start) {
     
     if (!start) {
         // main menu
+        if (IsViewNotCentered()) { CenterView(); }
         main_menu_renderer_.UpdateOutsideEventLoop(window_size, mouse_pos_);
     } else {
         // map view
