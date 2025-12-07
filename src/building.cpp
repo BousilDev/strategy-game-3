@@ -187,6 +187,8 @@ void FarmBuilding::atTurnEnd()
 
     if (!tile || !owner)
         return;
+    
+    
 
     owner->AddResources(tile->get_terrain()->get_resources());
 }
