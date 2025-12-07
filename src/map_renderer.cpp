@@ -277,7 +277,7 @@ void ui::MapRenderer::PanMap(sf::RenderWindow& window) {
 void ui::MapRenderer::UpdateNewTurn(sf::RenderWindow& window) {
     if (game_->GetCurrentTurn() > last_turn_) {
         SetViewOnPlayer(window);   // set view on new player
-        selected_tile_ = nullptr; // reset selected tile
+        selected_tile_ = game_->GetCurrentPlayer().GetCapitalBuilding()->getTile();  // reset selected tile to capital
         last_turn_ += 1;
     }
 }
@@ -287,7 +287,6 @@ void ui::MapRenderer::SetViewOnPlayer(sf::RenderWindow& window) {
         std::shared_ptr<buildings::Building> v = game_->GetCurrentPlayer().GetCapitalBuilding();
         if (v != nullptr) {
             auto centered_tile = tiles_[v->getTile()->get_tile_number()];
-            selected_tile_ = nullptr; 
             sf::View view = window.getView();
             view.setCenter(centered_tile.getPosition());
             window.setView(view);
