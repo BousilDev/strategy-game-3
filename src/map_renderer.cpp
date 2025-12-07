@@ -100,6 +100,7 @@ void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, flo
 }
 
 void ui::MapRenderer::Update(const sf::Event& event) {
+    
     if (event.type == sf::Event::MouseButtonReleased) {
         UpdateVisibleTiles();
     }
