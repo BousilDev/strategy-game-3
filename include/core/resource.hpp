@@ -31,6 +31,24 @@ struct Resource {
 
   Resource() = default;
   Resource(ResourceType type, int amount) : type(type), amount(amount) {}
+
+  Resource& operator+=(const Resource& other) {
+    if (type == other.type) {
+      amount += other.amount;
+    }
+    return *this;
+  }
+
+  Resource operator+(const Resource& other) const {
+    Resource result = *this;
+    result += other;
+    return result;
+  }
+
+  Resource& operator*(unsigned int factor) {
+    amount *= factor;
+    return *this;
+  }
 };
 
 } // namespace core

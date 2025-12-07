@@ -148,18 +148,18 @@ void CapitalBuilding::atTurnEnd()
 
 FarmBuilding::FarmBuilding(std::shared_ptr<world::Tile> tile,
                            std::shared_ptr<core::Player> owner,
-                           int max_hp)
-    : Building(tile, owner, max_hp, BuildingType::kFarm)
+                           int max_hp, int food_multiplier, int gold_multiplier)
+    : food_multiplier_(food_multiplier), gold_multiplier_(gold_multiplier), Building(tile, owner, max_hp, BuildingType::kFarm)
 {
 }
 
 std::shared_ptr<FarmBuilding> FarmBuilding::Create(
     std::shared_ptr<world::Tile> tile,
     std::shared_ptr<core::Player> owner,
-    int max_hp)
+    int max_hp, int food_multiplier, int gold_multiplier)
 {
     auto ptr = std::shared_ptr<FarmBuilding>(
-        new FarmBuilding(tile, owner, max_hp));
+        new FarmBuilding(tile, owner, max_hp, food_multiplier, gold_multiplier));
 
     if (!tile->place_building(ptr))
         return nullptr;
@@ -187,12 +187,23 @@ void FarmBuilding::atTurnEnd()
 
     if (!tile || !owner)
         return;
+
+    auto terrain_type = tile->get_terrain()->get_terrain_type();
+
+    // Farms only work on plains and forests
+    if (!(terrain_type == world::Terrain::plains ||
+          terrain_type == world::Terrain::forest))
+        return;
     
+    // Gather resources from the tile's terrain
     auto all_resources = tile->get_terrain()->get_resources();
     std::list<core::Resource> farm_resources;
     for (auto& resource : all_resources) {
-        if (resource.type == core::ResourceType::kFood || resource.type == core::ResourceType::kGold) {
-            farm_resources.push_back(resource);
+        if (resource.type == core::ResourceType::kFood) {
+            farm_resources.push_back(resource * food_multiplier_);
+        }
+        if (resource.type == core::ResourceType::kGold) {
+            farm_resources.push_back(resource * gold_multiplier_);
         }
     }   
 

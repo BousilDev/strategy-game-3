@@ -102,7 +102,7 @@ class FarmBuilding : public Building {
 public:
     static std::shared_ptr<FarmBuilding> Create(std::shared_ptr<world::Tile> tile,
                                                 std::shared_ptr<core::Player> owner,
-                                                int max_hp);
+                                                int max_hp, int food_multiplier = 1, int gold_multiplier = 1);
 
     static std::shared_ptr<FarmBuilding> CreateEmpty(int max_hp);
 
@@ -112,7 +112,10 @@ public:
 
     FarmBuilding(std::shared_ptr<world::Tile> tile,
                  std::shared_ptr<core::Player> owner,
-                 int max_hp);
+                 int max_hp, int food_multiplier = 1, int gold_multiplier = 1);
+private:
+    int food_multiplier_{1};
+    int gold_multiplier_{1};
 };
 
 } // namespace buildings
