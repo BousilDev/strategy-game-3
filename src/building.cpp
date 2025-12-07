@@ -188,9 +188,15 @@ void FarmBuilding::atTurnEnd()
     if (!tile || !owner)
         return;
     
-    
+    auto all_resources = tile->get_terrain()->get_resources();
+    std::list<core::Resource> farm_resources;
+    for (auto& resource : all_resources) {
+        if (resource.type == core::ResourceType::kFood || resource.type == core::ResourceType::kGold) {
+            farm_resources.push_back(resource);
+        }
+    }   
 
-    owner->AddResources(tile->get_terrain()->get_resources());
+    owner->AddResources(farm_resources);
 }
 
 } // namespace buildings
