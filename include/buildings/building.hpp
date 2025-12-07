@@ -138,4 +138,24 @@ private:
     int gold_multiplier_{1};
 };
 
+class MineBuilding : public Building {
+public:
+    static std::shared_ptr<MineBuilding> Create(std::shared_ptr<world::Tile> tile,
+                                                std::shared_ptr<core::Player> owner,
+                                                int max_hp = 100, int metal_multiplier = 1, int gold_multiplier = 1);
+
+    static std::shared_ptr<MineBuilding> CreateEmpty(int max_hp = 100, int metal_multiplier = 1, int gold_multiplier = 1);
+
+    std::shared_ptr<Building> CreateEmptyFromCopy() const override;
+
+    void atTurnEnd() override;
+
+    MineBuilding(std::shared_ptr<world::Tile> tile,
+                 std::shared_ptr<core::Player> owner,
+                 int max_hp = 100, int metal_multiplier = 1, int gold_multiplier = 1);
+private:
+    int metal_multiplier_{1};
+    int gold_multiplier_{1};
+};
+
 } // namespace buildings

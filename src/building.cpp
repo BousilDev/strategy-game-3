@@ -278,4 +278,71 @@ void LumberMillBuilding::atTurnEnd()
     owner->AddResources(lumbermill_resources);
 } 
 
+// ============================================================
+// MineBuilding
+// ============================================================
+
+MineBuilding::MineBuilding(std::shared_ptr<world::Tile> tile,
+                           std::shared_ptr<core::Player> owner,
+                           int max_hp, int metal_multiplier, int gold_multiplier)
+    : metal_multiplier_(metal_multiplier), gold_multiplier_(gold_multiplier), Building(tile, owner, max_hp, BuildingType::kFarm)
+{
+}
+
+std::shared_ptr<MineBuilding> MineBuilding::Create(
+    std::shared_ptr<world::Tile> tile,
+    std::shared_ptr<core::Player> owner,
+    int max_hp, int metal_multiplier, int gold_multiplier)
+{
+    auto ptr = std::shared_ptr<MineBuilding>(
+        new MineBuilding(tile, owner, max_hp, metal_multiplier, gold_multiplier));
+
+    if (!tile->place_building(ptr))
+        return nullptr;
+
+    owner->AddBuilding(ptr);
+    return ptr;
+}
+
+std::shared_ptr<MineBuilding> MineBuilding::CreateEmpty(int max_hp, int metal_multiplier, int gold_multiplier)
+{
+    return std::shared_ptr<MineBuilding>(
+        new MineBuilding(nullptr, nullptr, max_hp, metal_multiplier, gold_multiplier));
+}
+
+std::shared_ptr<Building> MineBuilding::CreateEmptyFromCopy() const
+{
+    return std::make_shared<MineBuilding>(nullptr, nullptr, max_hp_, metal_multiplier_, gold_multiplier_);
+}
+
+void MineBuilding::atTurnEnd()
+{   
+    std::cout << "at mine turn end\n";
+    auto tile  = current_tile_.lock();
+    auto owner = owner_.lock();
+
+    if (!tile || !owner)
+        return;
+
+    auto terrain_type = tile->get_terrain()->get_terrain_type();
+
+    // Mines only work on mountains and hills
+    if (terrain_type != world::Terrain::mountains)
+        return;
+    
+    // Gather resources from the tile's terrain
+    auto all_resources = tile->get_terrain()->get_resources();
+    std::list<core::Resource> mine_resources;
+    for (auto& resource : all_resources) {
+        if (resource.type == core::ResourceType::kMetal) {
+            mine_resources.push_back(resource * metal_multiplier_);
+        }
+        if (resource.type == core::ResourceType::kGold) {
+            mine_resources.push_back(resource * gold_multiplier_);
+        }
+    }   
+
+    owner->AddResources(mine_resources);
+}
+
 } // namespace buildings
