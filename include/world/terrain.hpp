@@ -80,8 +80,9 @@ public:
     // Default resources for Plains
     static std::list<core::Resource> default_resources() {
         return {
-            {core::kFood, 2},
-            {core::kWood, 2}
+            {core::kFood, 5},
+            {core::kWood, 1},
+            {core::kGold, 1}
         };
     }
     PlainsTerrain(const std::list<core::Resource>& resources = default_resources())
@@ -95,7 +96,8 @@ public:
     static std::list<core::Resource> default_resources() {
         return {
             {core::kWood, 5},
-            {core::kFood, 5}
+            {core::kFood, 3},
+            {core::kGold, 1}
         };
     }
     ForestTerrain(const std::list<core::Resource>& resources = default_resources())
@@ -109,7 +111,7 @@ public:
     static std::list<core::Resource> default_resources() {
         return {
             {core::kMetal, 5},
-            {core::kGold, 5}
+            {core::kGold, 3}
         };
     }
     MountainsTerrain(const std::list<core::Resource>& resources = default_resources())

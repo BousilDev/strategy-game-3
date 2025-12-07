@@ -39,9 +39,17 @@ int main() {
                     unsigned int deck = user_interface.GetSelectedDeck();
                     std::string game_name = user_interface.GetGameName();
 
-                    std::shared_ptr<cards::Card> test_card = std::make_shared<cards::BuildingCard>("Test card", "This is a test card", core::Resource(core::ResourceType::kGold, 1), buildings::FarmBuilding::CreateEmpty(10));
-                    std::vector<std::shared_ptr<cards::Card>> empty_cards = {test_card->Clone(), test_card->Clone(), test_card->Clone(), test_card->Clone(), test_card->Clone()};
-                    cards::Deck test_deck = cards::Deck(empty_cards, 3U);
+                    std::shared_ptr<cards::Card> farm_test_card = std::make_shared<cards::BuildingCard>(
+                        "Farm card", "This is a test card", core::Resource(core::ResourceType::kGold, 1), buildings::FarmBuilding::CreateEmpty(10));
+                    std::shared_ptr<cards::Card> lumbermill_test_card = std::make_shared<cards::BuildingCard>(
+                        "Lumbermill card", "This is a test card", core::Resource(core::ResourceType::kGold, 1), buildings::LumberMillBuilding::CreateEmpty(10));
+                    std::shared_ptr<cards::Card> mine_test_card = std::make_shared<cards::BuildingCard>(
+                        "Mine card", "This is a test card", core::Resource(core::ResourceType::kGold, 1), buildings::MineBuilding::CreateEmpty(10));
+                    std::shared_ptr<cards::Card> soldier_test_card = std::make_shared<cards::UnitCard>(
+                        "Soldier card", "This is a test card", core::Resource(core::ResourceType::kGold, 1), units::Soldier::CreateEmpty(10));
+                    std::vector<std::shared_ptr<cards::Card>> test_cards = {farm_test_card->Clone(), farm_test_card->Clone(), lumbermill_test_card->Clone(), lumbermill_test_card->Clone(), 
+                        mine_test_card->Clone(), mine_test_card->Clone(), soldier_test_card->Clone(), soldier_test_card->Clone()};
+                    cards::Deck test_deck = cards::Deck(test_cards, 5U);
                     // Create players
                     for (unsigned int i = 0; i < player_count; ++i) {
                         players.emplace_back(core::Game::PlayerInit{
@@ -64,7 +72,7 @@ int main() {
                         assert(game.GetCurrentTurn() == i + 1);
                         // Add resources to the current player for testing
                         game.GetCurrentPlayer().AddResources({core::Resource(core::ResourceType::kGold, 10 + 2 * i)});
-                        units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), 10, units::UnitType::kSoldier);
+                        units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), units::UnitType::kSoldier, 10, 5);
                     }
 
                     // Handling an event to ready-up map renderer
