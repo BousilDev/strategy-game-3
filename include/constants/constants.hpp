@@ -60,9 +60,8 @@ const std::vector<std::string> resourceTypeNames = {
 const std::vector<std::string> buildingTypeNames = {
     "Capital",
     "Farm",
-    "Mine",
-    "Neighborhood",
-    "Power",
+    "LumberMill",
+    "Mine"
 };
 
 const std::vector<std::string> unitTypeNames = {

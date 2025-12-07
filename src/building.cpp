@@ -99,6 +99,8 @@ std::shared_ptr<Building> Building::CreateEmpty(BuildingType type, int max_hp,
 std::istream& operator>>(std::istream &in, std::shared_ptr<Building>& b)
 {
     b->current_hp_ = core::GetIntFromLine(in);
+    b->resource_multiplier_ = core::GetIntFromLine(in);
+    b->gold_multiplier_ = core::GetIntFromLine(in);
     return in;
 }
 
@@ -107,6 +109,8 @@ std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Building>& b)
     out << constants::buildingTypeNames[static_cast<int>(b->GetType())] << "\n";
     out << b->getMaxHp() << "\n";
     out << b->getCurrentHp() << "\n";
+    out << b->getResourceMultiplier() << "\n";
+    out << b->getGoldMultiplier() << "\n";
 
     if (auto tile = b->getTile())
         out << tile->get_tile_number();

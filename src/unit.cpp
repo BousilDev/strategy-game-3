@@ -51,6 +51,7 @@ std::shared_ptr<Unit> Unit::CreateEmpty(UnitType type, int max_hp, int damage)
 
 std::istream& operator>>(std::istream &in, std::shared_ptr<Unit>& other) {
     other->current_hp_ = core::GetIntFromLine(in);
+    other->damage_ = core::GetIntFromLine(in);
     other->has_attacked_ = static_cast<bool>(core::GetIntFromLine(in));
     other->turn_movement_ = core::GetIntFromLine(in);
 
@@ -61,8 +62,9 @@ std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Unit>& other) 
     out << constants::unitTypeNames[static_cast<int>(other->GetType())] << "\n";
     out << other->getMaxHp() << "\n";
     out << other->getCurrentHp() << "\n";
-    out << other->has_attacked_ << "\n";
-    out << other->turn_movement_ << "\n";
+    out << other->getDamage() << "\n";
+    out << other->hasAttacked() << "\n";
+    out << other->getTurnMovement() << "\n";
     if (auto tile = other->current_tile_.lock()) {
         out << tile->get_tile_number();
     } else {

@@ -41,6 +41,9 @@ public:
     UnitType GetType() const { return unit_type_; }
     int getMaxHp()   const { return max_hp_; }
     int getCurrentHp() const { return current_hp_; }
+    int getDamage() const { return damage_; }
+    bool hasAttacked() const { return has_attacked_; }
+    int getTurnMovement() const { return turn_movement_; }
 
     int takeDamage(int damage);
     bool moveToTile(std::shared_ptr<world::Tile> tile);
