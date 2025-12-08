@@ -90,8 +90,6 @@ int main() {
                         std::cout << "No save file found." << std::endl;
                     }
                 }
-            } else {
-                // TODO: things that are done when the game has been initialized
             }
         }
         // Update window size etc. outside the event handling loop
