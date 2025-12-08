@@ -25,13 +25,6 @@ int ui::UserInterface::Initialize(core::Game& game) {
     return 0;
 }
 
-//bool ui::UserInterface::PollAndHandleEvent(bool start) {
-//    bool event_found = PollEvent();
-//    HandleEvent(start);
-//    return event_found;
-//}
-
-
 bool ui::UserInterface::PollEvent() {
     if (window_.pollEvent(event_)) {
         mouse_pos_ = window_.mapPixelToCoords(sf::Mouse::getPosition(window_));

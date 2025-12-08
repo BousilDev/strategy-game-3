@@ -1,15 +1,38 @@
 #pragma once
 
+/**
+ * @file text_input.hpp
+ * @brief Declares the TextInput class which handles text input fields in the UI.
+ */
+
 #include <string>
 #include <functional>
 #include <SFML/Graphics.hpp>
 
 namespace ui {
 
+/**
+ * @class TextInput
+ * @brief A class for handling text input fields in the UI.
+ */
 class TextInput {
 public:
+
+    /**
+     * @brief Default constructor.
+     */
     TextInput() = default;
 
+    /**
+     * @brief Construct a TextInput instance.
+     * 
+     * @param view_size The size of the view.
+     * @param prefix The prefix string displayed before user input.
+     * @param font The font used for rendering text.
+     * @param position The relative position (0.0 to 1.0) of the text input in the window.
+     * @param offset The pixel offset from the relative position.
+     * @param character_size The character size for the text.
+     */
     TextInput(const sf::Vector2f& view_size, const std::string& prefix, const sf::Font& font, const sf::Vector2f& position,
               const sf::Vector2f& offset = sf::Vector2f(0, 0), unsigned int character_size = 30U)
               : prefix_(prefix), position_(position), offset_(offset) {
@@ -23,6 +46,11 @@ public:
         caret_.setPosition(text_.getPosition());
     }
 
+    /**
+     * @brief Handle SFML events for text input.
+     * 
+     * @param event The SFML event to process.
+     */
     void UpdateEvent(const sf::Event& event) {
         if (event.type == sf::Event::TextEntered) {
             const sf::Uint32 u = event.text.unicode;
@@ -39,9 +67,7 @@ public:
             if (!(std::isalnum(u) || u==' ' || u=='_' || u=='-')) return;
 
             // Enforce max length
-            if (buffer_.getSize() >= max_length_) {
-                return;
-            }
+            if (buffer_.getSize() >= max_length_) return;
 
             buffer_.insert(buffer_.getSize(), u);
             dirty_ = true;
@@ -54,13 +80,22 @@ public:
         }
     }
 
+    /**
+     * @brief Update the position of the text input field based on window size.
+     * 
+     * @param window_size The size of the window.
+     */
     void UpdatePosition(const sf::Vector2f& window_size) {
         text_.setPosition(position_.x * window_size.x + offset_.x,
                           position_.y * window_size.y + offset_.y);
         dirty_ = true;
     }
 
-    // Call every frame with delta time to update the caret blink
+    /**
+     * @brief Update the text input field (caret blinking, text updates).
+     * 
+     * @param dt The delta time since the last update.
+     */
     void UpdateOutsideEventLoop(float dt) {
         caret_time_ += dt;
         if (caret_time_ >= caret_blink_period_) {
@@ -74,6 +109,11 @@ public:
         }
     }
 
+    /**
+     * @brief Draw the TextInput instance to the given window.
+     * 
+     * @param window The render window.
+     */
     void DrawTo(sf::RenderWindow& window) {
         window.draw(text_);
         if (caret_visible_) {
@@ -81,6 +121,11 @@ public:
         }
     }
 
+    /**
+     * @brief Get the current input string.
+     * 
+     * @return The current input string as a std::string.
+     */
     std::string GetInputString() const {
         sf::String s = buffer_;
         std::string out;
@@ -95,14 +140,23 @@ public:
         return out;
     }
 
+    /**
+     * @brief Get the current input buffer as an sf::String.
+     * 
+     * @return The current input buffer.
+     */
     const sf::String& GetBuffer() const { return buffer_; }
 
+    /**
+     * @brief Reset the text input field to an empty state.
+     */
     void Reset() {
         buffer_.clear();
         dirty_ = true;
     }
 
 private:
+    // Update the caret position based on the current text.
     void UpdateCaretPosition() {
         const auto bounds = text_.getLocalBounds();
         const float x = text_.getPosition().x + bounds.left + bounds.width;

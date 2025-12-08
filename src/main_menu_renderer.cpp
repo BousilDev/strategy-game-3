@@ -58,36 +58,36 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
 }   
 
 // Update the elements based on the event
-int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event) {
+int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vector2f& mouse_pos, const sf::Event& event) {
     //current_state_ = new_state_;
 
     if (current_state_ == 1) {
         // new game
         game_name_input_.UpdateEvent(event);
-        if (back_to_main_menu_button_.IsClicked(mousePos, event)) {
+        if (back_to_main_menu_button_.IsClicked(mouse_pos, event)) {
             new_state_ = 0;
         } else {
             // Update selector states
             for (auto& e : selections_) {
-                e.Update(mousePos, event);
+                e.Update(mouse_pos, event);
             }
         }
     } else if (current_state_ == 2) {
         // load game
-        if (back_to_main_menu_button_.IsClicked(mousePos, event)) {
+        if (back_to_main_menu_button_.IsClicked(mouse_pos, event)) {
             new_state_ = 0;
             save_file_selection_.Reset();
         } else {
-            save_file_selection_.Update(window, mousePos, event, start_loaded_button_.IsClicked(mousePos, event));
+            save_file_selection_.Update(window, mouse_pos, event, start_loaded_button_.IsClicked(mouse_pos, event));
         }
     } else {
         // main menu
-        if (new_game_button_.IsClicked(mousePos, event)) {
+        if (new_game_button_.IsClicked(mouse_pos, event)) {
             new_state_ = 1;
-        } else if (load_game_button_.IsClicked(mousePos, event)) {
+        } else if (load_game_button_.IsClicked(mouse_pos, event)) {
             save_file_selection_.ScanFiles();
             new_state_ = 2;
-            save_file_selection_.Update(window, mousePos, event, IsLoadClicked(mousePos, event));
+            save_file_selection_.Update(window, mouse_pos, event, IsLoadClicked(mouse_pos, event));
         }
     }
 

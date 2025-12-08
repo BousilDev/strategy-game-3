@@ -1,19 +1,18 @@
 #include "ui/file_selection.hpp"
 
-void ui::FileSelection::Initialize(const sf::Vector2f& viewSize, const std::shared_ptr<sf::Font>& font) {
+void ui::FileSelection::Initialize(const sf::Vector2f& view_size, const std::shared_ptr<sf::Font>& font) {
     
     default_text_.setFont(*font);
     default_text_.setCharacterSize(constants::kFileSelectionFontSize);
 
-    background_.setSize(sf::Vector2f(viewSize.x - viewSize.x * 2 * margin_, viewSize.y - viewSize.y * 2 * margin_));
-    background_.setPosition(sf::Vector2f(viewSize.x * margin_, viewSize.y * margin_));
+    background_.setSize(sf::Vector2f(view_size.x - view_size.x * 2 * margin_, view_size.y - view_size.y * 2 * margin_));
+    background_.setPosition(sf::Vector2f(view_size.x * margin_, view_size.y * margin_));
     background_.setFillColor(constants::kFSbgColor);
     background_.setOutlineColor(constants::kFSoutlineColor);
     background_.setOutlineThickness(2.f);
 
     visible_lines_ = background_.getSize().y / line_height_;
 
-    // Scrollbar
     //scrollbar_track_.setOutlineThickness(0.f);
     //scrollbar_thumb_.setOutlineThickness(0.f);
     scrollbar_track_.setFillColor(constants::kScrollbarTrackColor);
@@ -210,6 +209,7 @@ void ui::FileSelection::DrawTo(sf::RenderWindow& window) {
     // Restore view
     window.setView(prev);
 
+    // Draw scrollbar if needed
     if (IsOverflow()) {
         window.draw(scrollbar_track_);
         window.draw(scrollbar_thumb_);
