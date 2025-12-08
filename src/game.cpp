@@ -11,7 +11,7 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
     *this = Game(); // Reset game to default state
 
     // Create map with given size
-    map_ = world::Map(map_size, world::Map::GenerationMethod::Droplets);
+    map_ = world::Map(map_size, world::Map::GenerationMethod::BigDroplets);
     // Initialize players
     nof_players_ = players.size();
 

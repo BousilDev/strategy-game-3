@@ -164,7 +164,50 @@ void Map::generate_map(GenerationMethod generationmethod) {
 
     break;
 }
+case GenerationMethod::BigDroplets: {
+    const int total_tiles = map_width_ * map_height_;
+    const double target_fraction = 0.10; // fraction of map per terrain type
+    const int min_radius = 1;
+    const int max_radius = 3;
 
+    // Fill map with plains first
+    for (auto& tile : tiles_) {
+        tile->set_terrain(std::make_shared<PlainsTerrain>());
+    }
+
+    std::mt19937 rng(std::random_device{}());
+    std::uniform_int_distribution<int> tile_dist(0, total_tiles - 1);
+    std::uniform_int_distribution<int> radius_dist(min_radius, max_radius);
+
+    auto apply_droplet = [&](size_t center_idx, auto terrain_factory, int radius) {
+        auto& center_tile = tiles_[center_idx];
+        std::vector<unsigned int> neighbour_indices = center_tile->get_tiles_in_n_range(radius);
+
+        for (auto idx : neighbour_indices) {
+            tiles_[idx]->set_terrain(terrain_factory());
+        }
+    };
+
+    auto drop_terrain = [&](auto terrain_factory) {
+        int tiles_to_cover = static_cast<int>(total_tiles * target_fraction);
+        int covered = 0;
+
+        while (covered < tiles_to_cover) {
+            size_t center_idx = tile_dist(rng);
+            int radius = radius_dist(rng);
+            apply_droplet(center_idx, terrain_factory, radius);
+
+            covered += radius * radius; // approximate coverage
+        }
+    };
+
+    // Spawn terrains
+    drop_terrain([&]() { return std::make_shared<WaterTerrain>(); });
+    drop_terrain([&]() { return std::make_shared<ForestTerrain>(); });
+    drop_terrain([&]() { return std::make_shared<MountainsTerrain>(); });
+
+    break;
+}
     default:
         for (auto& tile : tiles_) {
             auto plains_ptr = std::make_shared<PlainsTerrain>();
@@ -196,39 +239,74 @@ unsigned int Map::get_map_width() const{
 unsigned int Map::get_map_height() const{
     return map_height_;
 };
-std::vector<std::shared_ptr<Tile>> Map::get_n_spawn(unsigned int nof_players) {
-    std::vector<size_t> valid_tiles;
-    for(size_t i = 0; i < tiles_.size(); i++){
-        auto tile = tiles_[i];
-        if (tile->get_terrain()->get_name() == "plains"){
-            valid_tiles.push_back(i);
+
+
+std::vector<std::shared_ptr<Tile>> Map::get_n_spawn(unsigned int nof_players)
+{
+    std::vector<size_t> plains_indices;
+    for (size_t i = 0; i < tiles_.size(); ++i) {
+        if (tiles_[i]->get_terrain()->get_name() == "plains") {
+            plains_indices.push_back(i);
         }
-}
+    }
+
+    std::random_device rd;
+    std::mt19937 rng(rd());
+
+    int min_distance = static_cast<int>(map_width_ * 0.20f + 1);
+    if (min_distance < 1) min_distance = 1;
+    std::cout << "min distance: " << min_distance;
+
+    // ---------- Try spaced placement ----------
+    static constexpr int MAX_ATTEMPTS = 10;
+
+    for (int attempt = 0; attempt < MAX_ATTEMPTS; ++attempt) {
+        std::shuffle(plains_indices.begin(), plains_indices.end(), rng);
+
+        std::vector<size_t> chosen;
+
+        for (size_t idx : plains_indices) {
+            bool too_close = false;
+            for (size_t prev : chosen) {
+                if (distance(static_cast<int>(idx),
+                             static_cast<int>(prev)) < min_distance) {
+                    too_close = true;
+                    break;
+                }
+            }
+
+            if (!too_close) {
+                chosen.push_back(idx);
+                if (chosen.size() == nof_players)
+                    break;
+            }
+        }
+
+        if (chosen.size() == nof_players) {
+            std::vector<std::shared_ptr<Tile>> result;
+            for (size_t idx : chosen)
+                result.push_back(tiles_[idx]);
+            return result;
+        }
+    }
+
+    // ---------- Fallback: ignore spacing ----------
+    std::cout << "[Map::get_n_spawn] Using fallback (ignoring spacing rule)\n";
+
+    std::shuffle(plains_indices.begin(), plains_indices.end(), rng);
 
     std::vector<std::shared_ptr<Tile>> result;
-    // Shuffle the valid indices for random selection
-    std::random_device rd;
-    std::mt19937 g(rd());
-    std::shuffle(valid_tiles.begin(), valid_tiles.end(), g);
-
-    // Take up to nof_players valid tiles
-    size_t count = std::min(valid_tiles.size(), static_cast<size_t>(nof_players));
-    for (size_t i = 0; i < count; ++i) {
-        size_t index = valid_tiles[i];
-        result.push_back(tiles_[index]);
-        std::cout << "  -> Assigned tile index " << index 
-                  << " (" << tiles_[index]->get_terrain()->get_name() << ")\n";
+    for (size_t i = 0;
+         i < std::min(plains_indices.size(),
+                      static_cast<size_t>(nof_players));
+         ++i)
+    {
+        result.push_back(tiles_[plains_indices[i]]);
     }
 
-    // Fill with empty pointers if not enough valid tiles
-    while (result.size() < nof_players) {
-        result.push_back(nullptr);
-        std::cout << "  -> Not enough plains: added empty spawn slot.\n";
-    }
-
-    std::cout << "[Map::get_n_spawn] Returning " << result.size() << " spawn tiles.\n";
     return result;
-};
+}
+
 
 //uses coordinate conversion to calculate distance
 int Map::distance(int tile1, int tile2) const {

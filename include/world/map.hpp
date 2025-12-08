@@ -50,6 +50,7 @@ public:
         PlainsOnly,
         Stripes,
         Droplets,
+        BigDroplets,
     };
     
     /**

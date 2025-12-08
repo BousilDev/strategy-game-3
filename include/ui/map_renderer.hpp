@@ -27,6 +27,8 @@ public:
 
     void UpdateVisibleTiles();
 
+    void UpdateMovableTilesFromSelection();
+
     void UpdateNewTurn(sf::RenderWindow& window);
 
     void ResetSelectedTile();
@@ -44,6 +46,8 @@ public:
     // Game info
     std::shared_ptr<world::Tile> selected_tile_ = nullptr;
     std::unordered_set<unsigned int> visible_tiles_;
+    std::unordered_set<unsigned int> movable_tiles_;
+    std::unordered_set<unsigned int> attackable_tiles_;
     core::Game* game_ = nullptr;
     std::vector<std::shared_ptr<world::Tile>> spawn_tiles_;
     int last_turn_;
