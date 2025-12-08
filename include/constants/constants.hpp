@@ -34,7 +34,7 @@ const std::string kGameTitle = "Strategy Game 3";
 
 // Map display constants
 const float mapPanSpeed = 15;
-const int viewDistance = 10;
+const int viewDistance = 2;
 const sf::Color playerOneColor = sf::Color(233,20,20);
 const sf::Color playerTwoColor = sf::Color(20,233,20);
 const sf::Color playerThreeColor = sf::Color(20,20,233);
