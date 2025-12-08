@@ -647,3 +647,42 @@ Game is playable but improvements to both game logic and UI can be done.
 3. Fix some issues in main menu
 4. Add distance function to map and restrict unit movement
 5. Start writing the Project document
+
+
+# Meeting 8.12.2025 12::00 - 14::00 @On site
+Sprint 4, "daily" 4
+
+**Participants**:
+
+1. Oliver Niemi
+2. Konsta Suuriniemi
+3. Aleksi Sarja
+4. Topi Varuskivi
+5. Atte Inki
+
+## Summary of works
+
+1. Added health bars to units & buildings
+2. Added more deck options and cards to the game
+3. Implemented scroll bar to load menu and added more validation to game name
+4. Tile selection highlighting implemented
+5. Implemented unit attacking and moving logic further
+
+## Challenges
+
+No notable challenges
+
+## Actions
+
+1. Fixed some Card UI things and Main menu resetting
+2. Discussed and planned the demo event
+
+## Project status
+
+Game is playable and nearly ready for demo.
+
+### TODOs
+
+1. Finish project document
+2. Fix all code problems before demo
+3. Finalize the game

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <filesystem>
 
+#include "constants/deck_and_card_options.hpp"
 #include "core/game.hpp"
 #include "ui/user_interface.hpp"
 
@@ -20,8 +21,14 @@ int main() {
         return EXIT_FAILURE;
     }
 
+    sf::Clock clock;
+    
     // Main graphics loop
     while (user_interface.GetWindow().isOpen()) {
+
+        // Time since last frame
+        sf::Time dt = clock.restart();
+        float delta_seconds = dt.asSeconds();
 
         // Handle events
         while (user_interface.PollEvent()) {
@@ -38,15 +45,23 @@ int main() {
                     unsigned int map_size = user_interface.GetSelectedMapSize();
                     unsigned int deck = user_interface.GetSelectedDeck();
                     std::string game_name = user_interface.GetGameName();
-
-                    std::shared_ptr<cards::Card> test_card = std::make_shared<cards::BuildingCard>("Test card", "This is a test card", core::Resource(core::ResourceType::kGold, 1), buildings::FarmBuilding::CreateEmpty(10));
-                    std::vector<std::shared_ptr<cards::Card>> empty_cards = {test_card->Clone(), test_card->Clone(), test_card->Clone(), test_card->Clone(), test_card->Clone()};
-                    cards::Deck test_deck = cards::Deck(empty_cards, 3U);
+                    std::shared_ptr<cards::Deck> selected_deck;
+                    switch (deck) {
+                        case 1:
+                            selected_deck = card_constants::kStarterDeck.Clone();
+                            break;
+                        case 2:
+                            selected_deck = card_constants::kBalancedDeck.Clone();
+                            break;
+                        default:
+                            selected_deck = card_constants::kAggroDeck.Clone();
+                            break;
+                    }
                     // Create players
                     for (unsigned int i = 0; i < player_count; ++i) {
                         players.emplace_back(core::Game::PlayerInit{
                             "Player " + std::to_string(i + 1),
-                            test_deck.Clone() // TODO: add custom starter decks
+                             selected_deck->Clone()
                         });
                     }
 
@@ -64,7 +79,7 @@ int main() {
                         assert(game.GetCurrentTurn() == i + 1);
                         // Add resources to the current player for testing
                         game.GetCurrentPlayer().AddResources({core::Resource(core::ResourceType::kGold, 10 + 2 * i)});
-                        units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), 10, units::UnitType::kSoldier);
+                        units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), units::UnitType::kSoldier, 10, 5);
                     }
 
                     // Handling an event to ready-up map renderer
@@ -88,7 +103,7 @@ int main() {
             }
         }
         // Update window size etc. outside the event handling loop
-        user_interface.UpdateOutsideEventLoop(game.IsInitialized());
+        user_interface.UpdateOutsideEventLoop(game.IsInitialized(), delta_seconds);
         user_interface.DrawAndDisplay(game.IsInitialized());
     }
     return 0;

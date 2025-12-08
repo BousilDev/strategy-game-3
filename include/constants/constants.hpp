@@ -15,11 +15,13 @@ const std::string debug_prefix = "###: ";
 const std::string faultySavesPath = "tests/faultySaves/";
 const std::string kSavesPath = "saves/";
 
-// UI constants
+// -----UI constants-----
 const int kInitWindowWidth = 800;
 const int kInitWindowHeight = 600;
 
 const int kMainMenuClickablesSize = 40;
+
+// ui::FileSelection
 const int kFileSelectionFontSize = 30;
 const sf::Color kFSselectedTextColor = sf::Color(255, 0, 0, 255);   // ui::FileSelection selected text color
 const sf::Color kFSselectedTextOutline = sf::Color(127, 0, 0, 255); // ui::FileSelection selected text outline color
@@ -27,6 +29,17 @@ const sf::Color kFStextColor = sf::Color(255, 255, 255, 255);       // ui::FileS
 const sf::Color kFSbgColor = sf::Color(50, 50, 50, 100);            // ui::FileSelection background color
 const sf::Color kFSoutlineColor = sf::Color(255, 255, 255, 200);    // ui::FileSelection outline color
 const float kFSmargin = 0.2f;                                       // ui::FileSelection margin size compared to window size
+const sf::Color kScrollbarTrackColor = sf::Color(60, 60, 60, 120);
+const sf::Color kScrollbarThumbColor = sf::Color(160, 160, 160, 200);
+const float kScrollbarPadding = 4.f;    // ui::FileSelection scrollbar gap from right edge of background_
+const float kScrollbarWidth = 8.f;      // ui::FileSelection scrollbar track width
+const float kMinThumbHeight = 24.f;     // ui::FileSelection scrollbar minimum thumb height
+const float kFScontentPadding = 8.f;    // ui::Fileselection text padding inside the element
+
+// ui::TextInput
+const size_t TextInputMaxLength = 64; // Max length for the text input buffer
+const float TextInputCaretTime = 0.f;
+const float TextInputCaretBlinkPeriod = 0.5f; // seconds
 
 const std::string kFontPath = "texture/times.ttf";
 const std::string kBackgroundImagePath = "texture/background.jpg";
@@ -60,13 +73,17 @@ const std::vector<std::string> resourceTypeNames = {
 const std::vector<std::string> buildingTypeNames = {
     "Capital",
     "Farm",
-    "Mine",
-    "Neighborhood",
-    "Power",
+    "LumberMill",
+    "Mine"
 };
 
 const std::vector<std::string> unitTypeNames = {
     "Soldier",
+};
+
+const std::vector<std::string> cardsTypeNames = {
+    "BuildingCard",
+    "UnitCard"
 };
 
 } // namespace constants

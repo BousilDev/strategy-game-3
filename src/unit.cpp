@@ -11,10 +11,11 @@ namespace units {
 
 Unit::Unit(std::shared_ptr<world::Tile> tile,
            std::shared_ptr<core::Player> owner,
-           int max_hp,
-           UnitType unit_type)
+           UnitType unit_type,
+           int max_hp, int damage)
     : max_hp_(max_hp),
       current_hp_(max_hp),
+      damage_(damage),
       unit_type_(unit_type),
       current_tile_(tile),
       owner_(owner)
@@ -24,32 +25,34 @@ Unit::Unit(std::shared_ptr<world::Tile> tile,
 // Polymorphic Create() - dispatch by UnitType
 std::shared_ptr<Unit> Unit::Create(std::shared_ptr<world::Tile> tile,
                                    std::shared_ptr<core::Player> owner,
-                                   int max_hp,
-                                   UnitType type)
+                                   UnitType type,
+                                   int max_hp, int damage)
 {
     switch (type) {
 
         case UnitType::kSoldier:
-            return Soldier::Create(tile, owner, max_hp);
+            return Soldier::Create(tile, owner, max_hp, damage);
     }
 
     return nullptr;
 }
 
 // Polymorphic CreateEmpty() - dispatch by UnitType
-std::shared_ptr<Unit> Unit::CreateEmpty(int max_hp, UnitType type)
+std::shared_ptr<Unit> Unit::CreateEmpty(UnitType type, int max_hp, int damage)
 {
     switch (type) {
 
         case UnitType::kSoldier:
-            return Soldier::CreateEmpty(max_hp);
+            return Soldier::CreateEmpty(max_hp, damage);
     }
 
     return nullptr;
 }
 
 std::istream& operator>>(std::istream &in, std::shared_ptr<Unit>& other) {
+    other->max_hp_ = core::GetIntFromLine(in);
     other->current_hp_ = core::GetIntFromLine(in);
+    other->damage_ = core::GetIntFromLine(in);
     other->has_attacked_ = static_cast<bool>(core::GetIntFromLine(in));
     other->turn_movement_ = core::GetIntFromLine(in);
 
@@ -60,8 +63,9 @@ std::ostream& operator<<(std::ostream &out, const std::shared_ptr<Unit>& other) 
     out << constants::unitTypeNames[static_cast<int>(other->GetType())] << "\n";
     out << other->getMaxHp() << "\n";
     out << other->getCurrentHp() << "\n";
-    out << other->has_attacked_ << "\n";
-    out << other->turn_movement_ << "\n";
+    out << other->getDamage() << "\n";
+    out << other->hasAttacked() << "\n";
+    out << other->getTurnMovement() << "\n";
     if (auto tile = other->current_tile_.lock()) {
         out << tile->get_tile_number();
     } else {
@@ -102,14 +106,14 @@ bool Unit::moveToTile(std::shared_ptr<world::Tile> tile)
     // Tile already has a unit or a building
     if (tile->get_unit() != nullptr && tile->get_unit()->GetOwner() != GetOwner()) {
         // Damage enemy unit
-        dealDamageToTileContents(tile, damage_);
+        dealDamageToTileContents(tile);
         has_attacked_ = true;
         if (tile->get_unit() != nullptr || (tile->get_building() != nullptr && tile->get_building()->getOwner() != GetOwner())) {
             return false; // Enemy unit still alive, can't move
         }
     } else if (tile->get_building() != nullptr && tile->get_building()->getOwner() != GetOwner()) {
         // Damage enemy building
-        dealDamageToTileContents(tile, damage_);
+        dealDamageToTileContents(tile);
         has_attacked_ = true;
         if (tile->get_building() != nullptr) {
             return false; // Enemy building still alive, can't move
@@ -133,7 +137,7 @@ bool Unit::moveToTile(std::shared_ptr<world::Tile> tile)
     return false;
 }
 
-void Unit::dealDamageToTileContents(std::shared_ptr<world::Tile> tile, int damage)
+void Unit::dealDamageToTileContents(std::shared_ptr<world::Tile> tile)
 {
     if (!tile || has_attacked_)
         return;
@@ -141,13 +145,13 @@ void Unit::dealDamageToTileContents(std::shared_ptr<world::Tile> tile, int damag
     // Damage building
     auto targetBuilding = tile->get_building();
     if (targetBuilding != nullptr && targetBuilding->getOwner() != GetOwner()) {
-        targetBuilding->takeDamage(damage);
+        targetBuilding->takeDamage(damage_);
     }
 
     // Damage unit
     auto targetUnit = tile->get_unit();
     if (targetUnit != nullptr && targetUnit->GetOwner() != GetOwner()) {
-        targetUnit->takeDamage(damage);
+        targetUnit->takeDamage(damage_);
     }
 }
 
@@ -157,16 +161,16 @@ void Unit::dealDamageToTileContents(std::shared_ptr<world::Tile> tile, int damag
 
 Soldier::Soldier(std::shared_ptr<world::Tile> tile,
                  std::shared_ptr<core::Player> owner,
-                 int max_hp)
-    : Unit(tile, owner, max_hp, UnitType::kSoldier)
+                 int max_hp, int damage)
+                 : Unit(tile, owner, UnitType::kSoldier, max_hp, damage)
 {
 }
 
 std::shared_ptr<Soldier> Soldier::Create(std::shared_ptr<world::Tile> tile,
                                          std::shared_ptr<core::Player> owner,
-                                         int max_hp)
+                                         int max_hp, int damage)
 {
-    auto soldier = std::make_shared<Soldier>(tile, owner, max_hp);
+    auto soldier = std::make_shared<Soldier>(tile, owner, max_hp, damage);
 
     if (tile && tile->place_unit(soldier)) {
         if (owner) {
@@ -177,14 +181,14 @@ std::shared_ptr<Soldier> Soldier::Create(std::shared_ptr<world::Tile> tile,
     return soldier;
 }
 
-std::shared_ptr<Soldier> Soldier::CreateEmpty(int max_hp)
+std::shared_ptr<Soldier> Soldier::CreateEmpty(int max_hp, int damage)
 {
-    return std::make_shared<Soldier>(nullptr, nullptr, max_hp);
+    return std::make_shared<Soldier>(nullptr, nullptr, max_hp, damage);
 }
 
 std::shared_ptr<Unit> Soldier::CreateEmptyFromCopy() const
 {
-    return std::make_shared<Soldier>(nullptr, nullptr, max_hp_);
+    return std::make_shared<Soldier>(nullptr, nullptr, max_hp_, damage_);
 }
 
 } // namespace units

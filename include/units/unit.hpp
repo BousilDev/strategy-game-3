@@ -17,10 +17,10 @@ public:
     // ---- STATIC FACTORIES (polymorphic) ----
     static std::shared_ptr<Unit> Create(std::shared_ptr<world::Tile> tile,
                                         std::shared_ptr<core::Player> owner,
-                                        int max_hp,
-                                        UnitType unit_type);
+                                        UnitType unit_type,
+                                        int max_hp = 10, int damage = 5);
 
-    static std::shared_ptr<Unit> CreateEmpty(int max_hp, UnitType unit_type);
+    static std::shared_ptr<Unit> CreateEmpty(UnitType unit_type, int max_hp = 10, int damage = 5);
 
     // ---- CLONE-LIKE CREATION (pure virtual!) ----
     virtual std::shared_ptr<Unit> CreateEmptyFromCopy() const = 0;
@@ -41,10 +41,13 @@ public:
     UnitType GetType() const { return unit_type_; }
     int getMaxHp()   const { return max_hp_; }
     int getCurrentHp() const { return current_hp_; }
+    int getDamage() const { return damage_; }
+    bool hasAttacked() const { return has_attacked_; }
+    int getTurnMovement() const { return turn_movement_; }
 
     int takeDamage(int damage);
     bool moveToTile(std::shared_ptr<world::Tile> tile);
-    void dealDamageToTileContents(std::shared_ptr<world::Tile> tile, int damage);
+    void dealDamageToTileContents(std::shared_ptr<world::Tile> tile);
     void NextTurnReset() { 
         has_attacked_ = false; 
         turn_movement_ = 0;
@@ -58,8 +61,8 @@ public:
 protected:
     Unit(std::shared_ptr<world::Tile> tile,
          std::shared_ptr<core::Player> owner,
-         int max_hp,
-         UnitType unit_type);
+         UnitType unit_type,
+         int max_hp, int damage);
 
     int max_hp_{0};
     int current_hp_{0};
@@ -81,16 +84,16 @@ class Soldier : public Unit {
 public:
     static std::shared_ptr<Soldier> Create(std::shared_ptr<world::Tile> tile,
                                            std::shared_ptr<core::Player> owner,
-                                           int max_hp);
+                                           int max_hp = 10, int damage = 5);
 
-    static std::shared_ptr<Soldier> CreateEmpty(int max_hp);
+    static std::shared_ptr<Soldier> CreateEmpty(int max_hp = 10, int damage = 5);
 
     // Correct override
     std::shared_ptr<Unit> CreateEmptyFromCopy() const override;
 
     Soldier(std::shared_ptr<world::Tile> tile,
             std::shared_ptr<core::Player> owner,
-            int max_hp);
+            int max_hp = 10, int damage = 5);
 };
 
 } // namespace units

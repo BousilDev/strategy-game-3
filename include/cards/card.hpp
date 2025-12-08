@@ -6,6 +6,7 @@
  * construct buildings, deploy units and activate different effects.
  */
 
+#include <iostream>
 #include <string>
 #include <memory>
 
@@ -21,7 +22,7 @@ namespace cards {
 /**
  * @brief Enumerator for different card types
  */
-enum class CardType { kBuilding, kUnit, kEffect };
+enum class CardType { kBuilding, kUnit };
   
 /**
  * @brief Abstract base class representing a playable card.
@@ -97,6 +98,9 @@ public:
    */
   virtual bool Play(std::shared_ptr<world::Tile> target, std::shared_ptr<core::Player> player) = 0;
 
+  friend std::istream& operator>>(std::istream& in, std::shared_ptr<Card>& other);
+  friend std::ostream& operator<<(std::ostream& out, const std::shared_ptr<Card>& other);
+
 private:
   std::string name_; ///< The name of the card.
   std::string description_; ///< The description of the card.
@@ -137,6 +141,13 @@ public:
    * @return CardType::kBuilding
    */
   CardType GetCardType() const override { return CardType::kBuilding; }
+
+  /**
+   * @brief Get the building the card constructs.
+   * 
+   * @return The building the card constructs.
+   */
+  std::shared_ptr<buildings::Building> GetBuilding() const { return building_; } 
   
   /**
    * @brief Plays the card by constructing a copy its building on the target tile if possible.
@@ -186,6 +197,13 @@ public:
    * @return CardType::kUnit
    */
   CardType GetCardType() const override { return CardType::kUnit; }
+
+  /**
+   * @brief Get the unit the card deploys.
+   * 
+   * @return The unit the card deploys.
+   */
+  std::shared_ptr<units::Unit> GetUnit() const { return unit_; }
   
   /**
    * @brief Plays the card by deploying a copy of its unit on the target tile.

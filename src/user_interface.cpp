@@ -47,8 +47,8 @@ void ui::UserInterface::HandleEvent(bool start) {
     if (event_.type == sf::Event::Closed) window_.close();
     if (event_.type == sf::Event::Resized) {
         view_.setSize(sf::Vector2f(event_.size.width, event_.size.height));
-        view_.setCenter(view_.getSize() * 0.5f);
         view_size_ = view_.getSize();
+        view_.setCenter(view_size_ * 0.5f);
         window_.setView(view_);
     }
 
@@ -78,7 +78,7 @@ void ui::UserInterface::HandleEvent(bool start) {
         }
 
         info_layer_renderer_.Update(window_, mouse_pos_, event_, tile_pointer);
-        map_renderer_.Update(window_, event_);
+        map_renderer_.Update(event_);
     }
 
 }
@@ -96,7 +96,6 @@ bool ui::UserInterface::IsLoadClicked() {
     return main_menu_renderer_.IsLoadClicked(mouse_pos_, event_);
 }
 
-// TODO: temporarily use start variable
 void ui::UserInterface::DrawAndDisplay(bool start) {
     // clear the screen
     window_.clear(sf::Color(0,123,167));
@@ -114,17 +113,18 @@ void ui::UserInterface::DrawAndDisplay(bool start) {
 }
 
 // Outside of event loop
-void ui::UserInterface::UpdateOutsideEventLoop(bool start) {
+void ui::UserInterface::UpdateOutsideEventLoop(const bool start, const float delta_seconds) {
     // Initialize variables
     mouse_pos_ = window_.mapPixelToCoords(sf::Mouse::getPosition(window_));
     sf::Vector2f window_size = sf::Vector2f(window_.getSize());
     
     if (!start) {
         // main menu
-        main_menu_renderer_.UpdateOutsideEventLoop(window_size, mouse_pos_);
+        if (IsViewNotCentered()) { CenterView(); }
+        main_menu_renderer_.UpdateOutsideEventLoop(window_size, mouse_pos_, delta_seconds);
     } else {
         // map view
         map_renderer_.PanMap(window_);
-        map_renderer_.SetViewOnPlayer(window_);
+        map_renderer_.UpdateNewTurn(window_);
     }
 }
