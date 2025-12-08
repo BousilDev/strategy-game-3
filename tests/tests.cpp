@@ -27,7 +27,7 @@ core::Game tests::CreateTestGame(unsigned int player_count, unsigned int map_siz
 // Testing the Game class
 void tests::TestGameInitializationAndTurns() {
   std::cout << "Testing Game class..." << std::endl;
-  core::Game game = CreateTestGame(4, 5);
+  core::Game game = CreateTestGame(4, 7);
   AssertWithMessage(game.IsInitialized() && !game.IsOver(), "Game should be initialized and not over after initialization.");
   AssertWithMessage(game.GetCurrentPlayer().GetName() == "Player 1", "Current player should be 'Player 1' after initialization.");
   for (int i = 0; i < 5; i++) {
@@ -77,7 +77,7 @@ void TestFaultyFile(std::string filename) {
 
 void tests::TestGameSaveAndLoad() {
     std::cout << "Testing Game Save and Load..." << std::endl;
-    core::Game game = CreateTestGame();
+    core::Game game = CreateTestGame(4, 7);
     // Advance a few turns
     for (int i = 0; i < game.GetNofPlayers(); i++) {
         game.NextTurn();
@@ -171,7 +171,7 @@ void tests::TestGameSaveAndLoad() {
 
 void tests::TestPlayer() {
     std::cout << "Testing Player class..." << std::endl;
-    core::Game game = CreateTestGame(2, 5);
+    core::Game game = CreateTestGame(2, 7);
     core::Player& player1 = game.GetCurrentPlayer();
     game.NextTurn();
     core::Player& player2 = game.GetCurrentPlayer();
@@ -205,16 +205,16 @@ void tests::TestPlayer() {
 
 void tests::TestMap() {
     std::cout << "Testing Map class..." << std::endl;
-    core::Game game = CreateTestGame(2, 5);
+    core::Game game = CreateTestGame(2, 7);
     world::Map& map = game.GetMap();
 
     // Test included tiles
-    AssertWithMessage(map.get_tiles().size() == 25, "Map should have 25 tiles for a 5x5 map.");
+    AssertWithMessage(map.get_tiles().size() == 49, "Map should have 49 tiles for a 7x7 map.");
     AssertWithMessage(map.get_tile(0) != nullptr, "Tile 0 should not be null.");
-    AssertWithMessage(map.get_tile(24) != nullptr, "Tile 24 should not be null.");
+    AssertWithMessage(map.get_tile(48) != nullptr, "Tile 48 should not be null.");
 
     // Test out-of-bounds tile access
-    AssertWithMessage(map.get_tile(25) == nullptr, "Tile 25 should be null.");
+    AssertWithMessage(map.get_tile(49) == nullptr, "Tile 49 should be null.");
 
     for (auto tile : map.get_tiles()) {
         // Test that each tile has terrain set
@@ -233,7 +233,7 @@ void tests::TestMap() {
 
 void tests::TestBuildings() {
     std::cout << "Testing Buildings..." << std::endl;
-    core::Game game = CreateTestGame(2, 5);
+    core::Game game = CreateTestGame(2, 7);
     core::Player& player = game.GetCurrentPlayer();
     std::shared_ptr<world::Tile> tile;
     int i = 0;
@@ -261,7 +261,7 @@ void tests::TestBuildings() {
 
 void tests::TestUnits() {
     std::cout << "Testing Units..." << std::endl;
-    core::Game game = CreateTestGame(2, 5);
+    core::Game game = CreateTestGame(2, 7);
     core::Player& player = game.GetCurrentPlayer();
     std::shared_ptr<world::Tile> tile = game.GetMap().get_tile(0);
     tile->remove_current_unit(); // Ensure tile is empty

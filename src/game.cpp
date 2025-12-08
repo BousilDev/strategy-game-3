@@ -17,6 +17,10 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
 
     // Temp generate capital locations
     spawn_tiles_ = map_.get_n_spawn(nof_players_);
+    if (spawn_tiles_.size() != nof_players_) { throw std::runtime_error("Not enough spawn tiles"); }
+    for (auto& tile : spawn_tiles_) {
+        if (tile == nullptr) { throw std::runtime_error("Not enough spawn tiles"); }
+    }
 
     unsigned int playerNum = 0;
     for (const auto& player : players) {
