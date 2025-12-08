@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <filesystem>
 
 /**
  * @file constants.hpp
@@ -14,12 +15,15 @@ const bool debug = false;
 const std::string debug_prefix = "###: ";
 const std::string faultySavesPath = "tests/faultySaves/";
 const std::string kSavesPath = "saves/";
+const std::filesystem::path kFramesPath = "texture/frames";
+const std::filesystem::path kDelaysFile = kFramesPath / "delays_cs.txt";
 
 // -----UI constants-----
 const int kInitWindowWidth = 800;
 const int kInitWindowHeight = 600;
 
 const int kMainMenuClickablesSize = 40;
+const bool kUseCoolTitle = true; // true to use the cool title animation in the main menu, false to use static text
 
 // ui::FileSelection
 const int kFileSelectionFontSize = 30;

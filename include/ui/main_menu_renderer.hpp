@@ -19,6 +19,7 @@
 #include "constants/constants.hpp"
 #include "ui/file_selection.hpp"
 #include "ui/text_input.hpp"
+#include "ui/cool_title.hpp"
 
 namespace fs = std::filesystem;
 
@@ -142,6 +143,7 @@ private:
     sf::Vector2f title_pos_;
     ui::ClickableText new_game_button_;
     ui::ClickableText load_game_button_;
+    ui::CoolTitle cool_title_;
 
     // new game
     ui::ClickableText start_new_button_;

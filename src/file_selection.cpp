@@ -211,6 +211,10 @@ void ui::FileSelection::DrawTo(sf::RenderWindow& window) {
 
     // Draw scrollbar if needed
     if (IsOverflow()) {
+        if (scrollbar_dirty_) {
+            UpdateScrollbarGeometry();
+            scrollbar_dirty_ = false;
+        }
         window.draw(scrollbar_track_);
         window.draw(scrollbar_thumb_);
     }
