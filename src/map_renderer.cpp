@@ -269,7 +269,7 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
 }
 
 // Returns the tile that was clicked with Mouse 1 on the map if that tile is visible. Returns nullptr when no visible tile is clicked!!
-std::shared_ptr<world::Tile> ui::MapRenderer::GetClickedTile(sf::RenderWindow& window) {
+std::shared_ptr<world::Tile> ui::MapRenderer::GetClickedTile(sf::RenderWindow& window, bool is_left_clicked) {
     
     sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
@@ -281,6 +281,7 @@ std::shared_ptr<world::Tile> ui::MapRenderer::GetClickedTile(sf::RenderWindow& w
                 std::cout << get_tile->get_building() << std::endl;
             selected_tile_ = get_tile;
 		    UpdateMovableTilesFromSelection();
+            selected_tile_ = is_left_clicked ? get_tile : selected_tile_;
             return get_tile;
         }
     }

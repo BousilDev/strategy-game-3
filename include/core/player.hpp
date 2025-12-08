@@ -200,7 +200,7 @@ public:
    * @param unit The unit to be potentially moved.
    * @param target The target tile to move the unit to.
    */
-  void MoveUnit(std::shared_ptr<units::Unit> unit, world::Tile& target);
+  void MoveUnit(std::shared_ptr<units::Unit> unit, std::shared_ptr<world::Tile> target);
 
   /**
    * @brief Use a unit if it is owned by the player.

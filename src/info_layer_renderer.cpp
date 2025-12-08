@@ -139,7 +139,7 @@ std::string ui::InfoLayerRenderer::GetCardInfoString(std::shared_ptr<cards::Card
     std::stringstream ss;
     std::string name = card->GetName();
     std::string description = card->GetDescription();
-    int realWidth = 2 * width / (inCard ? constants::infoLayerCardTextSize : constants::infoLayerTextSize);
+    int realWidth = 1.8 * width / (inCard ? constants::infoLayerCardTextSize : constants::infoLayerTextSize);
     ss << "NAME: \n";
     for (int i = 0; i < name.size(); i += realWidth) {
         ss << name.substr(i, realWidth) << "\n";
@@ -148,6 +148,8 @@ std::string ui::InfoLayerRenderer::GetCardInfoString(std::shared_ptr<cards::Card
     for (int i = 0; i < description.size(); i += realWidth) {
         ss << description.substr(i, realWidth) << "\n";
     }
+    ss << "COST:\n";
+    ss << "   * " << constants::resourceTypeNames[static_cast<int>(card->GetCost().type)] << ": " << card->GetCost().amount;
     return ss.str();
 }
 
