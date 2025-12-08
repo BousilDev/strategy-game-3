@@ -6,6 +6,7 @@
  * who owns the deck.
  */
 
+#include <iostream>
 #include <vector>
 
 #include <cards/card.hpp>
@@ -119,6 +120,9 @@ public:
    * in the discard pile of the deck.
    */
   void DiscardHand();
+
+  friend std::istream& operator>>(std::istream& in,  std::shared_ptr<Hand>& other);
+  friend std::ostream& operator<<(std::ostream& out, const std::shared_ptr<Hand>& other);
 
 private:
   unsigned int size_; ///< The size of the hand.

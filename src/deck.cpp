@@ -4,6 +4,46 @@
 
 namespace cards {
 
+std::ostream& operator<<(std::ostream& out, const std::shared_ptr<Deck>& other) {
+    // Write draw pile size
+    out << other->draw_.size() << '\n';
+    // Write each card in draw pile
+    for (const auto& card : other->draw_) {
+        out << card;
+    }
+    // Write discard pile size
+    out << other->discard_.size() << '\n';
+    // Write each card in discard pile
+    for (const auto& card : other->discard_) {
+        out << card;
+    }
+    out << other->hand_;
+    return out;
+}
+
+std::istream& operator>>(std::istream& in,  std::shared_ptr<Deck>& other) {
+    // Read draw pile size
+    int draw_size = core::GetIntFromLine(in);
+    other->draw_.clear();
+    // Read each card in draw pile
+    for (int i = 0; i < draw_size; ++i) {
+        std::shared_ptr<Card> card;
+        in >> card;
+        other->draw_.push_back(card);
+    }
+    // Read discard pile size
+    int discard_size = core::GetIntFromLine(in);
+    other->discard_.clear();
+    // Read each card in discard pile
+    for (int i = 0; i < discard_size; ++i) {
+        std::shared_ptr<Card> card;
+        in >> card;
+        other->discard_.push_back(card);
+    }
+    in >> other->hand_;
+    return in;
+}
+
 Deck::Deck(const std::vector<std::shared_ptr<Card>>& cards, unsigned int hand_size) {
     draw_ = cards;
     hand_ = std::make_unique<Hand>(this, hand_size);

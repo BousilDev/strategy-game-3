@@ -81,4 +81,9 @@ const std::vector<std::string> unitTypeNames = {
     "Soldier",
 };
 
+const std::vector<std::string> cardsTypeNames = {
+    "BuildingCard",
+    "UnitCard"
+};
+
 } // namespace constants

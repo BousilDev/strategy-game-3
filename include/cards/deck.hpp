@@ -5,6 +5,7 @@
  * @brief Declares the Deck class which manages and stores the playable cards of a player.
  */
 
+#include <iostream>
 #include <memory>
 #include <random>
 #include <vector>
@@ -46,6 +47,15 @@ public:
    * @return A pointer to the new hand of the deck.
    */
   Hand* DrawHand();
+
+  Hand* GetHand() const { return hand_.get(); }
+
+  /**
+   * @brief Get the Hand of the deck.
+   * 
+   * @return The hand of the deck.
+   */
+  Hand* GetHand() { return hand_.get(); }
 
   /**
    * @brief Get the draw pile of the deck.
@@ -112,8 +122,11 @@ public:
    */
   void RemoveCard(const std::shared_ptr<Card>& card);
 
+  friend std::istream& operator>>(std::istream& in,  std::shared_ptr<Deck>& other);
+  friend std::ostream& operator<<(std::ostream& out, const std::shared_ptr<Deck>& other);
+
 private:
-  std::unique_ptr<Hand> hand_; ///< The hand of the deck
+  std::shared_ptr<Hand> hand_; ///< The hand of the deck
   std::vector<std::shared_ptr<Card>> draw_; ///< The draw pile of the deck.
   std::vector<std::shared_ptr<Card>> discard_; ///< The discard pile of the deck.
   std::random_device rd_;

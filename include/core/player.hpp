@@ -79,9 +79,12 @@ public:
    * 
    * @return The hand of the player.
    */
-  cards::Hand* GetHand() { return hand_; };
+  cards::Hand* GetHand() { return deck_->GetHand(); };
 
-  void DrawHand() { hand_ = deck_->DrawHand(); }
+  /**
+   * @brief Draw a new hand for the player from their deck.
+   */
+  void DrawHand() { deck_->DrawHand(); }
 
   /**
    * @brief Get the buildings owned by the player.
@@ -221,7 +224,6 @@ private:
   std::list<std::shared_ptr<buildings::Building>> buildings_; ///< The buildings owned by the player.
   std::list<std::shared_ptr<units::Unit>> units_; ///< The units owned by the player.
   std::array<Resource, constants::kNumberOfResourceTypes> resources_; ///< The resources the player currently has.
-  cards::Hand* hand_; ///< The current hand of the player.
 };
 
 } // namespace core

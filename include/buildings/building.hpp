@@ -124,6 +124,10 @@ public:
                  int max_hp, int food_multiplier = 1, int gold_multiplier = 1);
 };
 
+// ----------------------------------------------------------
+// Lumber Mill Building
+// ----------------------------------------------------------
+
 class LumberMillBuilding : public Building {
 public:
     static std::shared_ptr<LumberMillBuilding> Create(std::shared_ptr<world::Tile> tile,
@@ -140,6 +144,10 @@ public:
                  std::shared_ptr<core::Player> owner,
                  int max_hp = 100, int wood_multiplier = 1, int gold_multiplier = 1);
 };
+
+// ----------------------------------------------------------
+// Mine Building
+// ----------------------------------------------------------
 
 class MineBuilding : public Building {
 public:

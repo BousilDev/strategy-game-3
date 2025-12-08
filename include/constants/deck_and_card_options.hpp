@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "cards/card.hpp"
 #include "cards/deck.hpp"
 
@@ -152,6 +154,23 @@ const std::shared_ptr<cards::Card> kBruteCard =
     );
 
 // ---------------------------------------------
+// Vector of all available cards
+// ---------------------------------------------
+
+const std::vector<std::shared_ptr<cards::Card>> kAllAvailableCards = {
+    kSmallFarmCard,
+    kEstateFarmCard,
+    kForestryCampCard,
+    kLoggingStationCard,
+    kStoneMineCard,
+    kProspectorsMineCard,
+    kInfantryCard,
+    kScoutCard,
+    kGuardianCard,
+    kBruteCard
+};
+
+// ---------------------------------------------
 // Decks
 // ---------------------------------------------
 
@@ -208,6 +227,10 @@ const cards::Deck kAggroDeck(
         kBruteCard->Clone()
     },
     4U // hand size
+);
+
+const cards::Deck kEmptyDeck(
+    {}, 0U
 );
 
 } // namespace card_constants
