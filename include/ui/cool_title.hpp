@@ -14,6 +14,8 @@
 #include <string>
 #include <algorithm>
 
+#include "constants/constants.hpp"
+
 namespace fs = std::filesystem;
 
 namespace ui {
@@ -21,22 +23,31 @@ namespace ui {
 /**
  * @class CoolTitle
  * @brief A class for rendering a cool animated title using frame images.
+ * 
+ * The logic in this class is mostly AI generated.
  */
 class CoolTitle {
 public:
+
+    /**
+     * @brief Default constructor.
+     */
     CoolTitle() = default;
 
-
+    /**
+     * @brief Initialize the CoolTitle instance.
+     * 
+     * @param view_size The size of the view.
+     * @param position The relative position (0.0 to 1.0) in the window.
+     * @param offset The pixel offset from the relative position.
+     */
     void Initialize(const sf::Vector2f& view_size, const sf::Vector2f& position, const sf::Vector2f& offset) {
 
         position_ = position;
         offset_ = offset;
 
-        const fs::path framesDir = "texture/frames";
-        const fs::path delaysFile = framesDir / "delays_cs.txt";
-
         // 1) Enumerate frames
-        frame_files_ = findFrameFiles(framesDir);
+        frame_files_ = findFrameFiles(frames_path);
 
         // 2) Load textures and create sprites
         textures_.resize(frame_files_.size());
@@ -51,9 +62,16 @@ public:
         }
 
         // 3) Read per-frame delays (seconds)
-        delays_ = readDelaysCs(delaysFile, frame_files_.size());
+        delays_ = readDelaysCs(delays_file, frame_files_.size());
     }
 
+    /**
+     * @brief Update the CoolTitle instance outside the event loop.
+     * 
+     * @param window_size The window size.
+     * @param delta_seconds The delta time since the last update.
+     * @param resized Whether the window was resized.
+     */
     void UpdateOutsideEventLoop(const sf::Vector2f& window_size, const float delta_seconds, const bool resized) {
 
         if (resized) {
@@ -70,7 +88,12 @@ public:
         }
     }
 
-    void draw(sf::RenderWindow& window) {
+    /**
+     * @brief Draw the CoolTitle instance to the given window.
+     * 
+     * @param window The render window.
+     */
+    void DrawTo(sf::RenderWindow& window) {
         window.draw(sprites_[idx_]);
     }
 
@@ -83,6 +106,8 @@ private:
     std::vector<sf::Texture> textures_;
     std::vector<sf::Sprite> sprites_;
     std::vector<float> delays_;
+    const fs::path frames_path = constants::kFramesPath;
+    const fs::path delays_file = constants::kDelaysFile;
 
 
     // Utility: find frame_###.png files in a directory

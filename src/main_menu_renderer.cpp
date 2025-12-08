@@ -15,11 +15,16 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
     // Initialize back button
     back_to_main_menu_button_ = ui::ClickableCircleShape(view_size, 15, 3, sf::Vector2f(0.1f, 0.2f), 270, sf::Vector2f(0,0));
 
-    // Initialize texts and set their position in the main menu
-    title_ = sf::Text(constants::kGameTitle, *font, 50);
-    title_pos_ = sf::Vector2f(0.1f, 0.3f);
-    title_.setPosition(view_size.x*title_pos_.x, view_size.y*title_pos_.y);
-
+    if (constants::kUseCoolTitle) {
+        // Initialize cool title animation
+        cool_title_.Initialize(view_size, sf::Vector2f(0.1f, 0.3f), sf::Vector2f(-25.f, -50.f));
+    } else {
+        // Initialize title text and set its position in the main menu
+        title_ = sf::Text(constants::kGameTitle, *font, 50);
+        title_pos_ = sf::Vector2f(0.1f, 0.3f);
+        title_.setPosition(view_size.x*title_pos_.x, view_size.y*title_pos_.y);
+    }
+    
     // Initialize clickable texts in main menu
     load_game_button_ =    ui::ClickableText(view_size, "Load Game",          *font, sf::Vector2f(0.1f, 0.3f),   constants::kMainMenuClickablesSize, sf::Vector2f(0, 1.375f*constants::kMainMenuClickablesSize));
     new_game_button_ =     ui::ClickableText(view_size, "New Game",           *font, sf::Vector2f(0.1f, 0.3f),   constants::kMainMenuClickablesSize, sf::Vector2f(0, 2.5f*constants::kMainMenuClickablesSize));
@@ -40,7 +45,7 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
     selections_.emplace_back(deckTexts, font, 35, sf::Vector2f(0.1f, 0.3f), sf::Vector2f(150.f, 200.f), view_size);
 
     // Initialize game name text
-    game_name_input_ = ui::TextInput(view_size, "Game Name: ", *font, sf::Vector2f(0.1f, 0.75f), sf::Vector2f(0, 0), 30);
+    game_name_input_ = ui::TextInput(view_size, "Game Name: ", *font, sf::Vector2f(0.1f, 0.3f), sf::Vector2f(0, 250.f), 30);
 
     // Initialize game over text
     game_over_text_ = sf::Text("Game Over", *font, 50);
@@ -62,13 +67,14 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
     current_window_size_main_ = view_size;
     current_window_size_new_ = view_size;
     current_window_size_load_ = view_size;
+
+    
     
     return 0;
 }   
 
 // Update the elements based on the event
 int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event, std::shared_ptr<bool> game_ended) {
-    //current_state_ = new_state_;
 
     if (*game_ended.get()) {
         if (event.type == sf::Event::MouseButtonReleased || event.type == sf::Event::KeyPressed) {
@@ -151,11 +157,16 @@ void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_siz
         bool resized = current_window_size_main_ != window_size;
         if (resized) {
             current_window_size_main_ = window_size;
-            title_.setPosition(window_size.x * title_pos_.x, window_size.y * title_pos_.y);
+            if (!constants::kUseCoolTitle) {
+                title_.setPosition(window_size.x * title_pos_.x, window_size.y * title_pos_.y);
+            }
         }
         
         new_game_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
         load_game_button_.UpdateOutsideEventLoop(window_size, mouse_pos, resized);
+        if (constants::kUseCoolTitle) {
+            cool_title_.UpdateOutsideEventLoop(window_size, delta_seconds, resized);
+        }
     }
 
 }
@@ -186,7 +197,11 @@ void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window, bool game_ended) {
 
         } else {
             // main menu
-            window.draw(title_);
+            if (constants::kUseCoolTitle) {
+                cool_title_.DrawTo(window);
+            } else {
+                window.draw(title_);
+            }
             new_game_button_.DrawTo(window);
             load_game_button_.DrawTo(window);
         }
