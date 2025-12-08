@@ -31,6 +31,10 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
         buildings::CapitalBuilding::Create(spawn_tiles_[playerNum], players_.back(), 100);
         players_.back()->SetDeck(player.deck);
         players_.back()->DrawHand();
+        // Add starting resources to each player
+        players_.back()->AddResources({core::Resource(core::ResourceType::kGold, 10)});
+        // Add starting unit to each player
+        units::Unit::Create(players_.back()->GetCapitalBuilding()->getTile(), players_.back(), units::UnitType::kSoldier, 10, 5);
         playerNum += 1;
     }
     nof_players_ = players_.size();

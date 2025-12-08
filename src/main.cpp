@@ -72,15 +72,7 @@ int main() {
                     game.SetName(game_name);
                     players.clear();
 
-                    assert(game.IsInitialized() && !game.IsOver());
-                    assert(game.GetCurrentPlayer().GetName() == "Player 1");
-                    for (int i = 0; i < 5; i++) {
-                        game.NextTurn();
-                        assert(game.GetCurrentTurn() == i + 1);
-                        // Add resources to the current player for testing
-                        game.GetCurrentPlayer().AddResources({core::Resource(core::ResourceType::kGold, 10 + 2 * i)});
-                        units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), units::UnitType::kSoldier, 10, 5);
-                    }
+                    game.NextTurn();
 
                     // Handling an event to ready-up map renderer
                     user_interface.HandleEvent(true, game.IsEnded());
