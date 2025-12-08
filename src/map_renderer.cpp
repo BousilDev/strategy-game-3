@@ -192,16 +192,31 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
             auto u = v-> get_unit();
                 if (u) {
 
-                    sf::CircleShape unit(10);
+                    sf::CircleShape unit(5 + u->getMaxHp()/5);
                     centerOrigin(unit);
 
-                    switch (u->GetType()) {
-                        case units::UnitType::kSoldier:
-                            unit.setFillColor(sf::Color(50,50,100));
+                    switch (u->getMaxHp()) {
+                        case 10:
+                            unit.setFillColor(sf::Color(170,56,30));
                             break;
+
+                        case 15:
+                            unit.setFillColor(sf::Color(112,66,65));
+                            break;
+
+                        case 20:
+                            unit.setFillColor(sf::Color(89,39,32));
+                            break;
+
+                        case 25:
+                            unit.setFillColor(sf::Color(60,52,31));
+                            break;
+
                         default:
                             unit.setFillColor(sf::Color(200,200,200));
+                            break;
                     }
+
 
                     // Set outline colour for units
                     sf::Color outline;
@@ -234,13 +249,22 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
                             break;
 
                         case buildings::BuildingType::kFarm:
-                            building.setFillColor(sf::Color(6,233,133));
+                            building.setFillColor(sf::Color(6,180,133));
+                            break;
+
+                        case buildings::BuildingType::kLumberMill:
+                            building.setFillColor(sf::Color(111,78,55));
+                            break;
+
+                        case buildings::BuildingType::kMine:
+                            building.setFillColor(sf::Color(150,140,136));   
                             break;
 
                         default:
                             building.setFillColor(sf::Color(255,255,255));
                             break;
                     }
+
 
                     // Set outline colour for buildings
                     sf::Color outline;
