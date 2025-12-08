@@ -1,12 +1,16 @@
 #pragma once
 
+/**
+ * @file file_selection.hpp
+ * @brief Declares the FileSelection class which scans for files and lets you select them visually.
+ */
+
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <filesystem>
 #include <iostream>
 #include <fstream>
 #include <tuple>
-
 #include <algorithm>
 #include <sstream>
 #include <cmath>
@@ -18,22 +22,58 @@ namespace fs = std::filesystem;
 
 namespace ui {
 
-// A class for a file selector object.
+/**
+ * @class FileSelection
+ * @brief A class for selecting a file via GUI from a folder.
+ */
 class FileSelection {
 public:
 
+    /**
+     * @brief Construct an empty FileSelection instance.
+     */
     FileSelection() {}
-    void Initialize(const sf::Vector2f& viewSize, const std::shared_ptr<sf::Font>& font);
+
+    /**
+     * @brief Initialize the FileSelection instance. Must be called before using other methods.
+     * 
+     * @param view_size The view size.
+     * @param font A shared_ptr to a font.
+     */
+    void Initialize(const sf::Vector2f& view_size, const std::shared_ptr<sf::Font>& font);
 
     // Scan for files in the folder constants::kSavesPath.
     int ScanFiles();
+
+    /**
+     * @brief Update the FileSelection instance within the event loop.
+     * 
+     * @param window The render window.
+     * @param mousePos The mouse position.
+     * @param event The current event.
+     * @param isLoadClicked Whether the load button was clicked.
+     */
     void Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event, const bool isLoadClicked);
+
+    /**
+     * @brief Update the FileSelection instance outside the event loop.
+     * 
+     * @param window_size The window size.
+     * @param resized Whether the window was resized.
+     */
     void UpdateOutsideEventLoop(const sf::Vector2f& window_size, const bool& resized);
+
+    // Returns true if a file is selected.
     bool IsSelected() const { return !last_clicked_path_.empty(); }
 
     // Reset to initial state
     void Reset();
 
+    /**
+     * @brief Draw the FileSelection instance to the given window.
+     * 
+     * @param window The render window.
+     */
     void DrawTo(sf::RenderWindow& window);
 
     // Returns the absolute path of the last clicked save file
@@ -67,8 +107,11 @@ private:
 
     // Scrollbar helper functions
     int MaxScroll() const { return std::max(0, (int)texts_.size() - visible_lines_); }
+
+    // Check if content overflows visible area
     bool IsOverflow() const { return (int)texts_.size() > visible_lines_; }
     
+    // Set scroll position with clamping
     void SetScroll(int s) { 
         int clamped = std::clamp(s, 0, MaxScroll());
         if (clamped != scroll_) {
@@ -77,6 +120,7 @@ private:
         }
     }
 
+    // Update scrollbar geometry based on current state
     void UpdateScrollbarGeometry() {
         const auto bgPos  = background_.getPosition();
         const auto bgSize = background_.getSize();

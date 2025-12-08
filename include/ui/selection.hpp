@@ -21,7 +21,7 @@ class Selection {
 public:
     
     /**
-     * @brief Construct a new Selection object
+     * @brief Construct a new Selection instance.
      * 
      * @param texts a vector containing the texts for the selections and the number for the action the selection does
      * @param font the font used for the texts
@@ -71,6 +71,13 @@ public:
         }
     }
 
+    /**
+     * @brief Update the Selection instance outside the event loop.
+     * 
+     * @param window_size The window size.
+     * @param mouse_pos The mouse position.
+     * @param resized Whether the window was resized.
+     */
     void UpdateOutsideEventLoop(const sf::Vector2f& window_size, const sf::Vector2f& mouse_pos, const bool resized) {
         if (resized) {
             for (auto& text : text_options_) {
@@ -108,11 +115,6 @@ public:
         window.draw(leftArrow_);
         window.draw(rightArrow_);
     }
-
-    // TODO: implement if needed
-    //void SetPosition(const sf::Vector2f& pos) {
-    //
-    //}
 
     /**
      * @brief Return the number of the selected option
