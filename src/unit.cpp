@@ -50,6 +50,7 @@ std::shared_ptr<Unit> Unit::CreateEmpty(UnitType type, int max_hp, int damage)
 }
 
 std::istream& operator>>(std::istream &in, std::shared_ptr<Unit>& other) {
+    other->max_hp_ = core::GetIntFromLine(in);
     other->current_hp_ = core::GetIntFromLine(in);
     other->damage_ = core::GetIntFromLine(in);
     other->has_attacked_ = static_cast<bool>(core::GetIntFromLine(in));

@@ -1,3 +1,4 @@
+#include "constants/deck_and_card_options.hpp"
 #include "core/player.hpp"
 #include "cards/card.hpp"
 #include <iostream>
@@ -60,8 +61,6 @@ std::shared_ptr<buildings::Building> core::Player::GetCapitalBuilding() const {
 namespace core {
 std::ostream& operator<<(std::ostream &out, const core::Player& other) {
     out << other.GetName() << "\n";
-    //out << other.deck_ << "\n";
-    //out << other.hand_ << "\n";
     
     out << other.GetBuildings().size() << "\n";
     for (const auto& building : other.GetBuildings()) {
@@ -73,6 +72,8 @@ std::ostream& operator<<(std::ostream &out, const core::Player& other) {
         out << unit << "\n";
     }
 
+    out << other.deck_;
+
     out << other.GetResources().size() << "\n";
     for (const auto& resource : other.GetResources()) {
         out << resource.amount << "\n";
@@ -81,17 +82,9 @@ std::ostream& operator<<(std::ostream &out, const core::Player& other) {
 }
 
 std::istream& operator>>(std::istream &in, core::Player& other) {
-    
-    // get deck here
-    //std::shared_ptr<cards::Deck> deck = std::make_shared<cards::Deck>();
-    //in >> *deck;
-    //other.SetDeck(deck);
-    // TEMPORARY deck for loading TODO: Implement proper loading of deck
-    std::shared_ptr<cards::Card> test_card = std::make_shared<cards::BuildingCard>("Test card", "This is a test card", core::Resource(core::ResourceType::kGold, 1), buildings::FarmBuilding::CreateEmpty(10));
-    std::vector<std::shared_ptr<cards::Card>> empty_cards = {test_card->Clone(), test_card->Clone(), test_card->Clone(), test_card->Clone(), test_card->Clone()};
-    cards::Deck test_deck = cards::Deck(empty_cards, 3U);
-    other.SetDeck(test_deck.Clone());
-    other.DrawHand();
+    std::shared_ptr<cards::Deck> deck = card_constants::kStarterDeck.Clone();
+    in >> deck;
+    other.SetDeck(deck);
 
     size_t resSize = GetIntFromLine(in);
     std::list<core::Resource> resources;
@@ -105,4 +98,5 @@ std::istream& operator>>(std::istream &in, core::Player& other) {
     
     return in;
 }
+
 } // namespace core

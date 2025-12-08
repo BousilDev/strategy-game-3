@@ -98,6 +98,7 @@ std::shared_ptr<Building> Building::CreateEmpty(BuildingType type, int max_hp,
 
 std::istream& operator>>(std::istream &in, std::shared_ptr<Building>& b)
 {
+    b->max_hp_ = core::GetIntFromLine(in);
     b->current_hp_ = core::GetIntFromLine(in);
     b->resource_multiplier_ = core::GetIntFromLine(in);
     b->gold_multiplier_ = core::GetIntFromLine(in);
