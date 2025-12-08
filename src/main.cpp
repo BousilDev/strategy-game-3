@@ -32,7 +32,7 @@ int main() {
 
         // Handle events
         while (user_interface.PollEvent()) {
-            user_interface.HandleEvent(game.IsInitialized());
+            user_interface.HandleEvent(game.IsInitialized(), game.IsEnded());
    
             // main menu if game is not initialized yet
             if (!game.IsInitialized()) {
@@ -83,7 +83,7 @@ int main() {
                     }
 
                     // Handling an event to ready-up map renderer
-                    user_interface.HandleEvent(true);
+                    user_interface.HandleEvent(true, game.IsEnded());
 
                 } else if (user_interface.IsLoadClicked()) {
                     // Things that are done when load is clicked
@@ -104,7 +104,7 @@ int main() {
         }
         // Update window size etc. outside the event handling loop
         user_interface.UpdateOutsideEventLoop(game.IsInitialized(), delta_seconds);
-        user_interface.DrawAndDisplay(game.IsInitialized());
+        user_interface.DrawAndDisplay(game.IsInitialized(), *game.IsEnded().get());
     }
     return 0;
 }

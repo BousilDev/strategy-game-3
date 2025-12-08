@@ -154,6 +154,8 @@ public:
 
   void SetName(const std::string& name) { name_ = name; }
   const std::string& GetName() const { return name_; }
+  const std::shared_ptr<bool> IsEnded() const { return is_ended_; }
+  void ResetGame() { *this = Game(); }
 
 private:
   std::vector<std::shared_ptr<Player>> players_; ///< All players in the game.
@@ -164,6 +166,7 @@ private:
   unsigned int current_turn_; ///< The index of the current player in players_.
   unsigned int turn_; ///< Global turn count.
   bool is_initialized_; ///< Indicator for whether the game has been initialized.
+  std::shared_ptr<bool> is_ended_ = std::make_shared<bool>(false); ///< Indicator for whether the game has ended.
   bool debug_ = constants::debug; ///< If true, debug information is printed to the console.
   std::string name_ = "Default_Game"; ///< The name of the game (used for saving).
 };

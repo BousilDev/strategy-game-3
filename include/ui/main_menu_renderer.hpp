@@ -46,6 +46,7 @@ public:
     int Initialize(const std::shared_ptr<sf::Font>& font, const sf::Vector2f& view_size);
 
     // Update the state of the main menu elements based on the event
+    int Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event, std::shared_ptr<bool> game_ended);
 
     /**
      * @brief Update the MainMenuRenderer instance within the event loop.
@@ -89,12 +90,8 @@ public:
         return false;
     }
 
-    /**
-     * @brief Draw the MainMenuRenderer instance to the given window.
-     * 
-     * @param window The render window.
-     */
-    void DrawTo(sf::RenderWindow& window);
+    // Draw the sprites and selectors
+    void DrawTo(sf::RenderWindow& window, bool game_ended);
 
     // Getters for selected options
     int GetSelectedPlayerCount() const { return selections_[0].GetSelectedOption(); }
@@ -149,6 +146,11 @@ private:
     // load game
     ui::ClickableText start_loaded_button_;
     ui::FileSelection save_file_selection_;
+
+    // game over
+    sf::RectangleShape game_over_background_;
+    sf::Vector2f game_over_pos_;
+    sf::Text game_over_text_;
 };
 
 } // namespace ui

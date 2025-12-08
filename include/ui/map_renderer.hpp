@@ -15,7 +15,7 @@ public:
 
     void DrawTo(sf::RenderWindow& window);
 
-    std::shared_ptr<world::Tile> GetClickedTile(sf::RenderWindow& window);
+    std::shared_ptr<world::Tile> GetClickedTile(sf::RenderWindow& window, bool is_left_clicked);
 
     std::shared_ptr<world::Tile> GetLastClickedTile();
 

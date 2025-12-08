@@ -239,7 +239,7 @@ void FarmBuilding::atTurnEnd()
 LumberMillBuilding::LumberMillBuilding(std::shared_ptr<world::Tile> tile,
                            std::shared_ptr<core::Player> owner,
                            int max_hp, int wood_multiplier, int gold_multiplier)
-    : Building(tile, owner, BuildingType::kFarm, max_hp, wood_multiplier, gold_multiplier)
+    : Building(tile, owner, BuildingType::kLumberMill, max_hp, wood_multiplier, gold_multiplier)
 {
 }
 
@@ -307,7 +307,7 @@ void LumberMillBuilding::atTurnEnd()
 MineBuilding::MineBuilding(std::shared_ptr<world::Tile> tile,
                            std::shared_ptr<core::Player> owner,
                            int max_hp, int metal_multiplier, int gold_multiplier)
-    : Building(tile, owner, BuildingType::kFarm, max_hp, metal_multiplier, gold_multiplier)
+    : Building(tile, owner, BuildingType::kMine, max_hp, metal_multiplier, gold_multiplier)
 {
 }
 

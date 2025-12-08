@@ -92,7 +92,7 @@ const std::shared_ptr<cards::Card> kProspectorsMineCard =
     std::make_shared<cards::BuildingCard>(
         "Prospector's Mine",
         "A risky investment with high metal and gold output.",
-        Resource(ResourceType::kMetal, 30),
+        Resource(ResourceType::kWood, 50),
         buildings::MineBuilding::CreateEmpty(
             /*hp*/ 90,
             /*metal_multiplier*/ 2,
@@ -110,7 +110,7 @@ const std::shared_ptr<cards::Card> kInfantryCard =
     std::make_shared<cards::UnitCard>(
         "Infantry",
         "A standard combat unit with balanced stats.",
-        Resource(ResourceType::kFood, 10),
+        Resource(ResourceType::kFood, 20),
         units::Soldier::CreateEmpty(
             /*hp*/ 15,
             /*damage*/ 5
@@ -181,14 +181,18 @@ const cards::Deck kStarterDeck(
         kEstateFarmCard->Clone(),
         kForestryCampCard->Clone(),
         kForestryCampCard->Clone(),
+        kForestryCampCard->Clone(),
         kLoggingStationCard->Clone(),
+        kStoneMineCard->Clone(),
         kStoneMineCard->Clone(),
         kScoutCard->Clone(),
         kScoutCard->Clone(),
         kInfantryCard->Clone(),
         kInfantryCard->Clone(),
         kInfantryCard->Clone(),
-        kGuardianCard->Clone()
+        kInfantryCard->Clone(),
+        kGuardianCard->Clone(),
+        kBruteCard->Clone()
     },
     6U // hand size
 );
@@ -219,10 +223,12 @@ const cards::Deck kAggroDeck(
         kEstateFarmCard->Clone(),
         kForestryCampCard->Clone(),
         kLoggingStationCard->Clone(),
+        kStoneMineCard->Clone(),
         kProspectorsMineCard->Clone(),
         kScoutCard->Clone(),
         kInfantryCard->Clone(),
         kInfantryCard->Clone(),
+        kBruteCard->Clone(),
         kBruteCard->Clone(),
         kBruteCard->Clone()
     },

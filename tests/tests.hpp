@@ -60,13 +60,43 @@ namespace tests {
  */
   void TestGameSaveAndLoad();
 
+  /**
+ * @brief Tests the Player class.
+ * 
+ * This function tests the Player class by adding and removing resources, and testing the IsAlive method.
+ */
   void TestPlayer();
 
+  /**
+ * @brief Tests the Map class which manages the game map.
+ * 
+ * Tests the size of the map, that each tile is not null, and that each tile has a valid terrain type.
+ * Also tests that the capital building is correctly placed on its tile and that trying to place another building on the same tile does not work.
+ */
   void TestMap();
 
+  /**
+ * @brief Tests the creation and destruction of buildings.
+ * 
+ * This function tests the creation and destruction of buildings. It creates
+ * a farm building and tests its properties, then applies damage and tests
+ * the resulting HP. Finally, it destroys the building and tests that the
+ * tile is left empty.
+ */
   void TestBuildings();
 
+  /**
+ * @brief Test the Unit class.
+ *
+ * This function tests the creation and damage application of Unit objects.
+ * It also tests the attacking functionality of Unit objects.
+ */
   void TestUnits();
 
+  /**
+ * @brief Unit tests for the cards module.
+ * 
+ * This function tests the creation of a BuildingCard, its properties and its cloning.
+ */
   void TestCards();
 }

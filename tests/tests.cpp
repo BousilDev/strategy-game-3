@@ -1,5 +1,6 @@
 #include "tests.hpp"
 #include "constants/constants.hpp"
+#include "constants/deck_and_card_options.hpp"
 #include <iostream>
 #include <assert.h>
 #include <fstream>
@@ -12,17 +13,11 @@
 core::Game tests::CreateTestGame(unsigned int player_count, unsigned int map_size) {
     core::Game game;
     std::vector<core::Game::PlayerInit> players;
-    std::shared_ptr<cards::Card> test_card = std::make_shared<cards::BuildingCard>("Test card", "This is a test card", core::Resource(core::ResourceType::kGold, 1), buildings::FarmBuilding::CreateEmpty(10));
-    std::vector<std::shared_ptr<cards::Card>> test_cards = {};
-    int card_count = 10;
-    for (int i = 0; i < 10; i++) {
-        test_cards.push_back(test_card->Clone());
-    }
-    cards::Deck test_deck = cards::Deck(test_cards, card_count);
+    std::shared_ptr<cards::Deck> deck = card_constants::kStarterDeck.Clone();
     for (unsigned int i = 0; i < player_count; ++i) {
         players.emplace_back(core::Game::PlayerInit{
             "Player " + std::to_string(i + 1),
-            test_deck.Clone() // TODO: add custom starter decks
+            deck->Clone()
         });
     }
     game.Initialize(players, map_size);
@@ -89,11 +84,12 @@ void tests::TestGameSaveAndLoad() {
         // Add resources to the current player for testing
         game.GetCurrentPlayer().AddResources({core::Resource(core::ResourceType::kGold, 10 + 2 * i)});
         // Make the capital of the players take damage
-        game.GetCurrentPlayer().GetBuildings().front()->takeDamage(20 * i);
+        std::shared_ptr<buildings::Building> capital = game.GetCurrentPlayer().GetBuildings().front();
+        capital->takeDamage(float(capital->getMaxHp()) / float(game.GetNofPlayers()) * i);
         // Use the first card from the player's hand
         std::shared_ptr<cards::Card> card_to_play = game.GetCurrentPlayer().GetHand()->GetCards().front();
         game.PlayCardOnTile(card_to_play, game.GetMap().get_tile(i + 1));
-        units::Unit::Create(game.GetCurrentPlayer().GetCapitalBuilding()->getTile(), game.GetCurrentPlayerPtr(), units::UnitType::kSoldier, 10);
+        units::Unit::Create(capital->getTile(), game.GetCurrentPlayerPtr(), units::UnitType::kSoldier, 10);
     }
     // Save the game state
     std::ofstream outFile("testSaveFile.txt");
@@ -239,7 +235,12 @@ void tests::TestBuildings() {
     std::cout << "Testing Buildings..." << std::endl;
     core::Game game = CreateTestGame(2, 5);
     core::Player& player = game.GetCurrentPlayer();
-    std::shared_ptr<world::Tile> tile = game.GetMap().get_tile(0);
+    std::shared_ptr<world::Tile> tile;
+    int i = 0;
+    while ((tile == nullptr || tile == player.GetCapitalBuilding()->getTile()) && i < game.GetMap().get_tiles().size()) {
+        tile = game.GetMap().get_tile(i);
+        i++;
+    }
 
     // Test FarmBuilding creation
     std::shared_ptr<buildings::Building> farm = buildings::FarmBuilding::Create(tile, game.GetCurrentPlayerPtr(), 10);
@@ -263,6 +264,7 @@ void tests::TestUnits() {
     core::Game game = CreateTestGame(2, 5);
     core::Player& player = game.GetCurrentPlayer();
     std::shared_ptr<world::Tile> tile = game.GetMap().get_tile(0);
+    tile->remove_current_unit(); // Ensure tile is empty
 
     // Test Unit creation
     std::shared_ptr<units::Unit> soldier = units::Unit::Create(tile, game.GetCurrentPlayerPtr(), units::UnitType::kSoldier, 15);
@@ -283,6 +285,8 @@ void tests::TestUnits() {
 
     core::Player& player2 = game.GetCurrentPlayer();
     std::shared_ptr<world::Tile> tile2 = game.GetMap().get_tile(1);
+
+    tile2->remove_current_unit(); // Ensure tile is empty
     std::shared_ptr<units::Unit> enemy_soldier = units::Unit::Create(tile2, game.GetCurrentPlayerPtr(), units::UnitType::kSoldier, 15);
 
     // Test attacking

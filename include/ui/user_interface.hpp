@@ -51,12 +51,8 @@ public:
      */
     sf::Event& GetEvent() { return event_; };
 
-    /**
-     * @brief Handle the current event.
-     * 
-     * @param start Whether the game has started (true) or is in the main menu (false).
-     */
-    void HandleEvent(bool start);
+    // Handle current event
+    void HandleEvent(bool start, std::shared_ptr<bool> game_ended);
 
     /**
      * @brief Get the tile that was last clicked.
@@ -90,12 +86,8 @@ public:
         map_renderer_.Initialize(game, window_);
     }
 
-    /**
-     * @brief Draw and display the user interface.
-     * 
-     * @param start Whether the game has started (true) or is in the main menu (false).
-     */
-    void DrawAndDisplay(bool start);
+    // clears the window and draws sprites
+    void DrawAndDisplay(bool start, bool game_ended);
 
     /**
      * @brief Get the SFML render window.

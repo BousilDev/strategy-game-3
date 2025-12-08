@@ -41,6 +41,15 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
 
     // Initialize game name text
     game_name_input_ = ui::TextInput(view_size, "Game Name: ", *font, sf::Vector2f(0.1f, 0.75f), sf::Vector2f(0, 0), 30);
+
+    // Initialize game over text
+    game_over_text_ = sf::Text("Game Over", *font, 50);
+    game_over_text_.setPosition(view_size.x*0.2f, view_size.y*0.45f);
+    game_over_pos_ = game_over_text_.getPosition();
+
+    game_over_background_ = sf::RectangleShape();
+    game_over_background_.setSize(view_size);
+    game_over_background_.setFillColor(sf::Color(0, 0, 0, 100));
     
     // Initialize save file selector
     save_file_selection_.Initialize(view_size, font);
@@ -58,36 +67,42 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
 }   
 
 // Update the elements based on the event
-int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vector2f& mouse_pos, const sf::Event& event) {
+int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event, std::shared_ptr<bool> game_ended) {
     //current_state_ = new_state_;
 
-    if (current_state_ == 1) {
-        // new game
-        game_name_input_.UpdateEvent(event);
-        if (back_to_main_menu_button_.IsClicked(mouse_pos, event)) {
-            new_state_ = 0;
-        } else {
-            // Update selector states
-            for (auto& e : selections_) {
-                e.Update(mouse_pos, event);
-            }
-        }
-    } else if (current_state_ == 2) {
-        // load game
-        if (back_to_main_menu_button_.IsClicked(mouse_pos, event)) {
-            new_state_ = 0;
-            save_file_selection_.Reset();
-        } else {
-            save_file_selection_.Update(window, mouse_pos, event, start_loaded_button_.IsClicked(mouse_pos, event));
+    if (*game_ended.get()) {
+        if (event.type == sf::Event::MouseButtonReleased || event.type == sf::Event::KeyPressed) {
+            *game_ended.get() = false;
         }
     } else {
-        // main menu
-        if (new_game_button_.IsClicked(mouse_pos, event)) {
-            new_state_ = 1;
-        } else if (load_game_button_.IsClicked(mouse_pos, event)) {
-            save_file_selection_.ScanFiles();
-            new_state_ = 2;
-            save_file_selection_.Update(window, mouse_pos, event, IsLoadClicked(mouse_pos, event));
+        if (current_state_ == 1) {
+            // new game
+            game_name_input_.UpdateEvent(event);
+            if (back_to_main_menu_button_.IsClicked(mousePos, event)) {
+                new_state_ = 0;
+            } else {
+                // Update selector states
+                for (auto& e : selections_) {
+                    e.Update(mousePos, event);
+                }
+            }
+        } else if (current_state_ == 2) {
+            // load game
+            if (back_to_main_menu_button_.IsClicked(mousePos, event)) {
+                new_state_ = 0;
+                save_file_selection_.Reset();
+            } else {
+                save_file_selection_.Update(window, mousePos, event, start_loaded_button_.IsClicked(mousePos, event));
+            }
+        } else {
+            // main menu
+            if (new_game_button_.IsClicked(mousePos, event)) {
+                new_state_ = 1;
+            } else if (load_game_button_.IsClicked(mousePos, event)) {
+                save_file_selection_.ScanFiles();
+                new_state_ = 2;
+                save_file_selection_.Update(window, mousePos, event, IsLoadClicked(mousePos, event));
+            }
         }
     }
 
@@ -145,29 +160,35 @@ void ui::MainMenuRenderer::UpdateOutsideEventLoop(const sf::Vector2f& window_siz
 
 }
 
-void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window) {
+void ui::MainMenuRenderer::DrawTo(sf::RenderWindow& window, bool game_ended) {
     current_state_ = new_state_;
     window.draw(background_rect_);
 
-    if (current_state_ == 1) {
-        // new game
-        start_new_button_.DrawTo(window);
-        for (auto selection : selections_) {
-            selection.DrawTo(window);
-        }
-        game_name_input_.DrawTo(window);
-        back_to_main_menu_button_.DrawTo(window);
-
-    } else if (current_state_ == 2) {
-        // load game
-        start_loaded_button_.DrawTo(window);
-        back_to_main_menu_button_.DrawTo(window);
-        save_file_selection_.DrawTo(window);
-
+    if (game_ended) {
+        game_over_background_.setSize(sf::Vector2f(window.getSize()));
+        window.draw(game_over_background_);
+        window.draw(game_over_text_);
     } else {
-        // main menu
-        window.draw(title_);
-        new_game_button_.DrawTo(window);
-        load_game_button_.DrawTo(window);
+        if (current_state_ == 1) {
+            // new game
+            start_new_button_.DrawTo(window);
+            for (auto selection : selections_) {
+                selection.DrawTo(window);
+            }
+            game_name_input_.DrawTo(window);
+            back_to_main_menu_button_.DrawTo(window);
+
+        } else if (current_state_ == 2) {
+            // load game
+            start_loaded_button_.DrawTo(window);
+            back_to_main_menu_button_.DrawTo(window);
+            save_file_selection_.DrawTo(window);
+
+        } else {
+            // main menu
+            window.draw(title_);
+            new_game_button_.DrawTo(window);
+            load_game_button_.DrawTo(window);
+        }
     }
 }
