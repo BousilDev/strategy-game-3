@@ -192,7 +192,7 @@ const cards::Deck kStarterDeck(
         kInfantryCard->Clone(),
         kInfantryCard->Clone(),
         kGuardianCard->Clone(),
-        kGuardianCard->Clone()
+        kBruteCard->Clone()
     },
     6U // hand size
 );
@@ -228,6 +228,7 @@ const cards::Deck kAggroDeck(
         kScoutCard->Clone(),
         kInfantryCard->Clone(),
         kInfantryCard->Clone(),
+        kBruteCard->Clone(),
         kBruteCard->Clone(),
         kBruteCard->Clone()
     },
