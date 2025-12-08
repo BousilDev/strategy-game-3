@@ -30,7 +30,7 @@ public:
     sf::Event& GetEvent() { return event_; };
 
     // Handle current event
-    void HandleEvent(bool start);
+    void HandleEvent(bool start, std::shared_ptr<bool> game_ended);
 
     std::shared_ptr<world::Tile> GetLastClickedTile();
 
@@ -47,7 +47,7 @@ public:
     }
 
     // clears the window and draws sprites
-    void DrawAndDisplay(bool start);
+    void DrawAndDisplay(bool start, bool game_ended);
 
     sf::RenderWindow& GetWindow() { return window_; }
 
