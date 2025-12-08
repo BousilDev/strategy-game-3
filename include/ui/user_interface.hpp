@@ -80,6 +80,11 @@ private:
     sf::View view_;
     sf::Vector2f view_size_;
     sf::Vector2f mouse_pos_;
+
+    //zooming variables
+    float zoom_ = 1.0f;
+    static constexpr float kMinZoom_ = 0.5f;
+    static constexpr float kMaxZoom_ = 2.5f;
     
     // TODO: fix event handling stuff
     sf::Event event_;

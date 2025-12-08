@@ -51,6 +51,32 @@ void ui::UserInterface::HandleEvent(bool start) {
         view_.setCenter(view_size_ * 0.5f);
         window_.setView(view_);
     }
+    
+    //zoom
+    if (event_.type == sf::Event::MouseWheelScrolled) {
+
+    float factor = event_.mouseWheelScroll.delta > 0 ? 0.9f : 1.1f;
+    float newZoom = zoom_ * factor;
+
+    if (newZoom >= kMinZoom_ && newZoom <= kMaxZoom_) {
+
+        sf::Vector2f before =
+            window_.mapPixelToCoords(
+                {event_.mouseWheelScroll.x, event_.mouseWheelScroll.y});
+
+        view_.zoom(factor);
+        window_.setView(view_);
+
+        sf::Vector2f after =
+            window_.mapPixelToCoords(
+                {event_.mouseWheelScroll.x, event_.mouseWheelScroll.y});
+
+        view_.move(before - after);
+        window_.setView(view_);
+
+        zoom_ = newZoom;
+    }
+}
 
     // Handle main menu events
     if (!start) {

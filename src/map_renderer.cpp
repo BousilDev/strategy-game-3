@@ -100,6 +100,7 @@ void ui::MapRenderer::Initialize(core::Game& game, sf::RenderWindow& window, flo
 }
 
 void ui::MapRenderer::Update(const sf::Event& event) {
+    
     if (event.type == sf::Event::MouseButtonReleased) {
         UpdateVisibleTiles();
     }
@@ -126,6 +127,24 @@ void ui::MapRenderer::UpdateVisibleTiles() {
 
 }
 
+void ui::MapRenderer::UpdateMovableTilesFromSelection() {
+    movable_tiles_.clear();
+    attackable_tiles_.clear();
+    if (!selected_tile_) return;
+
+    auto unit = selected_tile_->get_unit();
+    if (!unit) return;
+
+    auto cur_player = game_->GetCurrentPlayer().GetName();
+    if(cur_player != unit->GetOwner()->GetName()) return;
+    for (auto idx : unit->get_movable_tiles()) {
+        movable_tiles_.insert(idx);
+    }
+    for (auto idx : unit->get_attackable_tiles()) {
+        attackable_tiles_.insert(idx);
+    }
+}
+
 void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
 
     // Draw buildings units tiles
@@ -138,9 +157,31 @@ void ui::MapRenderer::DrawTo(sf::RenderWindow& window)  {
 
             cur_tile.setOutlineThickness(2);
 
+            sf::Color baseColor = cur_tile.getFillColor();
+
+            if (!attackable_tiles_.empty() && attackable_tiles_.count(idx)) {
+                // overlay color; preserve a bit of terrain if you prefer
+                cur_tile.setFillColor(sf::Color(
+                    static_cast<sf::Uint8>(std::min(255, baseColor.r + 30)), //red
+                    static_cast<sf::Uint8>(baseColor.g * 0.9), //green
+                    static_cast<sf::Uint8>(baseColor.b * 0.9) //blue
+                ));
+                cur_tile.setOutlineColor(sf::Color::Red);
+            }
+            else if (!movable_tiles_.empty() && movable_tiles_.count(idx)) {
+                // overlay color; preserve a bit of terrain if you prefer
+                cur_tile.setFillColor(sf::Color(
+                    static_cast<sf::Uint8>(baseColor.r * 0.9), //red
+                    static_cast<sf::Uint8>(baseColor.g * 0.9), //green
+                    static_cast<sf::Uint8>(std::min(255, baseColor.b + 10)) //blue
+                ));
+                cur_tile.setOutlineColor(sf::Color::Cyan);
+            }
+
             if (selected_tile_) {
                 if (idx == selected_tile_->get_tile_number()) {
                     cur_tile.setOutlineThickness(-3);
+                    cur_tile.setOutlineColor(sf::Color::Blue);//CHECK
                 }
             }
 
@@ -240,10 +281,15 @@ std::shared_ptr<world::Tile> ui::MapRenderer::GetClickedTile(sf::RenderWindow& w
             if (get_tile != nullptr && get_tile->get_building() != nullptr)
                 std::cout << get_tile->get_building() << std::endl;
             selected_tile_ = get_tile;
+
+            UpdateMovableTilesFromSelection();
+
             return get_tile;
         }
     }
     selected_tile_ = nullptr;
+    movable_tiles_.clear();
+    attackable_tiles_.clear();
     return nullptr;
 }
 
