@@ -1,4 +1,4 @@
-1765130623
+1765218302
 test_7
 1
 3
@@ -7,16 +7,38 @@ Player 1
 Capital
 100
 100
-45
+1
+1
+26
 1
 Soldier
 10
 10
+5
 0
 0
-45
+26
+10
+Stone Mine
+Small Farm
+Stone Mine
+Infantry
+Estate Farm
+Forestry Camp
+Scout
+Infantry
+Guardian
+Forestry Camp
+0
+5
+5
+Prospector's Mine
+Estate Farm
+Brute
+Scout
+Logging Station
 4
-14
+10
 0
 0
 0
@@ -25,16 +47,38 @@ Player 2
 Capital
 100
 100
-16
+1
+1
+1
 1
 Soldier
 10
 10
+5
 0
 0
-16
+1
+5
+Stone Mine
+Small Farm
+Stone Mine
+Infantry
+Estate Farm
+5
+Prospector's Mine
+Estate Farm
+Brute
+Scout
+Logging Station
+5
+5
+Forestry Camp
+Guardian
+Infantry
+Scout
+Forestry Camp
 4
-26
+11
 0
 0
 0
@@ -43,23 +87,45 @@ Player 3
 Capital
 100
 100
-3
+1
+1
+222
 1
 Soldier
 10
 10
-0
-0
-3
-4
-30
-0
-0
-0
-0
-2
 5
-7
-7
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0
+0
+222
+10
+Stone Mine
+Small Farm
+Stone Mine
+Infantry
+Estate Farm
+Forestry Camp
+Scout
+Infantry
+Guardian
+Forestry Camp
+0
+5
+5
+Prospector's Mine
+Estate Farm
+Brute
+Scout
+Logging Station
+4
+10
+0
+0
+0
+0
+1
+1
+15
+15
+0,0,2,2,2,0,0,3,3,2,2,0,0,1,1,0,2,2,2,2,0,3,3,2,2,2,0,2,2,2,0,2,2,2,2,2,2,2,3,2,2,0,2,2,2,0,2,2,2,2,2,2,2,3,3,0,2,2,2,2,0,0,2,2,2,3,2,2,3,2,2,2,2,2,2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,0,1,1,1,2,2,2,2,2,2,2,2,2,2,2,0,1,1,1,1,1,2,2,2,2,2,2,2,2,2,0,1,1,1,1,2,2,2,2,2,2,2,2,2,0,0,1,1,1,1,2,2,2,2,2,2,2,2,2,0,0,1,1,1,1,2,2,2,2,2,2,0,0,0,0,0,1,1,1,1,1,2,2,2,2,2,3,0,0,0,0,1,1,1,1,3,2,2,2,2,1,3,0,0,1,1,1,1,1,1,0,3,3,3,1,1,1,0,0,1,1,
 

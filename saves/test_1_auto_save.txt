@@ -1,4 +1,4 @@
-1765130556
+1765218148
 test_1
 1
 2
@@ -7,16 +7,40 @@ Player 1
 Capital
 100
 100
-6
+1
+1
+1
 1
 Soldier
 10
 10
+5
 0
 0
+1
+5
+Forestry Camp
+Infantry
+Guardian
+Infantry
+Small Farm
 6
+Infantry
+Stone Mine
+Scout
+Stone Mine
+Small Farm
+Scout
+6
+6
+Brute
+Estate Farm
+Forestry Camp
+Logging Station
+Forestry Camp
+Infantry
 4
-28
+11
 0
 0
 0
@@ -25,22 +49,46 @@ Player 2
 Capital
 100
 100
-8
+1
+1
+2
 1
 Soldier
 10
 10
-0
-0
-8
-4
-42
-0
-0
-0
-0
-1
 5
+0
+0
+2
+5
+Forestry Camp
+Infantry
+Guardian
+Infantry
+Small Farm
+6
+Infantry
+Stone Mine
+Scout
+Stone Mine
+Small Farm
+Scout
+6
+6
+Brute
+Estate Farm
+Forestry Camp
+Logging Station
+Forestry Camp
+Infantry
+4
+11
+0
+0
+0
+0
+0
+2
 3
 3
 0,0,0,0,0,0,0,0,0,
