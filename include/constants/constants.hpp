@@ -10,7 +10,7 @@
 namespace constants {
 const int kNumberOfResourceTypes = 4;
 const int kNumberOfTerrainTypes = 4;
-const bool debug = true;
+const bool debug = false;
 const std::string debug_prefix = "###: ";
 const std::string faultySavesPath = "tests/faultySaves/";
 const std::string kSavesPath = "saves/";
