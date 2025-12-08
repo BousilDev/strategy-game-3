@@ -30,7 +30,7 @@ public:
     int Initialize(const std::shared_ptr<sf::Font>& font, const sf::Vector2f& view_size);
 
     // Update the state of the main menu elements based on the event
-    int Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event);
+    int Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event, std::shared_ptr<bool> game_ended);
 
     // Check if start is clicked
     bool IsStartClicked(const sf::Vector2f& mouse_pos, const sf::Event& event) const {
@@ -51,7 +51,7 @@ public:
     }
 
     // Draw the sprites and selectors
-    void DrawTo(sf::RenderWindow& window);
+    void DrawTo(sf::RenderWindow& window, bool game_ended);
 
     int GetSelectedPlayerCount() const { return selections_[0].GetSelectedOption(); }
     int GetSelectedMapSize() const { return selections_[1].GetSelectedOption(); }
@@ -102,6 +102,11 @@ private:
     // load game
     ui::ClickableText start_loaded_button_;
     ui::FileSelection save_file_selection_;
+
+    // game over
+    sf::RectangleShape game_over_background_;
+    sf::Vector2f game_over_pos_;
+    sf::Text game_over_text_;
 };
 
 } // namespace ui

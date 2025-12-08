@@ -68,6 +68,8 @@ public:
     // Sets the currently selected tile
     void SetSelectedTile(std::shared_ptr<world::Tile> tile) { selected_tile_ = tile; }
 
+    bool IsVisible() {return game_->IsInitialized(); }
+
 private: 
     core::Game* game_ = nullptr;
     float tile_size_;

@@ -8,7 +8,7 @@
 
 void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int map_size) {
     // Clear previous game state if any
-    *this = Game(); // Reset game to default state
+    ResetGame();
 
     // Create map with given size
     map_ = world::Map(map_size, world::Map::GenerationMethod::Droplets);
@@ -24,7 +24,7 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
         
         // Add a capital building to each player
         // buildings::CapitalBuilding::Create handles adding itself to the player's building list
-        buildings::CapitalBuilding::Create(spawn_tiles_[playerNum], players_.back(), 100);
+        buildings::CapitalBuilding::Create(spawn_tiles_[playerNum], players_.back(), 5);
         players_.back()->SetDeck(player.deck);
         players_.back()->DrawHand();
         playerNum += 1;
@@ -192,6 +192,8 @@ void core::Game::NextTurn() {
                 if (debug_) {
                     core::PrintTestMsg("Game over! Winner: ", players_[current_turn_]->GetName());
                 }
+                *is_ended_.get() = true;
+                is_initialized_ = false;
                 return;
             }
         } else {

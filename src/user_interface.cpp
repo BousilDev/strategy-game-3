@@ -42,7 +42,7 @@ bool ui::UserInterface::PollEvent() {
     }
 }
 
-void ui::UserInterface::HandleEvent(bool start) {
+void ui::UserInterface::HandleEvent(bool start, std::shared_ptr<bool> game_ended) {
     // Handle general events
     if (event_.type == sf::Event::Closed) window_.close();
     if (event_.type == sf::Event::Resized) {
@@ -54,14 +54,14 @@ void ui::UserInterface::HandleEvent(bool start) {
 
     // Handle main menu events
     if (!start) {
-        main_menu_renderer_.Update(window_, mouse_pos_, event_);
+        main_menu_renderer_.Update(window_, mouse_pos_, event_, game_ended);
     } else {
         std::shared_ptr<world::Tile> tile_pointer = std::make_shared<world::Tile>(); // was nullptr
         
         if (event_.type == sf::Event::MouseButtonReleased && 
             event_.mouseButton.button == sf::Mouse::Left || event_.mouseButton.button == sf::Mouse::Right) {
             // update map elements that do something when LMB or RMB is released
-            tile_pointer = map_renderer_.GetClickedTile(window_);
+            tile_pointer = map_renderer_.GetClickedTile(window_, event_.mouseButton.button == sf::Mouse::Left);
             if (tile_pointer != nullptr) {
                 std::cout << "Tile number: " << tile_pointer->get_tile_number() 
                         << "\nTile terrain: " << tile_pointer->get_terrain()->get_name() 
@@ -78,6 +78,9 @@ void ui::UserInterface::HandleEvent(bool start) {
         }
 
         info_layer_renderer_.Update(window_, mouse_pos_, event_, tile_pointer);
+        if (!info_layer_renderer_.IsVisible()) {
+            ResetMainMenu();
+        }
         map_renderer_.Update(event_);
     }
 
@@ -96,13 +99,13 @@ bool ui::UserInterface::IsLoadClicked() {
     return main_menu_renderer_.IsLoadClicked(mouse_pos_, event_);
 }
 
-void ui::UserInterface::DrawAndDisplay(bool start) {
+void ui::UserInterface::DrawAndDisplay(bool start, bool game_ended) {
     // clear the screen
     window_.clear(sf::Color(0,123,167));
 
     // render main menu if game has not started, otherwise render the map etc.
     if (!start) {
-        main_menu_renderer_.DrawTo(window_);
+        main_menu_renderer_.DrawTo(window_, game_ended);
     } else {
         map_renderer_.DrawTo(window_);
         info_layer_renderer_.DrawTo(window_);
