@@ -275,8 +275,8 @@ std::istream& operator>>(std::istream& in, Map& other){
         std::shared_ptr<Terrain> terrain_ptr;
         switch (terrain_types_vector[i] % 4) {
             case 0: terrain_ptr = std::make_shared<PlainsTerrain>(); break;
-            case 1: terrain_ptr = std::make_shared<MountainsTerrain>(); break;
-            case 2: terrain_ptr = std::make_shared<ForestTerrain>(); break;
+            case 1: terrain_ptr = std::make_shared<ForestTerrain>(); break;
+            case 2: terrain_ptr = std::make_shared<MountainsTerrain>(); break;
             case 3: terrain_ptr = std::make_shared<WaterTerrain>(); break;
         }
         tiles[i]->set_terrain(terrain_ptr);
