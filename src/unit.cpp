@@ -101,42 +101,37 @@ bool Unit::moveToTile(std::shared_ptr<world::Tile> tile)
     if (!tile || has_attacked_)
         return false;
 
-    auto attackable = get_attackable_tiles();
-    //this is an attack not move
-    if (std::find(attackable.begin(), attackable.end(), tile->get_tile_number()) != attackable.end()) {
-            // Tile already has a unit or a building
-        if (tile->get_unit() != nullptr && tile->get_unit()->GetOwner() != GetOwner()) {
-            // Damage enemy unit
-            dealDamageToTileContents(tile, damage_);
-            has_attacked_ = true;
-            return false;
-        } else if (tile->get_building() != nullptr && tile->get_building()->getOwner() != GetOwner()) {
-            // Damage enemy building
-            dealDamageToTileContents(tile, damage_);
-            has_attacked_ = true;
-            return false;
-        }
-    } else {
-        unsigned int distance_traveled = get_terrain_distance_to(tile->get_tile_number());
-        //distance traveled returns 0 if we cant move / dont move
-        if (distance_traveled == 0) return false;
+    auto self = shared_from_this();
 
-    
-        if (tile->get_unit() != nullptr && tile->get_unit()->GetOwner() == GetOwner()) {
-            // Can't move onto tile with friendly unit
-            return false;
+    // Tile already has a unit or a building
+    if (tile->get_unit() != nullptr && tile->get_unit()->GetOwner() != GetOwner()) {
+        // Damage enemy unit
+        dealDamageToTileContents(tile);
+        has_attacked_ = true;
+        if (tile->get_unit() != nullptr || (tile->get_building() != nullptr && tile->get_building()->getOwner() != GetOwner())) {
+            return false; // Enemy unit still alive, can't move
+        }
+    } else if (tile->get_building() != nullptr && tile->get_building()->getOwner() != GetOwner()) {
+        // Damage enemy building
+        dealDamageToTileContents(tile);
+        has_attacked_ = true;
+        if (tile->get_building() != nullptr) {
+            return false; // Enemy building still alive, can't move
+        }
+    } else if (tile->get_unit() != nullptr && tile->get_unit()->GetOwner() == GetOwner()) {
+        // Can't move onto tile with friendly unit
+        return false;
+    }
+
+    if (tile->place_unit(self)) {
+        if (auto current = current_tile_.lock()) {
+            current->remove_current_unit();
         }
 
-        auto self = shared_from_this();
-        if (tile->place_unit(self)) {
-            if (auto current = current_tile_.lock()) {
-                current->remove_current_unit();
-            }
-
-            turn_movement_ += static_cast<int>(distance_traveled);
-            current_tile_ = tile;
-            return true;
-        }
+        // TODO: Uncomment when GetDistanceTo or similar is implemented
+        //turn_movement_ = tile->GetDistanceTo(current_tile_.lock());
+        current_tile_ = tile;
+        return true;
     }
 
     return false;
@@ -158,282 +153,6 @@ void Unit::dealDamageToTileContents(std::shared_ptr<world::Tile> tile)
     if (targetUnit != nullptr && targetUnit->GetOwner() != GetOwner()) {
         targetUnit->takeDamage(damage_);
     }
-}
-std::vector<unsigned int> Unit::get_movable_tiles() {
-    std::vector<unsigned int> result; // finished tiles
-    if (has_attacked_ || !current_tile_.lock()) return result;
-
-    int depth = std::max(static_cast<int>(can_move_in_a_turn) - static_cast<int>(turn_movement_), 0);
-    if (depth == 0) return result;
-
-    std::queue<std::pair<std::shared_ptr<world::Tile>, unsigned int>> to_visit;
-    std::unordered_set<unsigned int> visited;
-
-    auto start_tile = current_tile_.lock();
-    to_visit.push({start_tile, 0});
-    visited.insert(start_tile->get_tile_number());
-
-    while (!to_visit.empty()) {
-        auto [tile, distance] = to_visit.front();
-        to_visit.pop();
-
-        // Skip tiles that cannot be entered
-        if (tile->get_terrain()->get_terrain_type() == world::Terrain::terrainType::water) continue;
-        auto unit = tile->get_unit();
-        if (distance > 0 && unit != nullptr && unit->GetOwner()->GetName() != owner_.lock()->GetName()) {
-            continue;
-        }
-
-        if (distance > 0 && tile->get_unit()) continue;
-        if (distance > 0 && tile->get_building() && tile->get_building()->getOwner()->GetName() != owner_.lock()->GetName()) continue;
-
-        // Add to result if it's a tile the unit can move to (exclude starting tile)
-        if (distance > 0) result.push_back(tile->get_tile_number());
-
-        // Stop expanding if max movement depth reached
-        if (distance >= depth) continue;
-
-        // Enqueue neighbors
-        for (auto& weak_neigh : tile->get_neighbours()) {
-            if (auto neigh = weak_neigh.lock()) {
-                unsigned int neigh_number = neigh->get_tile_number();
-                if (visited.find(neigh_number) == visited.end()) {
-                    visited.insert(neigh_number); // mark as visited
-                    to_visit.push({neigh, distance + 1});
-                }
-            }
-        }
-    }
-
-    return result;
-}
-
-unsigned int Unit::get_terrain_distance_to(unsigned int target_tile_number) {
-    if (has_attacked_ || !current_tile_.lock()) return 0;
-
-    auto start_tile = current_tile_.lock();
-    if (start_tile->get_tile_number() == target_tile_number) return 0;
-
-    int depth = std::max(static_cast<int>(can_move_in_a_turn) - static_cast<int>(turn_movement_), 0);
-    if (depth == 0) return 0;
-
-    std::queue<std::pair<std::shared_ptr<world::Tile>, unsigned int>> to_visit;
-    std::unordered_set<unsigned int> visited;
-
-    to_visit.push({start_tile, 0});
-    visited.insert(start_tile->get_tile_number());
-
-    while (!to_visit.empty()) {
-        auto [tile, distance] = to_visit.front();
-        to_visit.pop();
-
-        // Skip tiles that cannot be entered
-        if (tile->get_terrain()->get_terrain_type() == world::Terrain::terrainType::water) continue;
-        if (distance > 0 && tile->get_unit()) continue;
-
-        if (tile->get_tile_number() == target_tile_number) {
-            return distance; // found target, return steps
-        }
-
-        // Stop expanding if max movement depth reached
-        if (distance >= depth) continue;
-
-        for (auto& weak_neigh : tile->get_neighbours()) {
-            if (auto neigh = weak_neigh.lock()) {
-                unsigned int neigh_number = neigh->get_tile_number();
-                if (visited.find(neigh_number) == visited.end()) {
-                    visited.insert(neigh_number);
-                    to_visit.push({neigh, distance + 1});
-                }
-            }
-        }
-    }
-
-    return 0; // target not reachable
-}
-
-std::vector<unsigned int> Unit::get_attackable_tiles() {
-    std::vector<unsigned int> result; // finished tiles
-    if (has_attacked_ || !current_tile_.lock()) return result;
-
-    int depth = attack_range_;
-    if (depth == 0) return result;
-
-    std::queue<std::pair<std::shared_ptr<world::Tile>, unsigned int>> to_visit;
-    std::unordered_set<unsigned int> visited;
-
-    auto start_tile = current_tile_.lock();
-    to_visit.push({start_tile, 0});
-    visited.insert(start_tile->get_tile_number());
-
-    while (!to_visit.empty()) {
-        auto [tile, distance] = to_visit.front();
-        to_visit.pop();
-
-        // Add to result if it's a tile the unit can move to (exclude starting tile)
-        auto building = tile->get_building();
-        auto unit = tile->get_unit();
-        if (distance > 0 && building != nullptr && building->getOwner()->GetName() != owner_.lock()->GetName()) {
-            result.push_back(tile->get_tile_number());
-        }
-        else if (distance > 0 && unit != nullptr && unit->GetOwner()->GetName() != owner_.lock()->GetName()) {
-            result.push_back(tile->get_tile_number());
-        }
-
-        // Stop expanding if max movement depth reached
-        if (distance >= depth) continue;
-
-        // Enqueue neighbors
-        for (auto& weak_neigh : tile->get_neighbours()) {
-            if (auto neigh = weak_neigh.lock()) {
-                unsigned int neigh_number = neigh->get_tile_number();
-                if (visited.find(neigh_number) == visited.end()) {
-                    visited.insert(neigh_number); // mark as visited
-                    to_visit.push({neigh, distance + 1});
-                }
-            }
-        }
-    }
-
-    return result;
-}
-std::vector<unsigned int> Unit::get_movable_tiles() {
-    std::vector<unsigned int> result; // finished tiles
-    if (has_attacked_ || !current_tile_.lock()) return result;
-
-    int depth = std::max(static_cast<int>(can_move_in_a_turn) - static_cast<int>(turn_movement_), 0);
-    if (depth == 0) return result;
-
-    std::queue<std::pair<std::shared_ptr<world::Tile>, unsigned int>> to_visit;
-    std::unordered_set<unsigned int> visited;
-
-    auto start_tile = current_tile_.lock();
-    to_visit.push({start_tile, 0});
-    visited.insert(start_tile->get_tile_number());
-
-    while (!to_visit.empty()) {
-        auto [tile, distance] = to_visit.front();
-        to_visit.pop();
-
-        // Skip tiles that cannot be entered
-        if (tile->get_terrain()->get_terrain_type() == world::Terrain::terrainType::water) continue;
-        auto unit = tile->get_unit();
-        if (distance > 0 && unit != nullptr && unit->GetOwner()->GetName() != owner_.lock()->GetName()) {
-            continue;
-        }
-
-        if (distance > 0 && tile->get_unit()) continue;
-        if (distance > 0 && tile->get_building() && tile->get_building()->getOwner()->GetName() != owner_.lock()->GetName()) continue;
-
-        // Add to result if it's a tile the unit can move to (exclude starting tile)
-        if (distance > 0) result.push_back(tile->get_tile_number());
-
-        // Stop expanding if max movement depth reached
-        if (distance >= depth) continue;
-
-        // Enqueue neighbors
-        for (auto& weak_neigh : tile->get_neighbours()) {
-            if (auto neigh = weak_neigh.lock()) {
-                unsigned int neigh_number = neigh->get_tile_number();
-                if (visited.find(neigh_number) == visited.end()) {
-                    visited.insert(neigh_number); // mark as visited
-                    to_visit.push({neigh, distance + 1});
-                }
-            }
-        }
-    }
-
-    return result;
-}
-
-unsigned int Unit::get_terrain_distance_to(unsigned int target_tile_number) {
-    if (has_attacked_ || !current_tile_.lock()) return 0;
-
-    auto start_tile = current_tile_.lock();
-    if (start_tile->get_tile_number() == target_tile_number) return 0;
-
-    int depth = std::max(static_cast<int>(can_move_in_a_turn) - static_cast<int>(turn_movement_), 0);
-    if (depth == 0) return 0;
-
-    std::queue<std::pair<std::shared_ptr<world::Tile>, unsigned int>> to_visit;
-    std::unordered_set<unsigned int> visited;
-
-    to_visit.push({start_tile, 0});
-    visited.insert(start_tile->get_tile_number());
-
-    while (!to_visit.empty()) {
-        auto [tile, distance] = to_visit.front();
-        to_visit.pop();
-
-        // Skip tiles that cannot be entered
-        if (tile->get_terrain()->get_terrain_type() == world::Terrain::terrainType::water) continue;
-        if (distance > 0 && tile->get_unit()) continue;
-
-        if (tile->get_tile_number() == target_tile_number) {
-            return distance; // found target, return steps
-        }
-
-        // Stop expanding if max movement depth reached
-        if (distance >= depth) continue;
-
-        for (auto& weak_neigh : tile->get_neighbours()) {
-            if (auto neigh = weak_neigh.lock()) {
-                unsigned int neigh_number = neigh->get_tile_number();
-                if (visited.find(neigh_number) == visited.end()) {
-                    visited.insert(neigh_number);
-                    to_visit.push({neigh, distance + 1});
-                }
-            }
-        }
-    }
-
-    return 0; // target not reachable
-}
-
-std::vector<unsigned int> Unit::get_attackable_tiles() {
-    std::vector<unsigned int> result; // finished tiles
-    if (has_attacked_ || !current_tile_.lock()) return result;
-
-    int depth = attack_range_;
-    if (depth == 0) return result;
-
-    std::queue<std::pair<std::shared_ptr<world::Tile>, unsigned int>> to_visit;
-    std::unordered_set<unsigned int> visited;
-
-    auto start_tile = current_tile_.lock();
-    to_visit.push({start_tile, 0});
-    visited.insert(start_tile->get_tile_number());
-
-    while (!to_visit.empty()) {
-        auto [tile, distance] = to_visit.front();
-        to_visit.pop();
-
-        // Add to result if it's a tile the unit can move to (exclude starting tile)
-        auto building = tile->get_building();
-        auto unit = tile->get_unit();
-        if (distance > 0 && building != nullptr && building->getOwner()->GetName() != owner_.lock()->GetName()) {
-            result.push_back(tile->get_tile_number());
-        }
-        else if (distance > 0 && unit != nullptr && unit->GetOwner()->GetName() != owner_.lock()->GetName()) {
-            result.push_back(tile->get_tile_number());
-        }
-
-        // Stop expanding if max movement depth reached
-        if (distance >= depth) continue;
-
-        // Enqueue neighbors
-        for (auto& weak_neigh : tile->get_neighbours()) {
-            if (auto neigh = weak_neigh.lock()) {
-                unsigned int neigh_number = neigh->get_tile_number();
-                if (visited.find(neigh_number) == visited.end()) {
-                    visited.insert(neigh_number); // mark as visited
-                    to_visit.push({neigh, distance + 1});
-                }
-            }
-        }
-    }
-
-    return result;
 }
 
 // ============================================================
