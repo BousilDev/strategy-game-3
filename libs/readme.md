@@ -11,8 +11,7 @@ apt with Ubuntu. In such case it does not need to be installed here.
 
 # List of External Libs
 
-1. [Project1](https://someproject.com/download)
-2. [Project2](https://anotherproject.com/download)
+1. [SFML] (https://www.sfml-dev.org/download/sfml/2.5.1/)
 
 > If you are using already compiled library, place it in this folder, and set the linker options appropriately.
 > The include files of the dependent library should also be placed in this folder.
