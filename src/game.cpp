@@ -24,7 +24,7 @@ void core::Game::Initialize(const std::vector<PlayerInit>& players, unsigned int
         
         // Add a capital building to each player
         // buildings::CapitalBuilding::Create handles adding itself to the player's building list
-        buildings::CapitalBuilding::Create(spawn_tiles_[playerNum], players_.back(), 5);
+        buildings::CapitalBuilding::Create(spawn_tiles_[playerNum], players_.back(), 100);
         players_.back()->SetDeck(player.deck);
         players_.back()->DrawHand();
         playerNum += 1;
