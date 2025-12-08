@@ -45,18 +45,16 @@ public:
      */
     int Initialize(const std::shared_ptr<sf::Font>& font, const sf::Vector2f& view_size);
 
-    // Update the state of the main menu elements based on the event
-    int Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event, std::shared_ptr<bool> game_ended);
-
     /**
      * @brief Update the MainMenuRenderer instance within the event loop.
      * 
      * @param window The render window.
-     * @param mouse_pos The mouse position.
+     * @param mousePos The mouse position.
      * @param event The current event.
+     * @param game_ended A shared pointer to a boolean indicating if the game has ended.
      * @return int Returns 0 if successful, 1 if there are errors.
      */
-    int Update(const sf::RenderWindow& window, const sf::Vector2f& mouse_pos, const sf::Event& event);
+    int Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event, std::shared_ptr<bool> game_ended);
 
     /**
      * @brief Check if the start new game button is clicked.
@@ -90,7 +88,12 @@ public:
         return false;
     }
 
-    // Draw the sprites and selectors
+    /**
+     * @brief Draw the MainMenuRenderer instance to the given window.
+     * 
+     * @param window The render window.
+     * @param game_ended Whether the game has ended.
+     */
     void DrawTo(sf::RenderWindow& window, bool game_ended);
 
     // Getters for selected options
@@ -100,7 +103,9 @@ public:
     std::string GetGameName() const { return game_name_input_.GetInputString(); }
     std::string& GetLastClickedSavePath() { return save_file_selection_.GetLastClickedPath(); }
 
-    // Reset the state. Used when returning to main menu from somewhere.
+    /**
+     * @brief Reset the MainMenuRenderer instance to its initial state.
+     */
     void Reset() {
         current_state_ = 0;
         new_state_ = 0;

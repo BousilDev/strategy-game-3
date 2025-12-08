@@ -86,7 +86,12 @@ public:
         map_renderer_.Initialize(game, window_);
     }
 
-    // clears the window and draws sprites
+    /**
+     * @brief Draw and display the current frame.
+     * 
+     * @param start Whether the game has started (true) or is in the main menu (false).
+     * @param game_ended Whether the game has ended.
+     */
     void DrawAndDisplay(bool start, bool game_ended);
 
     /**
