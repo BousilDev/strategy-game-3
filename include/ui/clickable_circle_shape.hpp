@@ -31,17 +31,19 @@ public:
      * @param radius The radius of the circle.
      * @param point_count The number of points of the circle.
      * @param position The relative position (0.0 to 1.0) of the circle in the window.
-     * @param angle The rotation angle of the circle in degrees.
-     * @param offset The pixel offset from the relative position.
-     * @param hovered_scale The scale to apply when the circle is hovered over.
+     * @param angle The rotation angle of the circle in degrees. Default is 0.
+     * @param offset The pixel offset from the relative position. Default is (0,0).
      */
     ClickableCircleShape(const sf::Vector2f& view_size, float radius, std::size_t point_count, sf::Vector2f position,
-                         float angle = 0, sf::Vector2f offset = sf::Vector2f(0,0), sf::Vector2f hovered_scale = sf::Vector2f(1.3f, 1.3f))
-                        : position_(position), offset_(offset), hovered_scale_(hovered_scale) {
+                         float angle = 0, sf::Vector2f offset = sf::Vector2f(0,0))
+                        : position_(position), offset_(offset) {
         circle_shape_ = sf::CircleShape(radius, point_count);
         centerOrigin(circle_shape_);
         circle_shape_.setRotation(angle);
         circle_shape_.setPosition(position_.x*view_size.x + offset_.x, position.y*view_size.y + offset_.y);
+        circle_shape_.setFillColor(normal_color_);
+        circle_shape_.setOutlineColor(outline_color_);
+        circle_shape_.setOutlineThickness(outline_size_);
     }
 
     /**
@@ -60,8 +62,10 @@ public:
         // Hovered over
         if (circle_shape_.getGlobalBounds().contains(mouse_pos)) {
             circle_shape_.setScale(hovered_scale_);
+            circle_shape_.setFillColor(hovered_color_);
         } else {
             circle_shape_.setScale(1, 1);
+            circle_shape_.setFillColor(normal_color_);
         }
     }
 
@@ -91,8 +95,12 @@ public:
 private:
     sf::CircleShape circle_shape_;
     sf::Vector2f position_;
-    sf::Vector2f hovered_scale_;
     sf::Vector2f offset_;
+    sf::Vector2f hovered_scale_ = constants::kClickableCircleShapeHoveredScale;
+    sf::Color normal_color_ = constants::kClickableNormalColor;
+    sf::Color hovered_color_ = constants::kClickableHoveredColor;
+    sf::Color outline_color_ = constants::kClickableOutlineColor;
+    float outline_size_ = constants::kClickableOutlineSize;
 };
 
 } // namespace ui

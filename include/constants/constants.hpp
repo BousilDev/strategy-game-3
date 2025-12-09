@@ -21,9 +21,18 @@ const std::filesystem::path kDelaysFile = kFramesPath / "delays_cs.txt";
 // -----UI constants-----
 const int kInitWindowWidth = 800;
 const int kInitWindowHeight = 600;
-
-const int kMainMenuClickablesSize = 40;
 const bool kUseCoolTitle = true; // true to use the cool title animation in the main menu, false to use static text
+
+// Main menu clickable elements (ui::ClickableText, ui::ClickableCircleShape and ui::Selection)
+const int kMainMenuClickablesSize = 40;
+const sf::Color kClickableNormalColor = sf::Color(255, 255, 255, 255);              // normal color
+const sf::Color kClickableHoveredColor = sf::Color(200, 150, 150, 255);             // hovered color
+const float kClickableOutlineSize = 1.f;                                            // outline size
+const sf::Color kClickableOutlineColor = sf::Color(50, 0, 0, 255);                 // outline color
+const sf::Vector2f kClickableTextHoveredScale = sf::Vector2f(1.1f, 1.1f);           // ui::ClickableText hovered scale
+const sf::Vector2f kClickableCircleShapeHoveredScale = sf::Vector2f(1.3f, 1.3f);    // ui::ClickableCircleShape hovered scale
+const sf::Color kSelectionTextOutlineColor = sf::Color(50, 0, 0, 255);             // ui::Selection outline color
+const float kSelectionTextOutlineSize = 1.f;                                        // ui::Selection outline size
 
 // ui::FileSelection
 const int kFileSelectionFontSize = 30;
@@ -44,6 +53,9 @@ const float kFScontentPadding = 8.f;    // ui::Fileselection text padding inside
 const size_t TextInputMaxLength = 64; // Max length for the text input buffer
 const float TextInputCaretTime = 0.f;
 const float TextInputCaretBlinkPeriod = 0.5f; // seconds
+const sf::Color kTextInputTextColor = sf::Color(255, 255, 255, 255);
+const sf::Color kTextInputTextOutlineColor = sf::Color(100, 0, 0, 255);
+const float kTextInputTextOutlineSize = 1.f;
 
 const std::string kFontPath = "texture/times.ttf";
 const std::string kBackgroundImagePath = "texture/background.jpg";
