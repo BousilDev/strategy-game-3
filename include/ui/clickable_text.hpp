@@ -26,37 +26,40 @@ public:
     /**
      * @brief Construct a ClickableText instance.
      * 
-     * @param viewSize The size of the view.
+     * @param view_size The size of the view.
      * @param string The text string.
      * @param font The font used for the text.
      * @param position The relative position (0.0 to 1.0) of the text in the window.
-     * @param characterSize The character size of the text.
-     * @param offset The pixel offset from the relative position.
-     * @param hovered_scale The scale to apply when the text is hovered over.
+     * @param character_size The character size of the text.
+     * @param offset The pixel offset from the relative position. Default is (0,0).
      */
-    ClickableText(const sf::Vector2f& viewSize, const sf::String& string, const sf::Font& font, const sf::Vector2f& position, unsigned int characterSize = 30U,
-                  sf::Vector2f offset = sf::Vector2f(0, 0), sf::Vector2f hovered_scale = sf::Vector2f(1.1f, 1.1f))
-                  : position_(position), offset_(offset), hovered_scale_(hovered_scale) {
-        text_ = sf::Text(string, font, characterSize);
-        text_.setPosition(position_.x*viewSize.x + offset_.x, position_.y*viewSize.y + offset_.y);
+    ClickableText(const sf::Vector2f& view_size, const sf::String& string, const sf::Font& font, const sf::Vector2f& position, unsigned int character_size = 30U,
+                  sf::Vector2f offset = sf::Vector2f(0, 0)) : position_(position), offset_(offset) {
+        text_ = sf::Text(string, font, character_size);
+        text_.setPosition(position_.x*view_size.x + offset_.x, position_.y*view_size.y + offset_.y);
+        text_.setFillColor(normal_color_);
+        text_.setOutlineColor(outline_color_);
+        text_.setOutlineThickness(outline_size_);
     }
 
     /**
      * @brief Update the ClickableText instance outside the event loop.
      * 
-     * @param viewSize The size of the view.
+     * @param view_size The size of the view.
      * @param mouse_pos The mouse position.
      * @param resized Whether the window was resized.
      */
-    void UpdateOutsideEventLoop(const sf::Vector2f& viewSize, const sf::Vector2f& mouse_pos, const bool& resized) {
+    void UpdateOutsideEventLoop(const sf::Vector2f& view_size, const sf::Vector2f& mouse_pos, const bool& resized) {
         if (resized) {
-            text_.setPosition(position_.x*viewSize.x + offset_.x, position_.y*viewSize.y + offset_.y);
+            text_.setPosition(position_.x*view_size.x + offset_.x, position_.y*view_size.y + offset_.y);
         }
 
         if (text_.getGlobalBounds().contains(mouse_pos)) {
             text_.setScale(hovered_scale_);
+            text_.setFillColor(hovered_color_);
         } else {
             text_.setScale(1, 1);
+            text_.setFillColor(normal_color_);
         }
     }
 
@@ -84,10 +87,14 @@ public:
     }
 
 private:
-    sf::Text text_;
     sf::Vector2f position_;
-    sf::Vector2f hovered_scale_;
     sf::Vector2f offset_;
+    sf::Text text_;
+    sf::Vector2f hovered_scale_ = constants::kClickableTextHoveredScale;
+    sf::Color normal_color_ = constants::kClickableNormalColor;
+    sf::Color hovered_color_ = constants::kClickableHoveredColor;
+    sf::Color outline_color_ = constants::kClickableOutlineColor;
+    float outline_size_ = constants::kClickableOutlineSize;
 };
 
 } // namespace ui

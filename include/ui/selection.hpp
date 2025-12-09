@@ -9,6 +9,7 @@
 #include <utility>
 #include <SFML/Graphics.hpp>
 
+#include "constants/constants.hpp"
 #include "center_origin.hpp"
 
 namespace ui {
@@ -29,13 +30,15 @@ public:
      * @param pos sets the position
      */
     Selection(const std::vector<std::pair<std::string, int>>& texts, const std::shared_ptr<sf::Font> font, const int font_size,
-              const sf::Vector2f& pos, const sf::Vector2f& offset, const sf::Vector2f& windowSize)
+              const sf::Vector2f& pos, const sf::Vector2f& offset, const sf::Vector2f& window_size)
               : texts_(texts), pos_(pos), offset_(offset) {
 
         for (const auto& text : texts_) {
             auto currentText = std::pair(sf::Text(text.first, *font, font_size), text.second);
             centerOrigin(currentText.first);
-            currentText.first.setPosition(pos.x*windowSize.x + offset_.x, pos.y*windowSize.y + offset_.y);
+            currentText.first.setPosition(pos.x*window_size.x + offset_.x, pos.y*window_size.y + offset_.y);
+            currentText.first.setOutlineColor(text_outline_color);
+            currentText.first.setOutlineThickness(text_outline_size_);
             text_options_.push_back(currentText);
         }
 
@@ -43,13 +46,19 @@ public:
         leftArrow_.setRadius(15.f);
         centerOrigin(leftArrow_);
         leftArrow_.setRotation(270);
-        leftArrow_.setPosition(pos.x * windowSize.x - 150 + offset.x, pos.y * windowSize.y + offset.y);
+        leftArrow_.setPosition(pos.x * window_size.x - 150 + offset.x, pos.y * window_size.y + offset.y);
+        leftArrow_.setFillColor(normal_color_);
+        leftArrow_.setOutlineColor(outline_color_);
+        leftArrow_.setOutlineThickness(clickable_outline_size_);
 
         rightArrow_.setPointCount(3);
         rightArrow_.setRadius(15.f);
         centerOrigin(rightArrow_);
         rightArrow_.setRotation(90);
-        rightArrow_.setPosition(pos.x * windowSize.x + 150 + offset.x, pos.y * windowSize.y + offset.y);
+        rightArrow_.setPosition(pos.x * window_size.x + 150 + offset.x, pos.y * window_size.y + offset.y);
+        rightArrow_.setFillColor(normal_color_);
+        rightArrow_.setOutlineColor(outline_color_);
+        rightArrow_.setOutlineThickness(clickable_outline_size_);
     }
 
     /**
@@ -93,14 +102,18 @@ public:
         // if mouse hovers over
         if(leftArrow_.getGlobalBounds().contains(mouse_pos)) {
             leftArrow_.setScale(1.3, 1.3);
+            leftArrow_.setFillColor(hovered_color_);
         } else {
             leftArrow_.setScale(1.0, 1.0);
+            leftArrow_.setFillColor(normal_color_);
         }
 
         if(rightArrow_.getGlobalBounds().contains(mouse_pos)) {
             rightArrow_.setScale(1.3, 1.3);
+            rightArrow_.setFillColor(hovered_color_);
         } else {
             rightArrow_.setScale(1.0, 1.0);
+            rightArrow_.setFillColor(normal_color_);
         }
     }
 
@@ -133,6 +146,12 @@ private:
     int selectedOption_ = 0;
     sf::Vector2f pos_;
     sf::Vector2f offset_;
+    sf::Color normal_color_ = constants::kClickableNormalColor;
+    sf::Color hovered_color_ = constants::kClickableHoveredColor;
+    sf::Color outline_color_ = constants::kClickableOutlineColor;
+    float clickable_outline_size_ = constants::kClickableOutlineSize;
+    sf::Color text_outline_color = constants::kSelectionTextOutlineColor;
+    float text_outline_size_ = constants::kSelectionTextOutlineSize;
 };
 
 } // namespace ui

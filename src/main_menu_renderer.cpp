@@ -13,7 +13,7 @@ int ui::MainMenuRenderer::Initialize(const std::shared_ptr<sf::Font>& font, cons
     
 
     // Initialize back button
-    back_to_main_menu_button_ = ui::ClickableCircleShape(view_size, 15, 3, sf::Vector2f(0.1f, 0.2f), 270, sf::Vector2f(0,0));
+    back_to_main_menu_button_ = ui::ClickableCircleShape(view_size, 15, 3, sf::Vector2f(0.1f, 0.2f), 270);
 
     if (constants::kUseCoolTitle) {
         // Initialize cool title animation
@@ -107,7 +107,7 @@ int ui::MainMenuRenderer::Update(const sf::RenderWindow& window, const sf::Vecto
             } else if (load_game_button_.IsClicked(mousePos, event)) {
                 save_file_selection_.ScanFiles();
                 new_state_ = 2;
-                save_file_selection_.Update(window, mousePos, event, IsLoadClicked(mousePos, event));
+                save_file_selection_.Update(window, sf::Vector2f(-1,-1), event, IsLoadClicked(mousePos, event));
             }
         }
     }

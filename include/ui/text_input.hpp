@@ -40,6 +40,9 @@ public:
         text_.setCharacterSize(character_size);
         text_.setString(prefix_);
         text_.setPosition(position_.x*view_size.x + offset_.x, position_.y*view_size.y + offset_.y);
+        text_.setFillColor(text_color_);
+        text_.setOutlineColor(text_outline_color_);
+        text_.setOutlineThickness(text_outline_size_);
 
         caret_.setFillColor(sf::Color::White);
         caret_.setSize({1.f, static_cast<float>(character_size)});
@@ -172,6 +175,9 @@ private:
 
     sf::Vector2f position_{0.f, 0.f};
     sf::Vector2f offset_{0.f, 0.f};
+    sf::Color text_color_ = constants::kTextInputTextColor;
+    sf::Color text_outline_color_ = constants::kTextInputTextOutlineColor;
+    float text_outline_size_ = constants::kTextInputTextOutlineSize;
 
     std::size_t max_length_ = constants::TextInputMaxLength;
 
