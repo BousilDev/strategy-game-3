@@ -4,8 +4,8 @@ int ui::UserInterface::Initialize(core::Game& game) {
 
     // Graphics init
     window_.create(sf::VideoMode(constants::kInitWindowWidth, constants::kInitWindowHeight), constants::kGameTitle);
-    //window_.setFramerateLimit(60);
-    window_.setVerticalSyncEnabled(true);
+    window_.setFramerateLimit(60);
+    //window_.setVerticalSyncEnabled(true);
     view_ = window_.getDefaultView();
     view_size_ = view_.getSize();
 
