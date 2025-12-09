@@ -22,6 +22,10 @@ void ui::FileSelection::Initialize(const sf::Vector2f& view_size, const std::sha
 }
 
 int ui::FileSelection::ScanFiles() {
+    texts_.clear();
+    last_clicked_path_.clear();
+    last_clicked_index_ = -1;
+
     if (constants::debug) { core::PrintTestMsg("Scanning files in ", saves_folder_); }
     try {
         if (!fs::exists(saves_folder_) || !fs::is_directory(saves_folder_)) {
@@ -144,7 +148,7 @@ void ui::FileSelection::Update(const sf::RenderWindow& window, const sf::Vector2
     }
 
     if (!textSelected && clicked) {
-        last_clicked_path_.erase();
+        last_clicked_path_.clear();
         last_clicked_index_ = -1;
     }
 
@@ -166,7 +170,7 @@ void ui::FileSelection::UpdateOutsideEventLoop(const sf::Vector2f& window_size, 
 }
 
 void ui::FileSelection::Reset() { 
-    last_clicked_path_.erase();
+    last_clicked_path_.clear();
     scroll_ = 0;
     last_clicked_index_ = -1;
     texts_.clear();
