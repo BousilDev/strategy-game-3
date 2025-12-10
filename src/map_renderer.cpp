@@ -343,7 +343,7 @@ void ui::MapRenderer::PanMap(sf::RenderWindow& window) {
 }
 
 void ui::MapRenderer::UpdateNewTurn(sf::RenderWindow& window) {
-    if (game_->GetCurrentTurn() > last_turn_) {
+    if (static_cast<int>(game_->GetCurrentTurn()) > last_turn_) {
         SetViewOnPlayer(window);   // set view on new player
         selected_tile_ = game_->GetCurrentPlayer().GetCapitalBuilding()->getTile();  // reset selected tile to capital
         last_turn_ += 1;

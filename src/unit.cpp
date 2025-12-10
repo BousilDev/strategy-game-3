@@ -174,7 +174,7 @@ std::vector<unsigned int> Unit::get_movable_tiles() {
         if (distance > 0) result.push_back(tile->get_tile_number());
 
         // Stop expanding if max movement depth reached
-        if (distance >= depth) continue;
+        if (static_cast<int>(distance) >= depth) continue;
 
         // Enqueue neighbors
         for (auto& weak_neigh : tile->get_neighbours()) {
@@ -219,7 +219,7 @@ unsigned int Unit::get_terrain_distance_to(unsigned int target_tile_number) {
         }
 
         // Stop expanding if max movement depth reached
-        if (distance >= depth) continue;
+        if (static_cast<int>(distance) >= depth) continue;
 
         for (auto& weak_neigh : tile->get_neighbours()) {
             if (auto neigh = weak_neigh.lock()) {
@@ -264,7 +264,7 @@ std::vector<unsigned int> Unit::get_attackable_tiles() {
         }
 
         // Stop expanding if max movement depth reached
-        if (distance >= depth) continue;
+        if (static_cast<int>(distance) >= depth) continue;
 
         // Enqueue neighbors
         for (auto& weak_neigh : tile->get_neighbours()) {
