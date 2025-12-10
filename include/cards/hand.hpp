@@ -32,7 +32,7 @@ public:
    * @param starting_size The starting size of the hand.
    */
   Hand(Deck* deck, unsigned int starting_size)
-    : deck_(deck), contents_(std::vector<std::shared_ptr<Card>>()) , size_(starting_size) {}
+    : size_(starting_size), deck_(deck), contents_(std::vector<std::shared_ptr<Card>>()) {}
 
   /**
    * @brief Copies the contents of another hand into this hand.
@@ -125,9 +125,9 @@ public:
   friend std::ostream& operator<<(std::ostream& out, const std::shared_ptr<Hand>& other);
 
 private:
-  unsigned int size_; ///< The size of the hand.
-  std::vector<std::shared_ptr<Card>> contents_; ///< The cards in the hand.
-  Deck* deck_; ///< The deck of cards the hand draws from and discards to.
+    unsigned int size_; ///< The size of the hand.
+    Deck* deck_; ///< The deck of cards the hand draws from and discards to.
+    std::vector<std::shared_ptr<Card>> contents_; ///< The cards in the hand.
 };
   
 } // namespace cards

@@ -48,10 +48,10 @@ public:
    */
   Player(const std::string& name, std::shared_ptr<cards::Deck> deck) :
     name_(name), 
-    deck_(deck), 
-    resources_({Resource(ResourceType::kGold, 0), Resource(ResourceType::kWood, 0), Resource(ResourceType::kMetal, 0), Resource(ResourceType::kFood, 0)}), 
+    deck_(deck),  
     buildings_({}), 
-    units_({}) {};
+    units_({}),
+    resources_({Resource(ResourceType::kGold, 0), Resource(ResourceType::kWood, 0), Resource(ResourceType::kMetal, 0), Resource(ResourceType::kFood, 0)}) {};
 
   /**
    * @brief Get the name of the player.

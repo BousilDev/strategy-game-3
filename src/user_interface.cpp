@@ -52,7 +52,7 @@ void ui::UserInterface::HandleEvent(bool start, std::shared_ptr<bool> game_ended
         std::shared_ptr<world::Tile> tile_pointer = std::make_shared<world::Tile>(); // was nullptr
         
         if (event_.type == sf::Event::MouseButtonReleased && 
-            event_.mouseButton.button == sf::Mouse::Left || event_.mouseButton.button == sf::Mouse::Right) {
+            (event_.mouseButton.button == sf::Mouse::Left || event_.mouseButton.button == sf::Mouse::Right)) {
             // update map elements that do something when LMB or RMB is released
             tile_pointer = map_renderer_.GetClickedTile(window_, event_.mouseButton.button == sf::Mouse::Left);
             if (tile_pointer != nullptr) {

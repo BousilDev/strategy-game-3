@@ -79,7 +79,7 @@ void ui::InfoLayerRenderer::UpdateDrawItems() {
     }
     items_.push_back({"Current Player", game_->GetCurrentPlayer().GetName()});
     std::array<core::Resource, 4UL> resources = game_->GetCurrentPlayer().GetResources();
-    for (int i = 0; i < constants::resourceTypeNames.size(); ++i) {
+    for (size_t i = 0; i < constants::resourceTypeNames.size(); ++i) {
         resource_items_.push_back({constants::resourceTypeNames[i], std::to_string(resources[i].amount)});
     }
     items_.push_back({"Buildings", std::to_string(game_->GetCurrentPlayer().GetBuildings().size())});
@@ -141,11 +141,11 @@ std::string ui::InfoLayerRenderer::GetCardInfoString(std::shared_ptr<cards::Card
     std::string description = card->GetDescription();
     int realWidth = 1.8 * width / (inCard ? constants::infoLayerCardTextSize : constants::infoLayerTextSize);
     ss << "NAME: \n";
-    for (int i = 0; i < name.size(); i += realWidth) {
+    for (size_t i = 0; i < name.size(); i += realWidth) {
         ss << name.substr(i, realWidth) << "\n";
     }
     ss << "DESCRIPTION: \n";
-    for (int i = 0; i < description.size(); i += realWidth) {
+    for (size_t i = 0; i < description.size(); i += realWidth) {
         ss << description.substr(i, realWidth) << "\n";
     }
     ss << "COST:\n";
@@ -184,7 +184,7 @@ void ui::InfoLayerRenderer::DrawCards(sf::RenderWindow& window) {
     int i = 0;
     for (const auto& card : cards) {
         // Add more background to match the number of cards
-        if (cardBackgrounds_.size() <= i) {
+        if (cardBackgrounds_.size() <= static_cast<size_t>(i)) {
             sf::RectangleShape cardBackground = cardBackground_;
             cardBackgrounds_.push_back(cardBackground);
         }
@@ -192,7 +192,7 @@ void ui::InfoLayerRenderer::DrawCards(sf::RenderWindow& window) {
         i += 1;
     }
     // Free unnecessary backgrounds
-    while (cardBackgrounds_.size() > cardsSize) {
+    while (cardBackgrounds_.size() > static_cast<size_t>(cardsSize)) {
         cardBackgrounds_.pop_back();
     }
 }
@@ -381,11 +381,13 @@ void ui::InfoLayerRenderer::Update(sf::RenderWindow& window, const sf::Vector2f&
 
 // Returns true if the next turn button was clicked
 bool ui::InfoLayerRenderer::isNextTurnClicked(const sf::RenderWindow& window, const sf::Vector2f& mousePos) {
+    (void)window;
     return nextTurnButton_.getGlobalBounds().contains(mousePos);
 }
 
 // Returns the card clicked at the given mouse position
 std::shared_ptr<cards::Card> ui::InfoLayerRenderer::CardClicked(const sf::RenderWindow& window, const sf::Vector2f& mousePos) {
+    (void)window;
     // Travel the cardBackgrounds_ vector in reverse since last cards are printed on top
     for (int i = cardBackgrounds_.size() - 1; i >= 0; i--) {
         if (cardBackgrounds_[i].getGlobalBounds().contains(mousePos)) {

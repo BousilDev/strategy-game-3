@@ -65,9 +65,9 @@ int ui::FileSelection::ScanFiles() {
     return 0;
 };
 
-void ui::FileSelection::Update(const sf::RenderWindow& window, const sf::Vector2f& mousePos, const sf::Event& event, const bool isLoadClicked) {
+void ui::FileSelection::Update(const sf::RenderWindow& /*window*/, const sf::Vector2f& mousePos, const sf::Event& event, const bool isLoadClicked) {
 
-    auto windowSize = window.getSize();
+    //auto windowSize = window.getSize();
 
     const bool overflow = IsOverflow();
     const bool mouseOverBackground = background_.getGlobalBounds().contains(mousePos);
